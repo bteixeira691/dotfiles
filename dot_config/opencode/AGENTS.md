@@ -55,14 +55,18 @@
 
 - **`build`** (default for actual work) — make code changes
 - **`plan`** (read-only) — design, refactor strategy, debugging analysis
+- **`me`** — your personal agent, knows your preferences and background
 - **`backend-engineer`** — API/business logic/data modeling
 - **`frontend-engineer`** — React features, pages, components (mid-level)
 - **`frontend-senior`** — design systems, large refactors, accessibility, perf
+- **`dotnet-dev`** — C#, ASP.NET Core, EF Core, .NET services
+- **`react-ts-dev`** — TypeScript-strict React 19, complex state, type patterns
 - **`qa-engineer`** — tests, test strategy, flaky test debugging
 - **`devops-engineer`** — Docker, CI/CD, deployment, monitoring
 - **`code-reviewer`** — read-only PR/branch review
 - **`product-manager`** — specs, user stories, edge cases, PR descriptions
 - **`marketing`** — landing page copy, email campaigns, SEO, growth
+- **`gastown-orchestrator`** — multi-agent orchestration, beads, convoys, polecats
 
 ## Skills (auto-loaded by keyword match)
 
@@ -70,8 +74,11 @@ Generic skills in `~/.config/opencode/skills/`:
 - `rest-api-design` — endpoint shape, status codes, errors, pagination
 - `database-patterns` — schema, migrations, indexes, queries, transactions
 - `react-patterns` — composition, state, forms, performance, a11y
+- `react-ts-patterns` — TypeScript-strict patterns, branded types, React 19 forms
+- `dotnet-patterns` — C#, EF Core, Minimal APIs, validation, testing
 - `i18n-patterns` — strings, ICU, locale, formatting, RTL
 - `multi-tenant-patterns` — tenant scoping, query filters, JWT, isolation
+- `gastown-workflow` — beads lifecycle, convoy management, polecat coordination
 
 Project-level skills in `<project>/.opencode/skills/` override these
 for project-specific knowledge.

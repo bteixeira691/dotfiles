@@ -46,6 +46,33 @@
       "installedAt": "REPLACE_ME_AT_INSTALL",
       "version": "1.0.0",
       "license": "MIT"
+    },
+    "dotnet-patterns": {
+      "source": "dotfiles",
+      "sourceType": "local",
+      "skillPath": "~/.config/opencode/skills/dotnet-patterns/SKILL.md",
+      "computedHash": "REPLACE_ME_AT_INSTALL",
+      "installedAt": "REPLACE_ME_AT_INSTALL",
+      "version": "1.0.0",
+      "license": "MIT"
+    },
+    "react-ts-patterns": {
+      "source": "dotfiles",
+      "sourceType": "local",
+      "skillPath": "~/.config/opencode/skills/react-ts-patterns/SKILL.md",
+      "computedHash": "REPLACE_ME_AT_INSTALL",
+      "installedAt": "REPLACE_ME_AT_INSTALL",
+      "version": "1.0.0",
+      "license": "MIT"
+    },
+    "gastown-workflow": {
+      "source": "dotfiles",
+      "sourceType": "local",
+      "skillPath": "~/.config/opencode/skills/gastown-workflow/SKILL.md",
+      "computedHash": "REPLACE_ME_AT_INSTALL",
+      "installedAt": "REPLACE_ME_AT_INSTALL",
+      "version": "1.0.0",
+      "license": "MIT"
     }
   }
 }

@@ -56,6 +56,22 @@
     "marketing": {
       "model": "anthropic/claude-sonnet-4-5",
       "prompt": "{file:./agents/marketing.md}"
+    },
+    "me": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/me.md}"
+    },
+    "dotnet-dev": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/dotnet-dev.md}"
+    },
+    "react-ts-dev": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/react-ts-dev.md}"
+    },
+    "gastown-orchestrator": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/gastown-orchestrator.md}"
     }
   },
   "command": {
