@@ -60,10 +60,12 @@ log "Detected OS: $OS"
 install_prereqs() {
   if ! command -v chezmoi >/dev/null 2>&1; then
     log "Installing chezmoi"
-    sh -c "$(curl -fsSL https://chezmoi.io/get)" || {
+    mkdir -p "$HOME/.local/bin"
+    curl -fsSL https://chezmoi.io/get | sh -s -- -b "$HOME/.local/bin" || {
       warn "chezmoi install failed. Install manually: https://chezmoi.io/install"
       exit 1
     }
+    export PATH="$HOME/.local/bin:$PATH"
   fi
   ok "chezmoi: $(chezmoi --version)"
 

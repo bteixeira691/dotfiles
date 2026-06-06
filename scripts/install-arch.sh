@@ -12,14 +12,14 @@ PACKAGES=(
   # Core
   base-devel git curl wget unzip tar gzip cmake
   # Shell
-  zsh zsh-vi-mode zsh-autosuggestions zsh-syntax-highlighting starship
+  zsh zsh-autosuggestions zsh-syntax-highlighting starship
   # Terminal + multiplexer
-  ghostty tmux tpm
+  ghostty tmux
   # Editor
   neovim lazygit gitui
   # Modern CLI
   fzf ripgrep fd bat eza zoxide btop yazi
-  delta hyperfine watchexec mprocs lazydocker dive ctop bandwhich
+  git-delta hyperfine watchexec lazydocker dive ctop bandwhich
   git-absorb gitleaks pre-commit miller sd trash-cli xh
   # Phase 1: shell upgrade
   atuin direnv uv
@@ -49,6 +49,12 @@ fi
 
 AUR_HELPER="$(command -v yay || command -v paru)"
 
+# Remove conflicting packages (rust conflicts with rustup)
+if pacman -Qi rust >/dev/null 2>&1; then
+  echo "  -> Removing rust (will use rustup instead)"
+  sudo pacman -R --noconfirm rust 2>/dev/null || true
+fi
+
 sudo pacman -S --noconfirm --needed "${PACKAGES[@]}"
 
 # AUR packages (tools not in core repos, or with non-standard names)
@@ -56,6 +62,9 @@ AUR_PACKAGES=(
   visual-studio-code-bin
   google-chrome
   fzf-tab
+  zsh-vi-mode
+  tpm
+  mprocs
 )
 "$AUR_HELPER" -S --noconfirm --needed "${AUR_PACKAGES[@]}" || true
 
@@ -70,7 +79,7 @@ fi
 if command -v go >/dev/null; then
   echo "==> Installing gas town (gastownhall/gastown)"
   if ! command -v gt >/dev/null; then
-    go install github.com/gastownhall/gastown/cmd/gt@latest 2>/dev/null || warn "gas town install failed; see https://github.com/gastownhall/gastown"
+    go install github.com/gastownhall/gastown/cmd/gt@latest 2>/dev/null || echo "  -> gas town install failed; see https://github.com/gastownhall/gastown"
   fi
   if ! command -v bd >/dev/null; then
     go install github.com/gastownhall/beads/cmd/bd@latest 2>/dev/null || true
