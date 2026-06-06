@@ -1,0 +1,39 @@
+# bunfig.toml — Bun configuration
+# https://bun.sh/docs/runtime/configuration
+
+# Registry URL
+registry = "https://registry.npmjs.org/"
+
+# Install options
+[install]
+# Always use the lockfile in CI
+frozenLockfile = false
+# Production: skip devDependencies
+production = false
+# Save exact versions (no ^ or ~)
+exact = false
+# Auto-install peer dependencies
+auto = "auto"
+# Save to dependencies by default (use `bun add -d` for dev)
+saveExact = false
+# Verify integrity of the install (slower)
+verify = false
+
+# Trusted dependencies (for postinstall scripts)
+# By default, Bun does NOT run postinstall scripts for security.
+# Add a package here if it needs postinstall (e.g., esbuild, sharp):
+# trustedDependencies = ["esbuild", "sharp", "@swc/core"]
+
+[install.scopes]
+# Map a scope to a private registry
+# "@mycompany" = { token = "$NPM_TOKEN", url = "https://npm.mycompany.com" }
+
+[run]
+# Default shell for `bun run` script
+shell = "system"
+# Bun is used to run .ts/.tsx files directly
+# No need to configure — it just works.
+
+[test]
+# Preload files for all tests
+# preload = ["./bun-test.setup.ts"]

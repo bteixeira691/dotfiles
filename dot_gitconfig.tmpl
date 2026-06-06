@@ -1,0 +1,221 @@
+# =================== .gitconfig ===================
+# Common settings (synced across machines via chezmoi)
+# Machine-specific overrides live in ~/.gitconfig.local (NOT in git)
+
+[user]
+  # name and email are loaded from ~/.gitconfig.local (which is created
+  # by the post-install hook). See docs/gitconfig.local.example.
+  useConfigOnly = false
+
+[include]
+  # Per-machine overrides (name, email, signing key, etc.)
+  path = ~/.gitconfig.local
+
+# Path-specific identity switching
+# ~/work/* repos use your work identity
+# ~/personal/* repos use your personal identity
+# Both identities are defined in ~/.gitconfig.local
+[includeIf "gitdir:~/work/"]
+  path = ~/.gitconfig.work
+[includeIf "gitdir:~/personal/"]
+  path = ~/.gitconfig.personal
+
+# =================== Core ===================
+[core]
+  pager = delta
+  editor = nvim
+  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+  autocrlf = input
+  eol = lf
+  excludesfile = ~/.config/git/ignore_global
+  attributesfile = ~/.config/git/attributes
+  hooksPath = ~/.config/git/hooks
+  untrackedCache = true
+  fsmonitor = true
+
+[init]
+  defaultBranch = main
+  templateDir = ~/.config/git/template
+
+# =================== Pull / Push ===================
+[pull]
+  ff = only
+  rebase = true
+[push]
+  autoSetupRemote = true
+  default = current
+[fetch]
+  prune = true
+  all = true
+
+# =================== Diff / Merge ===================
+[diff]
+  algorithm = histogram
+  colorMoved = default
+  mnemonicPrefix = true
+  renames = true
+[merge]
+  tool = nvimdiff
+  conflictstyle = zdiff3
+  log = true
+[mergetool "nvimdiff"]
+  cmd = nvim -d $LOCAL $BASE $REMOTE $MERGED -c \"wincmd J\" -c \"wincmd l\"
+  trustExitCode = true
+
+# =================== Aliases ===================
+[alias]
+  # status
+  st = status -sb
+  sts = status --short
+  stv = status -sb -uall
+
+  # diff
+  d = diff
+  ds = diff --staged
+  dc = diff --cached
+  dw = diff --word-diff
+  dsw = diff --staged --word-diff
+
+  # log
+  l = log --oneline --graph --decorate -20
+  ll = log --graph --pretty=format:'%C(yellow)%h%C(reset) %C(magenta)%an%C(reset) %C(white)%s%C(reset) %C(dim)(%cr)%C(reset)' --abbrev-commit
+  lg = log --graph --all --pretty=format:'%C(yellow)%h%C(reset) %C(magenta)%an%C(reset) %C(white)%s%C(reset) %C(dim)(%cr)%C(reset)' --abbrev-commit | delta
+  l1 = log --oneline -1
+  lp = log -p
+  ls = log --stat
+  a = add
+  aa = add --all
+  ap = add --patch
+
+  # branch
+  b = branch
+  bv = branch -v
+  bva = branch -vv
+  ba = branch --all
+  bd = branch -d
+  bD = branch -D
+  bm = branch --move
+  co = checkout
+  cob = checkout -b
+  com = checkout main
+  cod = checkout develop
+
+  # commit
+  c = commit
+  cm = commit -m
+  cam = commit -a -m
+  amend = commit --amend
+  amend-no-edit = commit --amend --no-edit
+
+  # remote
+  r = remote
+  rv = remote -v
+  ra = remote add
+  rs = remote set-url
+  rR = remote remove
+  rh = remote --set-head
+  rb = rebase
+  rbi = rebase --interactive
+  rbc = rebase --continue
+  rba = rebase --abort
+  rbs = rebase --skip
+
+  # stash
+  stash = stash push
+  sp = stash push
+  sl = stash list
+  sa = stash apply
+  sd = stash drop
+  spop = stash pop
+  sshow = stash show -p
+
+  # search
+  g = grep --break --heading --line-number
+  gi = grep -i
+
+  # misc
+  unstage = reset HEAD --
+  last = log -1 HEAD --stat
+  lol = log --oneline --graph --decorate
+  visual = !gitk
+  tree = log --all --graph --decorate --oneline
+  cleanup = "!git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d"
+  contributors = shortlog -sn
+  incoming = !git fetch && git log ..@{u}
+  outgoing = !git fetch && git log @{u}..
+  untracked = ls-files --others --exclude-standard
+  ignored = ls-files --others -i --exclude-standard
+  amend-file = add
+
+# =================== Delta ===================
+[delta]
+  features = side-by-side line-numbers decorations
+  navigate = true
+  light = false
+  line-numbers = true
+  side-by-side = true
+  syntax-theme = tokyonight
+  decorations = commit-decoration,file-style,file-decoration,hunk-header
+  minus-style = syntax "#30024a"
+  plus-style = syntax "#003024"
+
+[interactive]
+  diffFilter = delta --color-only
+
+# =================== Credential / Auth ===================
+[credential]
+  helper = store
+[credential "https://github.com"]
+  helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+  helper = !gh auth git-credential
+
+[github]
+  user = ""
+
+# =================== Submodules ===================
+[submodule]
+  recurse = true
+  status = true
+  diff = log --oneline --first-parent
+
+# =================== LFS (optional) ===================
+[lfs]
+  smudge = git-lfs smudge -- %f
+  clean = git-lfs clean -- %f
+
+# =================== Color ===================
+[color]
+  ui = auto
+  branch = auto
+  diff = auto
+  status = auto
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow bold
+  remote = green bold
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+
+# =================== Help / Info ===================
+[help]
+  autocorrect = 5
+  format = html
+  browser = firefox
+
+# =================== rerere ===================
+[rerere]
+  enabled = true
+  autoupdate = true
+
+# =================== Maintenance ===================
+[maintenance]
+  repo = true

@@ -1,0 +1,57 @@
+# lazydocker config
+# https://github.com/jesseduffield/lazydocker
+# Config docs: https://github.com/jesseduffield/lazydocker/blob/master/docs/Config.md
+
+gui:
+  theme:
+    activeBorderColor:   ["#7aa2f7", "bold"]
+    inactiveBorderColor: ["#414868"]
+    selectedLineBgColor: ["#33467c"]
+    optionsTextColor:    ["#c0caf5"]
+    selectedRangeBgColor: ["#1f2335"]
+    cherryPickedCommitBgColor: ["#3b4261"]
+    cherryPickedCommitFgColor: ["#9ece6a"]
+    unstagedChangesColor: ["#f7768e"]
+
+  # Tokyo Night-inspired
+  border: "rounded"
+  showAllContainers: true
+  showDockerCompose: true
+
+  # Keybindings (most are defaults; customize if you want)
+  keybindings:
+    global:
+      quit:           "q"
+      toggleSidebar:  "b"
+      refresh:        "r"
+      nextTab:        "]"
+      prevTab:        "["
+    containers:
+      viewAllLogs:        "L"
+      viewContainerLogs:  "l"
+      restartContainer:   "r"
+      stopContainer:      "s"
+      removeContainer:    "d"
+      confirm:            "y"
+    services:
+      viewServiceLogs: "l"
+      restartService:  "r"
+      stopService:     "s"
+
+  # Always wrap logs (easier to read with delta)
+  wrapLogs: true
+
+  # Use delta for log/diff rendering
+  # (lazydocker auto-detects git/delta if on PATH)
+
+# Logging
+logging:
+  file: "~/.cache/lazydocker/lazydocker.log"
+  level: "info"
+
+# Time format for log lines
+timeFormat: "15:04:05"
+
+# Don't ask to confirm dangerous actions
+confirmOnQuit: false
+confirmOnForcePush: false

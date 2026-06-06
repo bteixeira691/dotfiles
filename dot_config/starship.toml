@@ -1,0 +1,134 @@
+# =================== Starship ===================
+# Cross-shell prompt. Tokyo Night palette.
+
+palette = "tokyo_night"
+
+[palettes.tokyo_night]
+color_fg = "#c0caf5"
+color_bg = "#1a1b26"
+color_red = "#f7768e"
+color_green = "#9ece6a"
+color_yellow = "#e0af68"
+color_blue = "#7aa2f7"
+color_magenta = "#bb9af7"
+color_cyan = "#7dcfff"
+color_white = "#c0caf5"
+color_gray = "#414868"
+
+# Top-level prompt format
+format = """
+[░▒▓](#7aa2f7)\
+$os\
+$username\
+[](bg:#7aa2f7 fg:#1a1b26)\
+$directory\
+[](fg:#7aa2f7 bg:#414868)\
+$git_branch\
+$git_status\
+[](fg:#414868 bg:#1a1b26)\
+$nodejs\
+$rust\
+$python\
+$dotnet\
+$java\
+$golang\
+[](fg:#414868 bg:#1a1b26)\
+$time\
+[ ](fg:#7aa2f7)\
+"""
+
+# Disable new line prompt
+add_newline = false
+
+# OS icon
+[os]
+disabled = false
+style = "bg:#7aa2f7 fg:#1a1b26"
+
+[os.symbols]
+Linux = " "
+Macos = " "
+Windows = " "
+
+# Username (only shown if not the default user)
+[username]
+show_always = false
+style_user = "bg:#7aa2f7 fg:#1a1b26"
+style_root = "bg:#f7768e fg:#1a1b26"
+format = "[ $user ]($style)"
+
+# Directory
+[directory]
+style = "bg:#7aa2f7 fg:#1a1b26"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+# Git
+[git_branch]
+symbol = ""
+style = "bg:#414868 fg:#c0caf5"
+format = "[ $symbol $branch ]($style)"
+
+[git_status]
+style = "bg:#414868 fg:#c0caf5"
+format = "[$all_status$ahead_behind ]($style)"
+
+# Languages
+[nodejs]
+symbol = ""
+style = "bg:#1a1b26 fg:#9ece6a"
+format = "[ $symbol ($version) ]($style)"
+
+[rust]
+symbol = ""
+style = "bg:#1a1b26 fg:#e0af68"
+format = "[ $symbol ($version) ]($style)"
+
+[python]
+symbol = ""
+style = "bg:#1a1b26 fg:#7dcfff"
+format = "[ $symbol ($version) ]($style)"
+
+[dotnet]
+symbol = ".NET"
+style = "bg:#1a1b26 fg:#bb9af7"
+format = "[ $symbol ($version) ]($style)"
+
+[java]
+symbol = ""
+style = "bg:#1a1b26 fg:#f7768e"
+format = "[ $symbol ($version) ]($style)"
+
+[golang]
+symbol = ""
+style = "bg:#1a1b26 fg:#7dcfff"
+format = "[ $symbol ($version) ]($style)"
+
+# Time
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:#1a1b26 fg:#c0caf5"
+format = "[ 󰥔 $time ]($style)"
+
+# Command duration
+[cmd_duration]
+min_time = 2_000
+format = " [took $duration](bold yellow)"
+
+# Status
+[status]
+style = "bg:#1a1b26 fg:#f7768e"
+format = "[ $symbol $status ]($style)"
+symbol = ""
+map_symbol = true
+pipestatus = true
+when = "always"

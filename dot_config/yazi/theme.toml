@@ -1,0 +1,100 @@
+# =================== yazi tokyo-night theme ===================
+# File: ~/.config/yazi/theme.toml
+
+# Colors
+[colors]
+# Tokyo Night palette
+bg            = "#1a1b26"
+bg_alt        = "#16161e"
+fg            = "#c0caf5"
+fg_alt        = "#a9b1d6"
+gray          = "#414868"
+red           = "#f7768e"
+green         = "#9ece6a"
+yellow        = "#e0af68"
+blue          = "#7aa2f7"
+magenta       = "#bb9af7"
+cyan          = "#7dcfff"
+
+[status]
+# File mode
+mode_normal_bg = "#7aa2f7"
+mode_normal_fg = "#1a1b26"
+mode_select_bg = "#9ece6a"
+mode_select_fg = "#1a1b26"
+mode_unset_bg  = "#414868"
+mode_unset_fg  = "#1a1b26"
+
+# Progress bar
+progress_label  = "#c0caf5"
+progress_normal = "#7aa2f7"
+progress_error  = "#f7768e"
+
+[perm]
+type_f = "#bb9af7"
+type_d = "#7aa2f7"
+type_l = "#7dcfff"
+type_e = "#f7768e"
+type_p = "#e0af68"
+type_b = "#f7768e"
+type_s = "#9ece6a"
+type_t = "#e0af68"
+type_x = "#9ece6a"
+
+# Permissions
+read    = "#9ece6a"
+write   = "#e0af68"
+exec    = "#f7768e"
+none    = "#414868"
+
+[tabs]
+# Active tab
+active_bg   = "#7aa2f7"
+active_fg   = "#1a1b26"
+# Inactive tab
+inactive_bg = "#16161e"
+inactive_fg = "#a9b1d6"
+
+[selected]
+# Selected file/folder
+selected_bg = "#33467c"
+selected_fg = "#c0caf5"
+
+[find]
+# Matched characters in find
+found_fg = "#e0af68"
+
+[icon]
+# File icons (requires yazi >= 0.3 with Nerd Font)
+# These are just the colors; icons come from the file extension.
+dir     = "#7aa2f7"
+exec    = "#9ece6a"
+link    = "#7dcfff"
+socket  = "#e0af68"
+fifo    = "#e0af68"
+block   = "#f7768e"
+char    = "#9ece6a"
+orphan  = "#f7768e"
+missing = "#f7768e"
+
+[input]
+# Input bar (for renaming, search, etc.)
+bg       = "#1a1b26"
+fg       = "#c0caf5"
+placeholder = "#414868"
+cursor   = "#bb9af7"
+selected = "#33467c"
+
+[hovered]
+# Hovered file/folder
+hovered_bg = "#292e42"
+
+[filetype]
+# Highlights for specific file types
+# (e.g. images, videos, etc.)
+image_fg  = "#bb9af7"
+video_fg  = "#bb9af7"
+audio_fg  = "#9ece6a"
+doc_fg    = "#7dcfff"
+exec_fg   = "#9ece6a"
+archive_fg = "#e0af68"

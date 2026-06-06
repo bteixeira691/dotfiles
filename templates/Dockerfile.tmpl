@@ -1,0 +1,48 @@
+# .devcontainer/Dockerfile
+# Custom base for projects needing extra system deps beyond devcontainer/base.
+# Most projects won't need this — features handle 90% of installs.
+# Usage:  FROM <this-dockefile> in devcontainer.json, OR just use features.
+
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
+
+# System packages: postgres client, redis-cli, sqlite3, build tools
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        wget \
+        git \
+        gnupg2 \
+        lsb-release \
+        build-essential \
+        pkg-config \
+        libssl-dev \
+        libpq-dev \
+        postgresql-client \
+        redis-tools \
+        sqlite3 \
+        unzip \
+        zip \
+        zsh \
+        fzf \
+        ripgrep \
+        fd-find \
+        bat \
+        eza \
+        zoxide \
+        btop \
+        tmux \
+        neovim \
+        jq \
+        yq \
+        age \
+        direnv \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create symlinks for tools that have different names
+RUN ln -sf /usr/bin/fdfind /usr/local/bin/fd \
+ && ln -sf /usr/bin/batcat /usr/local/bin/bat
+
+# Default to zsh for interactive use
+SHELL ["/bin/bash", "-c"]
+USER vscode
+WORKDIR /workspace

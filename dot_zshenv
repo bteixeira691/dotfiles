@@ -1,0 +1,118 @@
+# =================== zshenv ===================
+# Sourced for ALL zsh invocations (interactive and non-interactive).
+# Keep this file lightweight. Heavy things go in zshrc.
+
+# --- XDG Base Directory --------------------------------------------------------
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+
+# --- Zsh own stuff ------------------------------------------------------------
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompcache/.zcompdump-$HOST"
+
+# --- Path ---------------------------------------------------------------------
+# Re-order PATH for sane defaults. Prepend custom bin, then platform defaults.
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.local/share/mise/shims:$HOME/.cargo/bin:$PATH"
+# uv: prefer self-installed binaries
+[[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
+
+# --- Language / locale --------------------------------------------------------
+export LANG="${LANG:-en_US.UTF-8}"
+export LC_ALL="${LC_ALL:-en_US.UTF-8}"
+# Override TZ in your ~/.zshenv.local if you're not in US/Pacific
+# (set to UTC, Europe/Lisbon, America/Sao_Paulo, etc.)
+export TZ="${TZ:-UTC}"
+
+# --- Editors ------------------------------------------------------------------
+export EDITOR="nvim"
+export VISUAL="nvim"
+export GIT_EDITOR="$EDITOR"
+export PAGER="less"
+export MANPAGER="less"
+
+# --- Less defaults ------------------------------------------------------------
+export LESS="-RFX --mouse --wheel-lines=3"
+# Build a sane LESS_TERMCAP only if terminfo is available
+if command -v tput >/dev/null 2>&1; then
+  export LESS_TERMCAP_md="$(tput bold 2>/dev/null)$(tput setaf 2 2>/dev/null)"
+  export LESS_TERMCAP_me="$(tput sgr0 2>/dev/null)"
+  export LESS_TERMCAP_so="$(tput bold 2>/dev/null)$(tput setaf 3 2>/dev/null)$(tput setab 4 2>/dev/null)"
+  export LESS_TERMCAP_se="$(tput sgr0 2>/dev/null)"
+  export LESS_TERMCAP_us="$(tput setaf 6 2>/dev/null)"
+fi
+
+# --- Tool-specific envs --------------------------------------------------------
+export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/ripgreprc"
+export BAT_CONFIG_PATH="$XDG_CONFIG_HOME/bat/config"
+export BAT_THEME="TwoDark"
+export EZA_COLORS="da=37:di=36:ln=33:so=35:pi=31:bd=33:cd=33:or=31:ex=32"
+export FZF_DEFAULT_OPTS="--height 60% --layout reverse --border rounded --preview 'bat --style=numbers --color=always --line-range=:500 {}' --preview-window=right:60%:wrap"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --color=always {} | head -200'"
+export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind 'ctrl-/:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | xargs -r xdg-open 2>/dev/null)+abort'"
+export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# Note: FZF_CTRL_R_OPTS is overridden by atuin once atuin is loaded.
+
+# --- Atuin history ------------------------------------------------------------
+# (Atuin handles its own db_path. We just set a sensible default session path.)
+export ATUIN_SESSION_ID="${ATUIN_SESSION_ID:-$(date +%s)}"
+
+# --- mise ---------------------------------------------------------------------
+export MISE_CONFIG_DIR="$XDG_CONFIG_HOME/mise"
+export MISE_CACHE_DIR="$XDG_CACHE_HOME/mise"
+export MISE_DATA_DIR="$XDG_DATA_HOME/mise"
+
+# --- Bun ----------------------------------------------------------------------
+export BUN_INSTALL="$HOME/.bun"
+[[ -d $BUN_INSTALL/bin ]] && export PATH="$BUN_INSTALL/bin:$PATH"
+export BUN_TLS_CA_STORE="system"
+
+# --- direnv -------------------------------------------------------------------
+export DIRENV_CONFIG="$XDG_CONFIG_HOME/direnv"
+
+# --- Python / uv --------------------------------------------------------------
+export UV_CONFIG_FILE="$XDG_CONFIG_HOME/uv/uv.toml"
+export UV_PYTHON_BIN_DIR="$HOME/.local/bin"
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
+
+# --- Node ---------------------------------------------------------------------
+export NODE_OPTIONS="--enable-source-maps"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+
+# --- Rust ---------------------------------------------------------------------
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+[[ -d $CARGO_HOME/bin ]] && export PATH="$CARGO_HOME/bin:$PATH"
+
+# --- Go -----------------------------------------------------------------------
+export GOPATH="$XDG_DATA_HOME/go"
+export GOMODCACHE="$XDG_CACHE_HOME/go-build"
+[[ -d $GOPATH/bin ]] && export PATH="$GOPATH/bin:$PATH"
+
+# --- Lazygit ------------------------------------------------------------------
+export LG_CONFIG_FILE="$XDG_CONFIG_HOME/lazygit/config.yml"
+
+# --- Yazi ---------------------------------------------------------------------
+export YAZI_CONFIG_HOME="$XDG_CONFIG_HOME/yazi"
+
+# --- Pre-commit ---------------------------------------------------------------
+export PRE_COMMIT_CONFIG_DIR="$XDG_CONFIG_HOME/pre-commit"
+
+# --- SSH agent ----------------------------------------------------------------
+# Keychain / ssh-agent: try to use existing socket, otherwise start one
+if [[ -z "$SSH_AUTH_SOCK" && -S $XDG_RUNTIME_DIR/ssh-agent.socket ]]; then
+  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+fi
+
+# --- Starship -----------------------------------------------------------------
+# Disable interactive loads of slow tools
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship.toml"
+export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
+
+# --- Programmable completion (no auto-load on path) ---------------------------
+fpath=($XDG_CONFIG_HOME/zsh/completions $fpath)
+fpath=($HOME/.zsh/completions $fpath)

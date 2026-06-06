@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "schema": "https://opencode.ai/skills-lock.schema.json",
+  "skills": {
+    "rest-api-design": {
+      "source": "dotfiles",
+      "sourceType": "local",
+      "skillPath": "~/.config/opencode/skills/rest-api-design.md",
+      "computedHash": "REPLACE_ME_AT_INSTALL",
+      "installedAt": "REPLACE_ME_AT_INSTALL",
+      "version": "1.0.0",
+      "license": "MIT"
+    },
+    "database-patterns": {
+      "source": "dotfiles",
+      "sourceType": "local",
+      "skillPath": "~/.config/opencode/skills/database-patterns.md",
+      "computedHash": "REPLACE_ME_AT_INSTALL",
+      "installedAt": "REPLACE_ME_AT_INSTALL",
+      "version": "1.0.0",
+      "license": "MIT"
+    },
+    "react-patterns": {
+      "source": "dotfiles",
+      "sourceType": "local",
+      "skillPath": "~/.config/opencode/skills/react-patterns.md",
+      "computedHash": "REPLACE_ME_AT_INSTALL",
+      "installedAt": "REPLACE_ME_AT_INSTALL",
+      "version": "1.0.0",
+      "license": "MIT"
+    },
+    "i18n-patterns": {
+      "source": "dotfiles",
+      "sourceType": "local",
+      "skillPath": "~/.config/opencode/skills/i18n-patterns.md",
+      "computedHash": "REPLACE_ME_AT_INSTALL",
+      "installedAt": "REPLACE_ME_AT_INSTALL",
+      "version": "1.0.0",
+      "license": "MIT"
+    },
+    "multi-tenant-patterns": {
+      "source": "dotfiles",
+      "sourceType": "local",
+      "skillPath": "~/.config/opencode/skills/multi-tenant-patterns.md",
+      "computedHash": "REPLACE_ME_AT_INSTALL",
+      "installedAt": "REPLACE_ME_AT_INSTALL",
+      "version": "1.0.0",
+      "license": "MIT"
+    }
+  }
+}

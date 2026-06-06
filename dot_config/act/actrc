@@ -1,0 +1,22 @@
+# Use medium-size GitHub-hosted runners for default images
+# Override on Apple Silicon to avoid emulation issues
+-P ubuntu-latest=catthehacker/ubuntu:act-24.04
+-P ubuntu-22.04=catthehacker/ubuntu:act-22.04
+-P ubuntu-24.04=catthehacker/ubuntu:act-24.04
+-P macos-latest=-self-hosted
+-P windows-latest=-self-hosted
+
+# Default architecture
+--container-architecture linux/amd64
+
+# Reuse the container between runs (faster iteration)
+--reuse
+
+# Bind-mount the workspace so source changes are reflected
+--bind
+
+# Don't skip the checkout step
+--no-skip-checkout
+
+# Default secrets file (optional — uncomment if you have one)
+# --secret-file .env.act

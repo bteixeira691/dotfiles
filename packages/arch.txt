@@ -1,0 +1,93 @@
+base-devel
+git
+curl
+wget
+unzip
+tar
+gzip
+cmake
+
+# Shell
+zsh
+zsh-vi-mode
+zsh-autosuggestions
+zsh-syntax-highlighting
+starship
+
+# Terminal + multiplexer
+ghostty
+tmux
+tpm
+
+# Editor
+neovim
+lazygit
+gitui
+
+# Modern CLI
+fzf
+ripgrep
+fd
+bat
+eza
+zoxide
+btop
+yazi
+git-delta
+hyperfine
+watchexec
+mprocs
+lazydocker
+dive
+ctop
+bandwhich
+git-absorb
+gitleaks
+pre-commit
+miller
+sd
+trash-cli
+xh
+
+# Phase 1: shell upgrade tools
+atuin
+direnv
+uv
+
+# Languages
+nodejs
+npm
+python
+python-pip
+ruff
+rustup
+dotnet-sdk
+go
+bun
+just
+act
+
+# Gas town / multi-agent orchestrator
+# Note: gas town is not yet on AUR. install-arch.sh runs:
+#   go install github.com/gastownhall/gastown/cmd/gt@latest
+#   go install github.com/gastownhall/beads/cmd/bd@latest
+#   go install github.com/gastownhall/beads/cmd/bv@latest
+dolt-bin
+
+# Build
+gcc
+make
+pkgconf
+openssl
+
+# Fonts
+ttf-jetbrains-mono-nerd
+noto-fonts-emoji
+
+# Misc
+github-cli
+age
+jq
+yq
+
+# AUR-only (handled by install-arch.sh): fzf-tab, visual-studio-code-bin, google-chrome

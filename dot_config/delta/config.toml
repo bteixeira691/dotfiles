@@ -1,0 +1,16 @@
+# =================== git-delta ===================
+# Used as the default git pager via ~/.gitconfig [core] pager = delta.
+# Tokyo Night theme.
+#
+# Delta reads config from EITHER ~/.config/delta/config.toml OR
+# ~/.gitconfig. The gitconfig wins if both are present. The gitconfig
+# template (dot_gitconfig.tmpl) mirrors these settings for consistency.
+# If you change colors here, update dot_gitconfig.tmpl too.
+
+features = "side-by-side line-numbers decorations"
+navigate = true
+line-numbers = true
+side-by-side = true
+syntax-theme = "tokyonight"
+minus-style = "syntax #30024a"
+plus-style = "syntax #003024"

@@ -1,0 +1,100 @@
+# =================== zshrc ===================
+# Interactive zsh config. Sourced for interactive shells only.
+#
+# Load order (matters!):
+#   1. compinit                (this file)
+#   2. config files            (aliases, exports, vi-mode, tools)
+#   3. fzf-tab plugin          (must come after compinit, before fzf keybindings)
+#   4. fzf keybindings         (this file, after the config block)
+#   5. direnv hook             (this file, after compinit)
+#   6. zoxide init             (this file)
+#   7. atuin init              (must be LAST so it can override Ctrl+R)
+#   8. zsh-syntax-highlighting (last in tools.zsh, to bind all widgets)
+
+# --- Completion system -------------------------------------------------------
+autoload -Uz compinit
+# Only run compinit once per day (huge speedup)
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit -u
+else
+  compinit -u -C
+fi
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
+zstyle ':completion:*:warnings' format '%F{red}-- no matches --%f'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
+
+# --- Options -----------------------------------------------------------------
+setopt AUTO_CD              # cd by typing dir name
+setopt CORRECT              # try to correct typos
+setopt CORRECT_ALL          # correct arguments too
+setopt INTERACTIVE_COMMENTS # # comments in interactive
+setopt NO_CASE_GLOB         # case-insensitive globbing
+setopt EXTENDED_GLOB        # #~^ patterns
+setopt SHARE_HISTORY        # share between sessions
+setopt APPEND_HISTORY       # append, don't overwrite
+setopt INC_APPEND_HISTORY   # write immediately
+setopt HIST_IGNORE_DUPS     # ignore consecutive duplicates
+setopt HIST_IGNORE_SPACE    # ignore lines starting with space
+setopt HIST_VERIFY          # show before executing from history
+setopt PROMPT_SUBST
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_TO_HOME
+setopt MAGIC_EQUAL_SUBST    # completion after =
+
+# --- Source user config files ------------------------------------------------
+ZSH_CONFIG_DIR="$XDG_CONFIG_HOME/zsh"
+
+for f in \
+  aliases.zsh \
+  exports.zsh \
+  vi-mode.zsh \
+  tools.zsh \
+  prompt.zsh
+do
+  [[ -f "$ZSH_CONFIG_DIR/$f" ]] && source "$ZSH_CONFIG_DIR/$f"
+done
+
+# --- fzf-tab plugin (BEFORE fzf key-bindings, AFTER compinit) ----------------
+# https://github.com/Aloxaf/fzf-tab
+for plugin in \
+  /usr/share/zsh/plugins/fzf-tab/fzf-tab.zsh \
+  /opt/homebrew/share/fzf-tab/fzf-tab.plugin.zsh \
+  $HOME/.zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
+do
+  [[ -f $plugin ]] && source $plugin && break
+done
+
+# Source the fzf-tab UI config
+[[ -f $ZSH_CONFIG_DIR/fzf-tab.zsh ]] && source $ZSH_CONFIG_DIR/fzf-tab.zsh
+
+# --- fzf keybindings (after fzf-tab, before atuin) ---------------------------
+if command -v fzf >/dev/null; then
+  source <(fzf --zsh) 2>/dev/null \
+    || source /usr/share/fzf/key-bindings.zsh 2>/dev/null \
+    || source /opt/homebrew/opt/fzf/shell/key-bindings.zsh 2>/dev/null
+fi
+
+# --- direnv: per-project env vars (after compinit) ---------------------------
+if command -v direnv >/dev/null; then
+  eval "$(direnv hook zsh)"
+fi
+
+# --- zoxide (smarter cd) -----------------------------------------------------
+if command -v zoxide >/dev/null; then
+  eval "$(zoxide init zsh)"
+fi
+
+# --- Atuin (MUST BE LAST — replaces Ctrl+R) ----------------------------------
+# https://atuin.sh — encrypted, searchable shell history
+if command -v atuin >/dev/null; then
+  eval "$(atuin init zsh --disable-up-arrow)"
+fi
+
+# --- Local overrides ---------------------------------------------------------
+# Machine-specific zsh settings (NOT in git)
+[[ -f ${ZDOTDIR:-$HOME}/.zshrc.local ]] && source ${ZDOTDIR:-$HOME}/.zshrc.local

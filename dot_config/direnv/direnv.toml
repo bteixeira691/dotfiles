@@ -1,0 +1,62 @@
+# =================== direnv ===================
+# https://direnv.net — per-directory shell environment.
+# Activated by `eval "$(direnv hook zsh)"` in tools.zsh.
+
+## Time to wait between direnv reloads (milliseconds)
+reload_interval = 200
+
+## Hide the "loaded N seconds ago" message unless it was an error
+hide_env_diff = false
+log_format = ""
+
+## What to do when an .envrc is found but not yet allowed
+warn_timeout = "5s"
+
+## Stash the .envrc state on shell exit (helps avoid slow reloads)
+stale_age = "48h"
+
+## Whitelist of stdlib commands allowed in .envrc
+# (security: prevent running arbitrary code in .envrc)
+whitelist = [
+    "use_awk",
+    "use_bundler",
+    "use_flake",
+    "use_go",
+    "use_guix",
+    "use_nix",
+    "use_node",
+    "use_python",
+    "use_ruby",
+    "use_rust",
+    "use_uv",
+    "use_mise",
+    "dotenv",
+    "dotenv_if_exists",
+    "load_prefix",
+    "layout",
+    "layout_anaconda",
+    "layout_anaconda-python",
+    "layout_go",
+    "layout_java",
+    "layout_meson",
+    "layout_node",
+    "layout_perl",
+    "layout_php",
+    "layout_python",
+    "layout_python3",
+    "layout_uv",
+    "layout_ruby",
+    "layout_rust",
+    "layout_scala",
+    "watch_file",
+    "source_env",
+    "source_up",
+    "source_url",
+    "path_add",
+    "MANPATH_add",
+    "export_alias",
+    "env_vars_required",
+]
+
+## Color output
+color_mode = "auto"

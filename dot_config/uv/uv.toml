@@ -1,0 +1,46 @@
+# =================== uv ===================
+# https://docs.astral.sh/uv
+# Replaces pip + pip-tools + pipx + poetry + pyenv + virtualenv.
+# Single Rust binary, 10-100x faster.
+
+## Index URL (PyPI by default; override for private registries)
+# index-url = "https://pypi.org/simple"
+
+## Allow pre-release versions
+prerelease = "if-necessary"
+
+## Default Python version (used when no .python-version in project)
+# python = "3.12"
+
+## Don't install package metadata (faster, smaller installs)
+no-binary-package = []
+
+## Always copy link mode (slower, but easier to debug)
+link-mode = "clone"
+
+## Cache directory
+# By default uses platform cache dir
+# cache-dir = "~/.cache/uv"
+
+## Auto-venv creation in projects
+# If false, requires `uv venv` to be explicit
+manage-project = true
+
+## Allow insecure packages
+allow-insecure-host = []
+
+## Compile bytecode after install (faster startup, slower install)
+compile-bytecode = false
+
+## Resolution strategy
+resolution = "highest"
+upgrade = "satisfy"
+
+## Pip-compatible interface defaults
+[pip]
+# Always require hashes when installing from requirements.txt
+require-hashes = false
+# Strict resolution
+strict = true
+# Allow building wheels from source for any package
+no-binary = []

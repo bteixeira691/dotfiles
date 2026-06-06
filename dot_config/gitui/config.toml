@@ -1,0 +1,36 @@
+# gitui — TUI for git
+# https://github.com/extrawurst/gitui
+# Config: https://github.com/extrawurst/gitui/blob/master/KEY_CONFIG.md
+
+theme = "tokyo_night.ron"
+
+# (theme file is installed with gitui; if you have a custom one,
+#  point to its path. Otherwise the built-in is used.)
+
+# Show a status bar at the bottom
+statusbar_enabled = true
+
+# Diff view: how many lines of context
+diff_view_line_commit = 1
+diff_view_line_branch = 1
+diff_view_line_file_history = 1
+diff_view_line_stash = 1
+diff_view_line_unstaged = 3
+diff_view_line_staged = 3
+
+# Editor to use for opening files (nvim by default from $EDITOR)
+# editor = "nvim"
+
+# Don't confirm when quitting with staged/unstaged changes
+confirm_quit = false
+
+# Use unicode for the file tree (better cross-platform display)
+file_view_show_untracked = true
+file_view_tree_collapse_depth = 3
+
+# Commit message editor config
+commit_editor = true
+commit_msg_length_warning = 72
+
+# Disable mouse capture (useful inside tmux if you prefer keyboard)
+# mouse = false

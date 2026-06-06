@@ -1,0 +1,65 @@
+{
+  "name": "myproject-dev",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": false
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "configureGitConfig": false,
+      "installGitDiffHighlighter": true
+    },
+    "ghcr.io/ansible/devcontainer-features/uv:1": {},
+    "ghcr.io/jungwinter/features/mise:1": {
+      "installBun": true,
+      "installJust": true,
+      "installDirenv": true
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "asvetliakov.vscode-neovim",
+        "editorconfig.editorconfig",
+        "tamasfe.even-better-toml",
+        "charliermarsh.ruff",
+        "ms-python.python",
+        "dbaeumer.vscode-eslint",
+        "rust-lang.rust-analyzer",
+        "ms-dotnettools.csharp"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2,
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+
+  "remoteUser": "vscode",
+
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.gitconfig.local,target=/home/vscode/.gitconfig.local,type=bind,consistency=cached,readonly"
+  ],
+
+  "containerUser": "vscode",
+
+  "runServices": [],
+
+  "forwardPorts": [8000, 3000, 5432],
+
+  "portsAttributes": {
+    "8000": { "label": "App" },
+    "3000": { "label": "Frontend" },
+    "5432": { "label": "Database" }
+  },
+
+  "shutdownAction": "stopContainer"
+}

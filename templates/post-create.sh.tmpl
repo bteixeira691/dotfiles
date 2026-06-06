@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# .devcontainer/post-create.sh
+# Runs once after the dev container is created.
+# Set in devcontainer.json: "postCreateCommand": "bash .devcontainer/post-create.sh"
+set -euo pipefail
+
+echo "==> Post-create: configuring dev container"
+
+# Trust the project's mise config (if present)
+if [[ -f .mise.toml ]] && command -v mise >/dev/null; then
+  mise trust
+  mise install
+fi
+
+# Allow the project's .envrc
+if [[ -f .envrc ]] && command -v direnv >/dev/null; then
+  direnv allow
+fi
+
+# Install Python deps
+if [[ -f pyproject.toml ]] && command -v uv >/dev/null; then
+  uv sync
+fi
+
+# Install Node deps
+if [[ -f package.json ]] && command -v bun >/dev/null; then
+  bun install
+fi
+
+# Restore .NET tools
+if [[ -f .config/dotnet-tools.json ]] && command -v dotnet >/dev/null; then
+  dotnet tool restore
+fi
+
+# Install pre-commit hooks
+if [[ -f .pre-commit-config.yaml ]] && command -v pre-commit >/dev/null; then
+  pre-commit install
+fi
+
+# Install git hooks
+if [[ -d .githooks ]]; then
+  git config --local core.hooksPath .githooks
+fi
+
+# Symlink the host's gitconfig.local if mounted
+if [[ ! -f $HOME/.gitconfig.local ]] && [[ -f /tmp/.gitconfig.local ]]; then
+  cp /tmp/.gitconfig.local $HOME/.gitconfig.local
+fi
+
+echo "✓ Dev container ready"

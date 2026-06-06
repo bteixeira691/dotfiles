@@ -1,0 +1,48 @@
+# pre-commit global config
+# https://pre-commit.com/#pre-commit-configyaml---top-level
+# This file is the user's default. Project-local .pre-commit-config.yaml
+# is always loaded first if it exists.
+
+# Default language version manager
+default_language_version:
+  python: python3
+  node: system
+  ruby: system
+  rust: system
+  go: system
+
+# How often to check for new versions of hooks
+# (weekly, daily, monthly)
+# weekly is the default and a good balance
+
+# Always run hooks on all files in the repo (not just changed)
+# Useful for "pre-commit run --all-files" with --hook-stage manual
+
+# Stages in order: commit, merge-commit, push, prepare-commit-msg,
+#                  commit-msg, post-commit, manual
+# Use 'manual' for hooks that need explicit invocation
+
+# Global fail-fast
+fail_fast: false
+
+# Skip submodules by default
+submodules: false
+
+# Default stages to run on
+default_install_hook_types: [pre-commit, commit-msg]
+
+# Exclude patterns (skip these files)
+exclude: |
+  (?x)^(
+    .*/node_modules/.*|
+    .*/dist/.*|
+    .*/build/.*|
+    .*/target/.*|
+    .*/__pycache__/.*|
+    .*\.min\..*|
+    .*lock.*|
+    .*-lock\.yaml
+  )$
+
+# Minimum pre-commit version
+# minimum_pre_commit_version: "3.0.0"

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "tokyo-night",
+  "model": "anthropic/claude-sonnet-4-5",
+  "provider": {
+    "anthropic": {
+      "options": {
+        "baseURL": "https://api.anthropic.com"
+      }
+    }
+  },
+  "instructions": [
+    "~/.config/opencode/AGENTS.md",
+    "~/.config/opencode/instructions/*.md"
+  ],
+  "agent": {
+    "build": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/build.md}"
+    },
+    "plan": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/plan.md}"
+    },
+    "general": {
+      "model": "anthropic/claude-sonnet-4-5"
+    },
+    "backend-engineer": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/backend-engineer.md}"
+    },
+    "frontend-engineer": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/frontend-engineer.md}"
+    },
+    "frontend-senior": {
+      "model": "anthropic/claude-opus-4-5",
+      "prompt": "{file:./agents/frontend-senior.md}"
+    },
+    "qa-engineer": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/qa-engineer.md}"
+    },
+    "devops-engineer": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/devops-engineer.md}"
+    },
+    "code-reviewer": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/code-reviewer.md}"
+    },
+    "product-manager": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/product-manager.md}"
+    },
+    "marketing": {
+      "model": "anthropic/claude-sonnet-4-5",
+      "prompt": "{file:./agents/marketing.md}"
+    }
+  },
+  "command": {
+    "commit": {
+      "template": "Commit the staged changes with a conventional commit message",
+      "description": "git commit with AI-generated message"
+    },
+    "explain": {
+      "template": "Explain the code in {selection} or the current file",
+      "description": "Explain code"
+    },
+    "review": {
+      "template": "Review the diff (staged + unstaged) for bugs, security issues, and style",
+      "description": "Review current changes"
+    },
+    "test": {
+      "template": "Write tests for {selection} or the current file",
+      "description": "Generate tests"
+    },
+    "plan": {
+      "template": "Switch to plan mode (read-only analysis)",
+      "description": "Enter plan mode",
+      "agent": "plan"
+    },
+    "build": {
+      "template": "Switch to build mode (active coding)",
+      "description": "Enter build mode",
+      "agent": "build"
+    },
+    "refactor": {
+      "template": "Refactor code while preserving behavior",
+      "description": "Refactor (uses refactor skill)",
+      "skill": "refactor"
+    },
+    "debug": {
+      "template": "Debug a bug or unexpected behavior",
+      "description": "Debug (uses debug skill)",
+      "skill": "debug"
+    }
+  },
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."]
+    },
+    "github": {
+      "type": "local",
+      "command": ["gh", "mcp", "serve"],
+      "enabled": true
+    }
+  },
+  "share": "manual"
+}

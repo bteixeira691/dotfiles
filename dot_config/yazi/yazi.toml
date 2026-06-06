@@ -1,0 +1,91 @@
+# =================== yazi ===================
+# Terminal file manager.
+# Tokyo Night theme + sensible defaults.
+
+[manager]
+ratio = [1, 4, 3]
+sort_by = "modified"
+sort_sensitive = true
+show_hidden = false
+show_symlink = true
+linemode = "size"
+reverse = false
+mouse_events = ["click", "scroll", "touch", "drag"]
+
+[preview]
+max_width = 1000
+max_height = 1000
+wrap = "yes"
+tab_size = 2
+# Image preview (requires Überzug++)
+image_filter = "triangle"
+image_quality = 75
+sixel_fraction = 20
+
+[opener]
+# Open code files in nvim
+nvim = [
+    { run = "nvim", desc = "Edit in nvim" },
+    { run = "nvim -- {{ Closure}}", desc = "Edit in nvim (cursor at file)", for = "unix" },
+    { run = "code {{ Closure}}", desc = "Edit in VSCode" },
+]
+"*/.png" = [
+    { run = "xdg-open {{ Closure}}", desc = "Open with default app" },
+]
+"*/.jpg" = [
+    { run = "xdg-open {{ Closure}}", desc = "Open with default app" },
+]
+"*/.pdf" = [
+    { run = "xdg-open {{ Closure}}", desc = "Open with default app" },
+]
+"*/.mp4" = [
+    { run = "mpv {{ Closure}}", desc = "Play with mpv" },
+]
+
+[tasks]
+# Extract archives with one keypress
+extract = [
+    { run = "unar {{ Closure}}", desc = "unar" },
+    { run = "tar -xvf {{ Closure}}", desc = "tar -xvf", for = "unix" },
+    { run = "unzip {{ Closure}}", desc = "unzip" },
+]
+
+[input]
+cd_title = "cd: "
+
+[confirm]
+override = false
+
+[which]
+# Show command for current selection with 'w' — keybinds removed
+# (yazi >=0.3 uses `shown` for the which-bar)
+shown = ["size", "mtime"]
+
+[search]
+case_sensitive = "smart"
+
+[find]
+hidden = true
+
+[open]
+prepend_extension = true
+
+[plugin]
+residents = []
+
+# Tokyo Night colors
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = "fg=#414868"
+
+[sort]
+reverse = false
+dir_first = true
+translit = true
+case_sensitive = false
+natural = true
+locale = ""
+
+# Theme (set via YAZI_THEME env var if you want a different one)
+# YAZI_THEME="tokyo-night"

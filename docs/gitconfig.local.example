@@ -1,0 +1,29 @@
+# =================== .gitconfig.local ===================
+# Per-machine git settings. NEVER committed to git.
+#
+# 1. Set your real name and email:
+[user]
+  name = Your Name
+  email = you@example.com
+
+# 2. (Optional) Sign your commits with GPG/SSH:
+# [user]
+#   signingKey = ~/.ssh/git_signing_key.pub
+# [commit]
+#   gpgsign = true
+# [tag]
+#   gpgsign = true
+
+# 3. (Optional) Work identity (also create ~/.gitconfig.work for includeIf)
+# [github]
+#   user = your-work-username
+
+# 4. (Optional) Per-machine overrides
+# [core]
+#   sshCommand = "ssh -i ~/.ssh/work_key"
+#
+# [http]
+#   proxy = http://proxy.corp.example.com:8080
+#
+# [url "git@github.com:"]
+#   insteadOf = https://github.com/

@@ -1,0 +1,63 @@
+# =================== Atuin ===================
+# https://atuin.sh — shell history with E2E encrypted sync.
+# Drop-in Ctrl+R replacement. Loads via `eval "$(atuin init zsh)"` in tools.zsh.
+
+## Path
+# Where the sqlite database lives
+db_path = "~/.local/share/atuin/history.db"
+
+## Where to sync history to
+# Hosted: https://api.atuin.sh
+# Self-hosted: point at your own server
+sync_address = "https://api.atuin.sh"
+
+## Sync frequency (minutes). Set to 0 to disable auto-sync.
+sync_frequency = "10m"
+
+## Search mode: "fuzzy", "prefix", "fulltext", "skim"
+search_mode = "fuzzy"
+
+## Inline mode: show results in the prompt instead of full-screen
+inline_mode = false
+
+## Maximum number of results to show
+max_results = 100
+
+## Style: "compact" or "full"
+style = "compact"
+
+## Filter out commands that look like secrets before recording
+# Any command matching these patterns is dropped from history
+history_filter = [
+    "^git push.*--force",
+    "^git push.*-f$",
+    "^curl.*-u\\s+\\S+",
+    "^curl.*--user\\s+\\S+",
+    "^wget.*--password",
+    "^ssh.*-i\\s+~/.ssh/(?!allowed)",
+    "^mysql.*-p\\s*\\S+",
+    "^psql.*-W.*\\S+",
+    "^aws.*--password",
+    "^aws.*--secret-key",
+    "^gcloud.*--password",
+    "^gcloud.*--account-key",
+    "^gh auth login.*--with-token",
+    "^docker login.*-p\\s*\\S+",
+    "^env\\s*.*TOKEN\\s*=",
+    "^export\\s+\\w*(TOKEN|KEY|SECRET|PASSWORD)\\s*=",
+    "BEGIN.*PRIVATE KEY",
+    "\\.env$",
+    "rm\\s+-rf\\s+/$",
+]
+
+## Don't record commands that take less than this (seconds). 0 = record everything.
+# Useful for noisy single-letter commands
+# min_command_length = 0
+
+## Workspace UI: vim mode for the history picker
+show_preview = true
+show_help = true
+
+## Key bindings (defaults shown, override if you want)
+# enter_accept = ["Return"]
+# exit = ["Esc", "Ctrl-c"]

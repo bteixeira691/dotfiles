@@ -1,0 +1,40 @@
+# =================== lazygit ===================
+# https://github.com/jesseduffield/lazygit
+# Config docs: https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md
+
+gui:
+  theme:
+    activeBorderColor: ["#7aa2f7", "bold"]
+    inactiveBorderColor: ["#414868"]
+    optionsTextColor: ["#bb9af7"]
+    selectedLineBgColor: ["#33467c"]
+    selectedRangeBgColor: ["#7aa2f7"]
+    cherryPickedCommitBgColor: ["#bb9af7"]
+    cherryPickedCommitFgColor: ["#1a1b26"]
+    defaultFgColor: ["#c0caf5"]
+  showFileTree: true
+  showListFooter: true
+  showBranchCommitHash: true
+  showRandomTip: false
+  showStash: true
+  showCommandLog: true
+  showConfirmationFooter: true
+  showFilesWhenStashing: true
+
+git:
+  pager: "delta --color-only"
+  diffContextSize: 5
+  autoFetch: true
+  autoRefreshInterval: 10
+  branchLogCmd: "git log --graph --color=always --abbrev-commit --pretty=format:'%h - %s %C(dim)(%cr)%Creset' -n 20"
+  overrideGpg: false
+
+os:
+  editCommand: "nvim"
+  editCommandAtLine: "nvim +{{line}} -c 'normal! {{col}}l' {{filename}}"
+  openCommand: "xdg-open"
+  openLinkCommand: "xdg-open"
+
+update:
+  method: "prompt"
+  days: 14

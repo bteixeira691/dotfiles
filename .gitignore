@@ -1,0 +1,14 @@
+.DS_Store
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# chezmoi
+.chezmoi/
+*.tmp
+
+# age-encrypted key MUST never be committed
+# (chezmoi handles this via private_* prefix, but be explicit)
+key.txt

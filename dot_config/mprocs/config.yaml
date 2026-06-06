@@ -1,0 +1,81 @@
+# mprocs — TUI for running multiple processes
+# https://github.com/pvolok/mprocs
+# Config docs: https://github.com/pvolok/mprocs#config-file
+
+# Server address for the control socket
+# server:
+#   ip: "127.0.0.1"
+#   port: 0
+#   open: false
+
+# Tokyo Night colors
+colors:
+  fg: "#c0caf5"
+  bg: "#1a1b26"
+  blue: "#7aa2f7"
+  cyan: "#7dcfff"
+  green: "#9ece6a"
+  magenta: "#bb9af7"
+  red: "#f7768e"
+  yellow: "#e0af68"
+  gray: "#565f89"
+  dark_gray: "#414868"
+  light_blue: "#7aa2f7"
+  light_cyan: "#7dcfff"
+  light_green: "#9ece6a"
+  light_magenta: "#bb9af7"
+  light_red: "#f7768e"
+  light_yellow: "#e0af68"
+  light_gray: "#a9b1d6"
+  white: "#c0caf5"
+  black: "#15161e"
+
+# Key bindings (most defaults; customize if you want)
+keymap:
+  preselected:
+    "Up": "Up"
+    "Down": "Down"
+  global:
+    "ctrl+c": "Quit"
+    "ctrl+r": "RestartProcess"
+    "ctrl+s": "StartProcess"
+    "ctrl+x": "TerminateProcess"
+    "ctrl+k": "ScrollUp"
+    "ctrl+j": "ScrollDown"
+    "ctrl+b": "ScrollUp"
+    "ctrl+f": "ScrollDown"
+    "ctrl+u": "ScrollUpHalfPage"
+    "ctrl+d": "ScrollDownHalfPage"
+    "q": "Quit"
+    "0": "SelectProcess0"
+    "1": "SelectProcess1"
+    "2": "SelectProcess2"
+    "3": "SelectProcess3"
+    "4": "SelectProcess4"
+    "5": "SelectProcess5"
+    "6": "SelectProcess6"
+    "7": "SelectProcess7"
+    "8": "SelectProcess8"
+    "9": "SelectProcess9"
+
+# Mouse support (works inside tmux with mouse enabled)
+mouse_scroll_speed: 3
+mouse_enabled: true
+
+# Status bar at the bottom
+status_bar_enabled: true
+
+# Whether to show timestamps
+timestamp_format: "%H:%M:%S"
+
+# Project-local procsfile: drop a `.procs.yaml` in your project root
+# Example:
+# procs:
+#   postgres:
+#     shell: "docker compose up db"
+#   api:
+#     shell: "uv run uvicorn main:app --reload"
+#   worker:
+#     shell: "uv run python worker.py"
+#
+# Run with: mprocs
