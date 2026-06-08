@@ -166,10 +166,11 @@ else
 fi
 
 # Hook up the new-skill / new-agent scaffolders (add to ~/.local/bin)
-if [[ -d "$HOME/dotfiles/scripts" ]]; then
+dotfiles_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+if [[ -d "$dotfiles_root/scripts" ]]; then
   mkdir -p "$HOME/.local/bin"
   for scaffolder in new-skill.sh new-agent.sh; do
-    src="$HOME/dotfiles/scripts/$scaffolder"
+    src="$dotfiles_root/scripts/$scaffolder"
     dst="$HOME/.local/bin/${scaffolder%.sh}"
     if [[ -f "$src" ]]; then
       cp "$src" "$dst"

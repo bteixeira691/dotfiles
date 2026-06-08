@@ -18,6 +18,8 @@ export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompcache/.zcompdump-$HOST"
 export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.local/share/mise/shims:$HOME/.cargo/bin:$PATH"
 # uv: prefer self-installed binaries
 [[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
+# .NET global tools (dotnet-easydotnet, dotnet-ef, etc.)
+[[ -d $HOME/.dotnet/tools ]] && export PATH="$HOME/.dotnet/tools:$PATH"
 
 # --- Language / locale --------------------------------------------------------
 export LANG="${LANG:-en_US.UTF-8}"

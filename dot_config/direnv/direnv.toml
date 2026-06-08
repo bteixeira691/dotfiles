@@ -17,7 +17,8 @@ stale_age = "48h"
 
 ## Whitelist of stdlib commands allowed in .envrc
 # (security: prevent running arbitrary code in .envrc)
-whitelist = [
+[whitelist]
+prefix = [
     "use_awk",
     "use_bundler",
     "use_flake",

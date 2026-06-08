@@ -66,7 +66,17 @@ AUR_PACKAGES=(
   tpm
   mprocs
 )
-"$AUR_HELPER" -S --noconfirm --needed "${AUR_PACKAGES[@]}" || true
+
+# Clean yay build cache so existing build directories don't trigger
+# interactive "CleanBuild?" / "Diffs?" prompts (--noconfirm doesn't cover these).
+for pkg in "${AUR_PACKAGES[@]}"; do
+  rm -rf "$HOME/.cache/yay/$pkg" 2>/dev/null || true
+done
+
+if ! "$AUR_HELPER" -S --noconfirm --needed "${AUR_PACKAGES[@]}"; then
+  echo "  -> Warning: some AUR packages failed to install (see above)."
+  echo "     You can retry individually with: $AUR_HELPER -S <package>"
+fi
 
 # Install rustup-managed toolchain if not present
 if ! command -v cargo >/dev/null; then
@@ -79,13 +89,13 @@ fi
 if command -v go >/dev/null; then
   echo "==> Installing gas town (gastownhall/gastown)"
   if ! command -v gt >/dev/null; then
-    go install github.com/gastownhall/gastown/cmd/gt@latest 2>/dev/null || echo "  -> gas town install failed; see https://github.com/gastownhall/gastown"
+    go install github.com/gastownhall/gastown/cmd/gt@latest || echo "  -> gas town install failed; see https://github.com/gastownhall/gastown"
   fi
   if ! command -v bd >/dev/null; then
-    go install github.com/gastownhall/beads/cmd/bd@latest 2>/dev/null || true
+    go install github.com/gastownhall/beads/cmd/bd@latest || echo "  -> bd install failed"
   fi
   if ! command -v bv >/dev/null; then
-    go install github.com/gastownhall/beads/cmd/bv@latest 2>/dev/null || true
+    go install github.com/gastownhall/beads/cmd/bv@latest || echo "  -> bv install failed"
   fi
 fi
 

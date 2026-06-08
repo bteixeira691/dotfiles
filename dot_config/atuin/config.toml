@@ -34,7 +34,7 @@ history_filter = [
     "^curl.*-u\\s+\\S+",
     "^curl.*--user\\s+\\S+",
     "^wget.*--password",
-    "^ssh.*-i\\s+~/.ssh/(?!allowed)",
+    "^ssh.*-i\\s+~/.ssh/",
     "^mysql.*-p\\s*\\S+",
     "^psql.*-W.*\\S+",
     "^aws.*--password",

@@ -1,47 +1,71 @@
--- Custom keymaps on top of LazyVim's defaults.
--- LazyVim already binds the common LSP/file/buffer keys; only add what's missing.
+-- Keymaps are automatically loaded on the VeryLazy event
+-- Default keymaps: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+-- Add any additional keymaps here.
 
-local map = LazyVim.safe_keymap_set
+-- LazyVim already defines <leader>b (buffer), <leader>d (debug), <leader>r (refactor) groups.
+-- which-key auto-discovers keymaps from `vim.keymap.set` with `desc`, so we don't need
+-- the deprecated which_key.register() calls.
 
--- Better window navigation: Alt + hjkl
-map("n", "<A-h>", "<C-w>h", { desc = "Window left" })
-map("n", "<A-j>", "<C-w>j", { desc = "Window down" })
-map("n", "<A-k>", "<C-w>k", { desc = "Window up" })
-map("n", "<A-l>", "<C-w>l", { desc = "Window right" })
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true, nowait = true }
 
--- Move text up/down (visual)
-map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
-map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+-- --- Dotnet (.NET) keymaps ---
+map("n", "<leader>k",  "<Nop>", { desc = "Dotnet" })
+map("n", "<leader>kb", "<cmd>Dotnet build<CR>",        { desc = "Build" })
+map("n", "<leader>kc", "<cmd>Dotnet clean<CR>",        { desc = "Clean" })
+map("n", "<leader>kx", function()
+  vim.cmd("Dotnet clean")
+  vim.cmd("Dotnet build")
+end, vim.tbl_extend("force", opts, { desc = "Clean+Build" }))
+map("n", "<leader>kr", "<cmd>Dotnet run<CR>",          { desc = "Run" })
+map("n", "<leader>kw", "<cmd>Dotnet watch<CR>",        { desc = "Watch" })
+map("n", "<leader>kt", function() require("neotest").run.run() end,         { desc = "Test nearest" })
+map("n", "<leader>ktt", function() require("neotest").run.run(vim.fn.expand("%")) end, { desc = "Test file" })
+map("n", "<leader>kdt", function() require("neotest").run.run({strategy = "dap"}) end, { desc = "Debug test" })
+map("n", "<leader>ka", "<cmd>Dotnet add package<CR>",  { desc = "Add package" })
+map("n", "<leader>kP", "<cmd>Dotnet remove package<CR>", { desc = "Remove package" })
+map("n", "<leader>ko", "<cmd>Dotnet outdated<CR>",     { desc = "Outdated" })
+map("n", "<leader>ks", "<cmd>Dotnet secrets<CR>",      { desc = "Secrets" })
+map("n", "<leader>kv", "<cmd>Dotnet<CR>",              { desc = "Dotnet menu" })
+map("n", "<leader>kD", "<cmd>Dotnet ef database update<CR>", { desc = "EF DB update" })
+map("n", "<leader>km", function()
+  local name = vim.fn.input("Migration name: ")
+  if name ~= "" then
+    vim.cmd("Dotnet ef migrations add " .. vim.fn.fnameescape(name))
+  end
+end, vim.tbl_extend("force", opts, { desc = "Add migration" }))
+map("n", "<leader>kM", "<cmd>Dotnet ef migrations list<CR>", { desc = "List migrations" })
 
--- Keep cursor centered when scrolling
-map("n", "<C-d>", "<C-d>zz", { desc = "Half-page down (centered)" })
-map("n", "<C-u>", "<C-u>zz", { desc = "Half-page up (centered)" })
+-- --- ProjektGunnar (NuGet helpers) ---
+map("n", "<leader>kp", "<Nop>", { desc = "ProjektGunnar" })
+map("n", "<leader>kpa", "<cmd>ProjektGunnar AddNugetToProject<CR>", { desc = "Add NuGet" })
+map("n", "<leader>kpr", "<cmd>ProjektGunnar RemoveNugetFromProject<CR>", { desc = "Remove NuGet" })
+map("n", "<leader>kpu", "<cmd>ProjektGunnar UpdateNugetsInProject<CR>", { desc = "Update NuGets" })
+map("n", "<leader>kpU", "<cmd>ProjektGunnar UpdateNugetsInSolution<CR>", { desc = "Update all NuGets" })
+map("n", "<leader>kpA", "<cmd>ProjektGunnar AddProjectToProject<CR>", { desc = "Add project ref" })
+map("n", "<leader>kpR", "<cmd>ProjektGunnar RemoveProjectFromProject<CR>", { desc = "Remove project ref" })
+map("n", "<leader>kpS", "<cmd>ProjektGunnar AddProjectToSolution<CR>", { desc = "Add to solution" })
+map("n", "<leader>kpf", "<cmd>ProjektGunnar ForgetCachedSolutionFile<CR>", { desc = "Forget cache" })
 
--- Clear search highlight with <Esc>
-map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search" })
+-- --- Buffer keymaps (save/reload) ---
+-- LazyVim already registers <leader>b group; just add overrides
+map("n", "<leader>bS", function()
+  vim.cmd("checktime")  -- reload file if changed on disk
+  vim.cmd("update")     -- save buffer
+  vim.notify("Buffer reloaded & saved", vim.log.levels.INFO)
+end, vim.tbl_extend("force", opts, { desc = "Reload & save" }))
 
--- Diagnostics
-map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Diagnostic (line)" })
-map("n", "[d", function()
-  vim.diagnostic.jump({ count = -1, float = true })
-end, { desc = "Prev diagnostic" })
-map("n", "]d", function()
-  vim.diagnostic.jump({ count = 1, float = true })
-end, { desc = "Next diagnostic" })
+-- --- Debug (DAP) keymaps ---
+-- LazyVim already defines the <leader>d group and most DAP keymaps.
+-- Only add custom ones or overrides.
+map("n", "<leader>dP", function()
+  require("config.dap_breakpoints_panel").toggle()
+end, vim.tbl_extend("force", opts, { desc = "Breakpoints panel" }))
 
--- Quick file save
-map("n", "<C-s>", "<cmd>w<cr>", { desc = "Save file" })
-map("i", "<C-s>", "<Esc><cmd>w<cr>a", { desc = "Save file" })
-
--- Yank to system clipboard
-map({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to clipboard" })
-map("n", "<leader>Y", '"+Y', { desc = "Yank line to clipboard" })
-
--- Toggle line wrapping
-map("n", "<leader>uw", "<cmd>set wrap!<cr>", { desc = "Toggle word wrap" })
-
--- Close all but current
-map("n", "<leader>qa", "<cmd>%bd|e#|bd#<cr>", { desc = "Close all but current" })
-
--- Quick terminal
-map({ "n", "t" }, "<C-\\>", "<cmd>close<cr>", { desc = "Close terminal" })
+-- --- Refactor keymaps ---
+-- LazyVim already defines <leader>r group and code-action/rename.
+-- Only add extract refactors (visual mode).
+map("v", "<leader>re", "<Esc><cmd>lua require('refactoring').refactor('Extract Function')<CR>",
+  vim.tbl_extend("force", opts, { desc = "Extract function" }))
+map("v", "<leader>rv", "<Esc><cmd>lua require('refactoring').refactor('Extract Variable')<CR>",
+  vim.tbl_extend("force", opts, { desc = "Extract variable" }))

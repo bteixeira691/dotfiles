@@ -1,18 +1,6 @@
 # ===== Tool integrations =====
 # Load order matters. Heavy/early stuff first.
 
-# --- tmux: auto-attach or start new ------------------------------------------
-if command -v tmux >/dev/null && [[ -z "$TMUX" ]] && [[ $- == *i* ]]; then
-  # Only auto-attach in graphical sessions (Wayland/X11/Quartz), not in TTY/SSH
-  if [[ -n "$WAYLAND_DISPLAY" || -n "$DISPLAY" || "$(uname)" == "Darwin" ]]; then
-    if tmux has-session 2>/dev/null; then
-      tmux attach
-    else
-      tmux new -s main
-    fi
-  fi
-fi
-
 # --- mise: auto-use project-local versions ----------------------------------
 if command -v mise >/dev/null; then
   eval "$(mise activate zsh)"
