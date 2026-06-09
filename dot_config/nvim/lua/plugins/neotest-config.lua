@@ -7,9 +7,6 @@ return {
       {
         "Issafalcon/neotest-dotnet",
         dependencies = { "mfussenegger/nvim-dap" },
-        -- Fix: upstream returns {} instead of nil for empty spec lists,
-        -- causing "attempt to index field 'context' (a nil value)"
-        build = "sed -i 's/#specs < 0/#specs == 0/' lua/neotest-dotnet/utils/build-spec-utils.lua",
       },
     },
     config = function()

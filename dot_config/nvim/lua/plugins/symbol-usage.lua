@@ -5,7 +5,7 @@ return {
   event = "VeryLazy",
   opts = {
     text_format = function(symbol)
-      local kind = symbol.symbol_kind:lower()
+      local kind = (symbol.kind or ""):lower()
       local def = symbol.definition_count
       local ref = symbol.reference_count
       if def > 0 and ref > 0 then
