@@ -30,7 +30,7 @@ check_cmd() {
   case "$1" in
     go)  ver=$(go version 2>&1) ;;
     tmux) ver=$(tmux -V 2>&1) ;;
-    *)   ver=$($1 --version 2>&1) ;;
+    *)   ver=$($1 --version 2>&1) || ver="version check failed" ;;
   esac
   ok "$1: $(echo "$ver" | head -1)"
 }

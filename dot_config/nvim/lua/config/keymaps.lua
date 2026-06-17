@@ -9,6 +9,16 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true, nowait = true }
 
+-- --- Highlight word under cursor without moving ---
+-- Overrides the default H (jump to top of screen).
+map("n", "H", function()
+  local word = vim.fn.expand("<cword>")
+  if word ~= "" then
+    vim.opt.hlsearch = true
+    vim.api.nvim_exec2([[let @/ = expand('<cword>')]], {})
+  end
+end, { desc = "Highlight word" })
+
 -- --- Dotnet (.NET) keymaps ---
 map("n", "<leader>k",  "<Nop>", { desc = "Dotnet" })
 map("n", "<leader>kb", "<cmd>Dotnet build<CR>",        { desc = "Build" })

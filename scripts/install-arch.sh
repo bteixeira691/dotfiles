@@ -2,19 +2,23 @@
 # Arch / Omarchy installer
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
+
 if ! command -v pacman >/dev/null; then
   echo "pacman not found. This is not an Arch-based system." >&2
   exit 1
 fi
 
-echo "==> Installing Arch packages"
+log "Installing Arch packages"
+
 PACKAGES=(
   # Core
   base-devel git curl wget unzip tar gzip cmake
   # Shell
   zsh zsh-autosuggestions zsh-syntax-highlighting starship
   # Terminal + multiplexer
-  ghostty tmux
+  ghostty kitty tmux
   # Editor
   neovim lazygit gitui
   # Modern CLI
@@ -33,13 +37,15 @@ PACKAGES=(
   ttf-jetbrains-mono-nerd noto-fonts-emoji
   # Git / auth
   github-cli
+  # Clipboard (tmux integration)
+  xclip wl-clipboard
   # Misc
   age jq yq
 )
 
-# AUR helper
+# --- AUR helper ---------------------------------------------------------------
 if ! command -v yay >/dev/null && ! command -v paru >/dev/null; then
-  echo "==> Installing yay (AUR helper)"
+  log "Installing yay (AUR helper)"
   sudo pacman -S --noconfirm --needed base-devel
   tmpdir=$(mktemp -d)
   git clone https://aur.archlinux.org/yay.git "$tmpdir/yay"
@@ -57,7 +63,7 @@ fi
 
 sudo pacman -S --noconfirm --needed "${PACKAGES[@]}"
 
-# AUR packages (tools not in core repos, or with non-standard names)
+# AUR packages
 AUR_PACKAGES=(
   visual-studio-code-bin
   google-chrome
@@ -67,42 +73,18 @@ AUR_PACKAGES=(
   mprocs
 )
 
-# Clean yay build cache so existing build directories don't trigger
-# interactive "CleanBuild?" / "Diffs?" prompts (--noconfirm doesn't cover these).
+# Clean yay build cache to avoid interactive prompts
 for pkg in "${AUR_PACKAGES[@]}"; do
   rm -rf "$HOME/.cache/yay/$pkg" 2>/dev/null || true
 done
 
 if ! "$AUR_HELPER" -S --noconfirm --needed "${AUR_PACKAGES[@]}"; then
-  echo "  -> Warning: some AUR packages failed to install (see above)."
-  echo "     You can retry individually with: $AUR_HELPER -S <package>"
+  warn "Some AUR packages failed to install (see above). Retry with: $AUR_HELPER -S <package>"
 fi
 
-# Install rustup-managed toolchain if not present
-if ! command -v cargo >/dev/null; then
-  echo "==> Installing rustup"
-  rustup install stable
-  rustup default stable
-fi
+# --- Shared steps (via lib.sh) -----------------------------------------------
+install_rustup_toolchain
+install_gastown
+set_default_shell_zsh
 
-# Gas town: install via `go install` (no official AUR package yet)
-if command -v go >/dev/null; then
-  echo "==> Installing gas town (gastownhall/gastown)"
-  if ! command -v gt >/dev/null; then
-    go install github.com/gastownhall/gastown/cmd/gt@latest || echo "  -> gas town install failed; see https://github.com/gastownhall/gastown"
-  fi
-  if ! command -v bd >/dev/null; then
-    go install github.com/gastownhall/beads/cmd/bd@latest || echo "  -> bd install failed"
-  fi
-  if ! command -v bv >/dev/null; then
-    go install github.com/gastownhall/beads/cmd/bv@latest || echo "  -> bv install failed"
-  fi
-fi
-
-# Set zsh as default shell
-if [[ "$SHELL" != */zsh ]]; then
-  echo "==> Setting zsh as default shell"
-  chsh -s "$(command -v zsh)"
-fi
-
-echo "✓ Arch packages installed"
+ok "Arch packages installed"

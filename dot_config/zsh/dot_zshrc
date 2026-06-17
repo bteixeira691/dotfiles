@@ -62,6 +62,7 @@ done
 # --- fzf-tab plugin (BEFORE fzf key-bindings, AFTER compinit) ----------------
 # https://github.com/Aloxaf/fzf-tab
 for plugin in \
+  /usr/share/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh \
   /usr/share/zsh/plugins/fzf-tab/fzf-tab.zsh \
   /opt/homebrew/share/fzf-tab/fzf-tab.plugin.zsh \
   $HOME/.zsh/plugins/fzf-tab/fzf-tab.plugin.zsh

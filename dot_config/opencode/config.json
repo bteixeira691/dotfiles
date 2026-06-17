@@ -15,11 +15,11 @@
   ],
   "agent": {
     "build": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "opencode/deepseek-v4-flash",
       "prompt": "{file:./agents/build.md}"
     },
     "plan": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "opencode/go-kimi-k2.6",
       "prompt": "{file:./agents/plan.md}"
     },
     "general": {

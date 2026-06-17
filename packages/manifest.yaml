@@ -1,0 +1,384 @@
+# packages/manifest.yaml — Single source of truth for all tools
+# Maps each tool to its package name per OS/package manager.
+# Reference for humans and install scripts.
+#
+# Fields:
+#   arch, fedora, debian: package name in the respective package manager
+#   brew: Homebrew formula/cask name (macOS)
+#   winget: Windows package ID
+#   note: any special install instructions
+
+tools:
+  # ===== Core CLI =====
+  fzf:
+    arch: fzf
+    fedora: fzf
+    debian: fzf
+    brew: fzf
+    winget: junegunn.fzf
+
+  ripgrep:
+    arch: ripgrep
+    fedora: ripgrep
+    debian: ripgrep
+    brew: ripgrep
+    winget: BurntSushi.ripgrep
+
+  fd:
+    arch: fd
+    fedora: fd-find
+    debian: fd-find
+    brew: fd
+    winget: sharkdp.fd
+
+  bat:
+    arch: bat
+    fedora: bat
+    debian: bat
+    brew: bat
+    winget: sharkdp.bat
+
+  eza:
+    arch: eza
+    fedora: eza (cargo install if not in dnf)
+    debian: eza (gierens apt repo)
+    brew: eza
+    winget: N/A
+
+  zoxide:
+    arch: zoxide
+    fedora: zoxide (curl install)
+    debian: zoxide (curl install)
+    brew: zoxide
+    winget: ajeetdsouza.zoxide
+
+  btop:
+    arch: btop
+    fedora: btop
+    debian: btop
+    brew: btop
+    winget: N/A
+
+  yazi:
+    arch: yazi
+    fedora: yazi
+    debian: yazi (not in apt, use cargo/gh release)
+    brew: yazi
+    winget: N/A
+
+  # ===== Git tooling =====
+  lazygit:
+    arch: lazygit
+    fedora: lazygit
+    debian: lazygit (gh release download)
+    brew: lazygit
+    winget: N/A
+
+  gitui:
+    arch: gitui
+    fedora: gitui
+    debian: gitui (cargo install)
+    brew: gitui
+    winget: N/A
+
+  git-delta:
+    arch: git-delta
+    fedora: git-delta
+    debian: git-delta (gh release download)
+    brew: git-delta
+    winget: N/A
+
+  git-absorb:
+    arch: git-absorb
+    fedora: git-absorb
+    debian: git-absorb (cargo install)
+    brew: git-absorb
+    winget: N/A
+
+  gitleaks:
+    arch: gitleaks
+    fedora: gitleaks
+    debian: gitleaks (go install)
+    brew: gitleaks
+    winget: N/A
+
+  # ===== Shell / prompt =====
+  starship:
+    arch: starship
+    fedora: starship
+    debian: starship
+    brew: starship
+    winget: starship.starship
+
+  oh-my-posh:
+    arch: oh-my-posh
+    fedora: oh-my-posh
+    debian: oh-my-posh
+    brew: oh-my-posh
+    winget: JanDeDobbeleer.OhMyPosh
+
+  atuin:
+    arch: atuin
+    fedora: atuin (curl install if not in dnf)
+    debian: atuin (curl install if not in apt)
+    brew: atuin
+    winget: N/A
+
+  direnv:
+    arch: direnv
+    fedora: direnv
+    debian: direnv
+    brew: direnv
+    winget: N/A
+
+  # ===== Language toolchains =====
+  nodejs:
+    arch: nodejs
+    fedora: nodejs
+    debian: nodejs
+    brew: node
+    winget: N/A (use nvm/mise)
+
+  python3:
+    arch: python
+    fedora: python3
+    debian: python3
+    brew: python@3.13
+    winget: N/A (use uv/mise)
+
+  go:
+    arch: go
+    fedora: golang
+    debian: golang
+    brew: go
+    winget: N/A (use mise)
+
+  rustup:
+    arch: rustup
+    fedora: rustup
+    debian: rustup
+    brew: rustup-init
+    winget: N/A (use mise)
+
+  dotnet-sdk:
+    arch: dotnet-sdk
+    fedora: dotnet-sdk-9.0
+    debian: dotnet-sdk (microsoft repo)
+    brew: dotnet-sdk
+    winget: N/A
+
+  bun:
+    arch: bun
+    fedora: bun (npm install -g bun)
+    debian: bun (curl install)
+    brew: bun
+    winget: N/A
+
+  uv:
+    arch: uv
+    fedora: uv (curl install)
+    debian: uv (curl install)
+    brew: uv
+    winget: N/A
+
+  mise:
+    arch: mise
+    fedora: mise
+    debian: mise
+    brew: mise
+    winget: N/A
+
+  # ===== Dev workflow =====
+  just:
+    arch: just
+    fedora: just
+    debian: just
+    brew: just
+    winget: N/A
+
+  act:
+    arch: act
+    fedora: act
+    debian: act (gh release download)
+    brew: act
+    winget: N/A
+
+  pre-commit:
+    arch: pre-commit
+    fedora: pre-commit
+    debian: pre-commit
+    brew: pre-commit
+    winget: N/A
+
+  # ===== Container / Docker =====
+  lazydocker:
+    arch: lazydocker
+    fedora: lazydocker
+    debian: lazydocker (go install)
+    brew: lazydocker
+    winget: N/A
+
+  dive:
+    arch: dive
+    fedora: dive
+    debian: dive (gh release download)
+    brew: dive
+    winget: N/A
+
+  ctop:
+    arch: ctop
+    fedora: ctop
+    debian: ctop
+    brew: ctop
+    winget: N/A
+
+  bandwhich:
+    arch: bandwhich
+    fedora: bandwhich
+    debian: bandwhich (cargo install)
+    brew: bandwhich
+    winget: N/A
+
+  # ===== CLI extras =====
+  hyperfine:
+    arch: hyperfine
+    fedora: hyperfine
+    debian: hyperfine
+    brew: hyperfine
+    winget: N/A
+
+  watchexec:
+    arch: watchexec
+    fedora: watchexec
+    debian: watchexec
+    brew: watchexec
+    winget: N/A
+
+  mprocs:
+    arch: mprocs (AUR)
+    fedora: mprocs
+    debian: mprocs (go install)
+    brew: mprocs
+    winget: N/A
+
+  xh:
+    arch: xh
+    fedora: xh
+    debian: xh (cargo install)
+    brew: xh
+    winget: N/A
+
+  miller:
+    arch: miller
+    fedora: miller
+    debian: miller
+    brew: miller
+    winget: N/A
+
+  sd:
+    arch: sd
+    fedora: sd
+    debian: sd
+    brew: sd
+    winget: N/A
+
+  trash-cli:
+    arch: trash-cli
+    fedora: trash-cli
+    debian: trash-cli
+    brew: trash
+    winget: N/A
+
+  jq:
+    arch: jq
+    fedora: jq
+    debian: jq
+    brew: jq
+    winget: jqlang.jq
+
+  yq:
+    arch: yq
+    fedora: yq
+    debian: yq
+    brew: yq
+    winget: N/A
+
+  # ===== Terminal / multiplexer =====
+  ghostty:
+    arch: ghostty
+    fedora: ghostty
+    debian: ghostty (gh release download)
+    brew: ghostty
+    winget: ghostty (gh release download)
+
+  tmux:
+    arch: tmux
+    fedora: tmux
+    debian: tmux
+    brew: tmux
+    winget: N/A
+
+  # ===== Editor =====
+  neovim:
+    arch: neovim
+    fedora: neovim
+    debian: neovim
+    brew: neovim
+    winget: Neovim.Neovim
+
+  # ===== Zsh plugins =====
+  zsh-autosuggestions:
+    arch: zsh-autosuggestions
+    fedora: zsh-autosuggestions
+    debian: zsh-autosuggestions (git clone if not in apt)
+    brew: zsh-autosuggestions
+    winget: N/A
+
+  zsh-syntax-highlighting:
+    arch: zsh-syntax-highlighting
+    fedora: zsh-syntax-highlighting
+    debian: zsh-syntax-highlighting (git clone if not in apt)
+    brew: zsh-syntax-highlighting
+    winget: N/A
+
+  zsh-vi-mode:
+    arch: zsh-vi-mode (AUR)
+    fedora: zsh-vi-mode
+    debian: zsh-vi-mode (git clone)
+    brew: zsh-vi-mode
+    winget: N/A
+
+  fzf-tab:
+    arch: fzf-tab (AUR)
+    fedora: fzf-tab
+    debian: fzf-tab (git clone)
+    brew: fzf-tab
+    winget: N/A
+
+  # ===== Auth / misc =====
+  gh:
+    arch: github-cli
+    fedora: gh
+    debian: gh
+    brew: gh
+    winget: GitHub.cli
+
+  age:
+    arch: age
+    fedora: age
+    debian: age
+    brew: age
+    winget: FiloSottile.age
+
+  # ===== Not in package managers (custom install) =====
+  gastown:
+    note: go install github.com/gastownhall/gastown/cmd/gt@latest
+
+  beads-bd:
+    note: go install github.com/gastownhall/beads/cmd/bd@latest
+
+  beads-bv:
+    note: go install github.com/gastownhall/beads/cmd/bv@latest
+
+  opencode:
+    note: npm install -g @opencode/opencode or download prebuilt binary

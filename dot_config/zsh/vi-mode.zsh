@@ -24,7 +24,8 @@ ZVM_OPPEND_MODE_CURSOR=$'\e[6 q'
 # Initialize (sourced after compinit)
 source /usr/share/zsh-vi-mode/zsh-vi-mode.zsh 2>/dev/null \
   || source /opt/homebrew/share/zsh-vi-mode/zsh-vi-mode.zsh 2>/dev/null \
-  || source /usr/local/share/zsh-vi-mode/zsh-vi-mode.zsh 2>/dev/null
+  || source /usr/local/share/zsh-vi-mode/zsh-vi-mode.zsh 2>/dev/null \
+  || source $HOME/.zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh 2>/dev/null
 
 # After plugin loads, customize
 function zvm_after_init() {

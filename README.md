@@ -1,160 +1,203 @@
 # Dotfiles
 
-Cross-platform dev environment for **Linux (Omarchy / Fedora)**, **macOS**, and **WSL2**.
+Cross-platform dev environment for **Linux (Arch/Fedora/Debian)**, **macOS**, and **WSL2**.
 Managed by [chezmoi](https://chezmoi.io) with [age](https://age-encryption.org) for secrets.
-Designed to host [gas town](https://github.com/gastownhall/gastown) for multi-agent orchestration.
+
+---
+
+## Quickstart (new machine)
+
+Three commands from a blank machine to a fully configured environment:
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/YOU/dotfiles.git ~/dotfiles
+
+# 2. Run bootstrap — detects OS, installs packages + configs
+bash ~/dotfiles/scripts/bootstrap.sh
+
+# 3. Restart your shell
+exec zsh
+```
+
+That's it. The bootstrap script handles everything:
+- Detects your OS (Arch/Fedora/Debian/macOS/WSL/Windows)
+- Installs **chezmoi** + **age** if missing
+- Installs all 50+ CLI tools via the OS-specific package manager
+- Runs `chezmoi apply` to symlink all configs (backs up existing files)
+- Sets up zsh plugins, tmux plugin manager, git stubs
+- Installs gas town (`gt`, `bd`, `bv`) via `go install`
+
+**After bootstrap, open nvim once** to let LazyVim install plugins:
+```bash
+nvim
+```
+
+**Then set your git identity:**
+```bash
+nvim ~/.gitconfig.local      # add your name and email
+nvim ~/.gitconfig.work        # work identity (if applicable)
+nvim ~/.gitconfig.personal    # personal identity (if applicable)
+```
 
 ---
 
 ## What's included
 
 ### Editor
-- **Neovim** with **LazyVim** distribution
-- **Theme:** Tokyo Night (one-file swap path back to Aether)
-- **LSPs:** pyright, lua_ls, rust_analyzer, csharp_ls, sqls (and per-project extras)
-- **Tools:** conform, nvim-lint, nvim-dap, neotest, autopairs, surround, gitsigns, neoscroll
+- **Neovim** with **LazyVim** distribution, Tokyo Night theme
+- **LSPs:** pyright, lua_ls, rust_analyzer, csharp_ls, sqls
+- **Tools:** conform, nvim-lint, nvim-dap, neotest, gitsigns
 
 ### Shell (zsh)
 - **zsh-vi-mode** with vim cursor shapes
-- **Starship** prompt (Oh My Posh for Windows)
+- **Starship** prompt (Oh My Posh on Windows)
 - **Atuin** for encrypted, searchable shell history (replaces Ctrl+R)
 - **fzf-tab** for fzf-powered tab completion
 - **direnv** for per-directory environments
 - **fzf, zoxide, autosuggestions, syntax-highlighting**
 
-### Terminal
+### Terminal & multiplexer
 - **Ghostty** with cross-platform keybinds and Tokyo Night palette
-
-### Multiplexer
 - **tmux** with `Ctrl-a` prefix, vim-style copy mode, tpm plugin manager
 
-### Modern CLI tools
-- **Core:** fzf, ripgrep, fd, bat, eza, zoxide, btop, lazygit, delta, yazi
-- **Extended:** hyperfine, dive, lazydocker, ctop, bandwhich, gitui, git-absorb, mprocs, pre-commit, watchexec, trash, xh, miller, sd, gitleaks
+### Modern CLI tools (50+)
+| Category | Tools |
+|---|---|
+| Core | fzf, ripgrep, fd, bat, eza, zoxide, btop, yazi |
+| Git | lazygit, gitui, delta, git-absorb, gitleaks |
+| Shell | starship, atuin, direnv, uv, mise |
+| Languages | node, python, go, rust, dotnet, bun |
+| Docker | lazydocker, dive, ctop, bandwhich |
+| Extras | hyperfine, watchexec, mprocs, xh, miller, sd, trash-cli |
 
-### Dev workflow
-- **uv** — Python (replaces pip / poetry / pyenv)
-- **bun** + Node — for new projects
-- **just** — task runner
-- **act** — local GitHub Actions testing
-- **devcontainer** — templates for `.devcontainer/devcontainer.json`, `Dockerfile`, `post-create.sh`
-- **pre-commit** — global config + per-project hooks
+See [`packages/manifest.yaml`](packages/manifest.yaml) for the full list with OS-specific package names.
 
 ### AI agent & gas town
-- **OpenCode** — daily-driver AI agent
-  - 10 subagents (build, plan, backend, frontend×2, qa, devops, code-reviewer, pm, marketing)
-  - 5 generic skills (rest-api, db, react, i18n, multi-tenant) + 5 dev skills (code-review, refactor, write-test, debug, dotfiles)
-  - 8 slash commands
-  - MCP servers (filesystem, github)
-  - Tokyo Night theme
-- **Gas town** — multi-agent orchestrator (Mayor, Polecats, Crew, Beads, Rigs)
-  - `gt`, `bd`, `bv` CLIs installed via `go install`
-  - Zsh aliases for all gas town subcommands
-  - `~/.config/opencode/AGENTS.md` includes gas-town etiquette (polecat behavior, `gt prime`, `bd sync`)
-- **Scaffolders:** `new-skill <name>` and `new-agent <name>` to create new skills/agents from templates
-- **skills-lock.json** — versioned lockfile tracking skill content hashes
-
-### Git
-- Per-machine overrides via `~/.gitconfig.local` (NOT in dotfiles)
-- `includeIf` for `~/work/*` → work identity, `~/personal/*` → personal identity
-- 200+ aliases, delta pager, signed commits, autosquash, rerere
-
-### Secrets
-- Encrypted with `age` (SSH keys, API tokens)
-- Stored in `private_*` paths
-- Key backup instructions in `docs/SECRETS.md`
-
----
-
-## Quickstart (new machine)
-
-The bootstrap script (`scripts/bootstrap.sh`) automates everything — OS detection, package install with `go install` for gas town, chezmoi init + apply, and post-install hooks (ssh key stub, tmux tpm, fzf-tab, zsh plugins, skills-lock.json recompute, scaffolder install).
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/<you>/dotfiles.git ~/dotfiles
-
-# 2. Run bootstrap (detects OS, installs all packages + chezmoi + configs)
-#    This does: OS detect → install prereqs (chezmoi, age, git) →
-#               install packages via OS-specific script → chezmoi apply →
-#               post-install hooks (scaffolders, tpm, fzf-tab, zsh plugins,
-#               skills-lock hashes, gitconfig stubs, gas town via go install)
-bash ~/dotfiles/scripts/bootstrap.sh
-
-# 3. Reload your shell (zsh plugins + aliases need a fresh session)
-exec zsh
-
-# 4. Edit ~/.gitconfig.local with your real name and email
-nvim ~/.gitconfig.local
-
-# 5. Open nvim — LazyVim auto-installs plugins on first start
-nvim
-
-# 6. (Optional) trust mise configs in your projects
-cd ~/work/myproject && mise trust && mise install
-
-# 7. (Optional) register for Atuin cloud sync
-atuin register -u <username> -e <email>
-atuin sync
-
-# 8. (Optional) initialize gas town
-gt town new
-
-# 9. (Optional) create a custom skill or subagent
-new-skill my-pattern "description"
-new-agent my-role "description" --read-only
-```
-
-### What bootstrap.sh does, step by step
-
-| Step | What happens |
-|------|-------------|
-| 1 | Detects OS (arch/fedora/debian/macos/wsl/windows) |
-| 2 | Installs **chezmoi** (if missing) |
-| 3 | Installs **age** (encryption, if missing) |
-| 4 | Installs all packages via `install-{os}.sh` (tools, languages, fonts) |
-| 5 | Runs **`go install`** for gas town (`gt`, `bd`, `bv`) if `go` is present |
-| 6 | Runs **`chezmoi init --source ~/dotfiles`** (first time only) |
-| 7 | Runs **`chezmoi apply --force`** — creates all symlinks, backs up old configs |
-| 8 | Post-install: stubs `.gitconfig.local`, clones tpm + zsh plugins, computes skills-lock hashes, installs scaffolders to `~/.local/bin/` |
-
-After bootstrap, you have a fully configured shell. **Step 3-9 are just for extras.**
+- **OpenCode** — daily-driver AI agent with 10 subagents and 10 skills
+- **Gas town** — multi-agent orchestrator (`gt`, `bd`, `bv`)
 
 ---
 
 ## Daily workflow
 
 ```bash
-# Edit a tracked dotfile → chezmoi picks up the change
+# Edit a dotfile → chezmoi picks up the change
 nvim ~/.zshrc
-chezmoi diff        # see what would change
-chezmoi re-add      # pull the change into the source repo
-chezmoi git -- push # commit + push
+chezmoi diff           # see what would change
+chezmoi re-add         # pull the change into the source repo
+chezmoi git -- push    # commit + push
 
-# Copy a template to a new project
-cp ~/dotfiles/templates/devcontainer.json.tmpl ~/work/myproj/.devcontainer/devcontainer.json
-cp ~/dotfiles/templates/SKILL.md.tmpl ~/.agents/skills/my-pattern/SKILL.md
-cp ~/dotfiles/justfile ~/work/myproj/justfile
+# Verify everything is set up correctly
+~/dotfiles/scripts/verify.sh
 
-# Add a new skill (creates file + updates skills-lock.json)
-new-skill my-pattern-name "Description here"
-new-skill agent-browser/slack "Slack automation"
-
-# Add a new subagent
-new-agent my-role "Description"               # full permissions
-new-agent code-reviewer --read-only           # read-only preset
-new-agent data-engineer --no-write            # can edit, can't write
+# Add a new tool
+# 1. Install it: add to packages/manifest.yaml + OS install script
+# 2. Add config: dot_config/<toolname>/
+# 3. Add alias:  dot_config/zsh/aliases.zsh
 ```
+
+---
+
+## Step-by-step guide (full detail)
+
+### Prerequisites
+
+Your machine needs **git** and **curl**. That's it — bootstrap installs everything else.
+
+| OS | git comes with |
+|---|---|
+| Arch | `sudo pacman -S git curl` |
+| Fedora | `sudo dnf install git curl` |
+| Debian/Ubuntu | `sudo apt-get install git curl` |
+| macOS | Xcode Command Line Tools (`xcode-select --install`) |
+| WSL | `sudo apt-get install git curl` |
+| Windows (native) | winget or Git for Windows |
+
+### Bootstrap walkthrough
+
+When you run `bootstrap.sh`, here's exactly what happens:
+
+| Step | Action |
+|---|---|
+| 1 | Detects OS (arch/fedora/debian/macos/wsl/windows) |
+| 2 | Installs **chezmoi** (if missing) |
+| 3 | Installs **age** for encryption (if missing) |
+| 4 | Installs all packages via OS-specific installer (pacman/dnf/apt/brew/winget) |
+| 5 | Runs `go install` for gas town (`gt`, `bd`, `bv`) |
+| 6 | Initializes chezmoi source (first time only) |
+| 7 | Runs `chezmoi apply --force` — symlinks all dotfiles, backs up conflicts |
+| 8 | Runs post-install: git stubs, tpm, zsh plugins, skills-lock hashes, scaffolders |
+
+### After bootstrap
+
+```bash
+# 1. Let LazyVim install plugins (first nvim launch)
+nvim
+
+# 2. Edit git identity (these files are NOT in dotfiles — machine-specific)
+nano ~/.gitconfig.local       # name + email
+nano ~/.gitconfig.work        # work identity
+nano ~/.gitconfig.personal    # personal identity
+
+# 3. (Optional) Atuin cloud sync
+atuin register -u <username> -e <email>
+atuin sync
+
+# 4. (Optional) Initialize gas town
+gt town new
+
+# 5. (Optional) Trust mise in projects
+cd ~/work/myproject && mise trust && mise install
+```
+
+---
+
+## Managing dotfiles (chezmoi workflow)
+
+```bash
+# See what's managed
+chezmoi managed
+
+# See pending changes
+chezmoi diff
+
+# Pull an edited file back into the source repo
+chezmoi re-add ~/.zshrc
+
+# Edit a managed file (opens in $EDITOR with chezmoi path)
+chezmoi edit ~/.zshrc
+
+# See the source path of a managed file
+chezmoi source-path ~/.zshrc
+
+# Commit and push
+chezmoi git -- add -A
+chezmoi git -- commit -m "update zsh config"
+chezmoi git -- push
+```
+
+### Adding a new tool to the dotfiles
+
+1. **Install the tool** — add it to `packages/manifest.yaml` and the relevant `install-*.sh` scripts
+2. **Add config file** — create `dot_config/<toolname>/<config>` (chezmoi maps this to `~/.config/<toolname>/<config>`)
+3. **Add shell integration** — add aliases to `dot_config/zsh/aliases.zsh`
+4. **Run `chezmoi re-add`** to pull it into the source state
+5. **Commit and push**
 
 ---
 
 ## Per-OS behavior
 
-chezmoi templates render differently per OS:
-- `dot_config/starship.toml` linked on Linux/macOS
-- `dot_config/omp/omp.json` (oh-my-posh) linked on Windows
-- Tmux, ghostty, nvim configs are 100% portable
-- `scripts/install-{arch,fedora,debian,mac}.sh` and `install-windows.ps1` are OS-detected
+| Area | Linux | macOS | WSL | Windows native |
+|---|---|---|---|---|
+| Package manager | pacman/dnf/apt | Homebrew | apt | winget |
+| Prompt | Starship | Starship | Starship | Oh My Posh |
+| Fonts | JetBrains Mono Nerd | JetBrains Mono Nerd | JetBrains Mono Nerd | JetBrains Mono Nerd |
+| Tmux clipboard | xclip | pbcopy | clip.exe | clip.exe |
+| Ghostty | async-backend = epoll | macos-titlebar-style | async-backend | N/A |
+| Terminal | Ghostty/Kitty | Ghostty/Kitty | Windows Terminal | Ghostty |
+| Gas town | go install | go install | go install (in WSL) | Not supported |
 
 ---
 
@@ -162,202 +205,85 @@ chezmoi templates render differently per OS:
 
 ```
 dotfiles/
-├── README.md
-├── .chezmoiroot
-├── .chezmoiignore.tmpl
-├── .chezmoi/chezmoi.toml.tmpl
-├── .gitignore
-├── Brewfile                              # macOS packages
-├── packages/{arch,fedora}.txt            # Linux package lists
-├── justfile                              # project-local task runner template
-├── templates/                            # copy-once project templates
-│   ├── devcontainer.json.tmpl
-│   ├── Dockerfile.tmpl
-│   ├── post-create.sh.tmpl
-│   ├── SKILL.md.tmpl                     # new-skill source
-│   └── AGENT.md.tmpl                     # new-agent source
-├── scripts/                              # bootstrap + installers + scaffolders
-│   ├── bootstrap.sh                      # main entry: OS detect, install, link
-│   ├── install-{arch,fedora,debian,mac}.sh
-│   ├── install-windows.ps1
-│   ├── post-install.sh                   # hooks after chezmoi apply
-│   ├── new-skill.sh                      # scaffold a new skill
-│   └── new-agent.sh                      # scaffold a new subagent
-├── dot_config/                           # → ~/.config/
-│   ├── nvim/                             # LazyVim (init.lua, lazyvim.json, lua/)
-│   ├── zsh/                              # 5 user config files + fzf-tab.zsh
+├── README.md                       ← this file
+├── .chezmoi/                       ← chezmoi config
+├── dot_gitconfig.tmpl              ← ~/.gitconfig (template)
+├── dot_zshenv                      ← ~/.zshenv
+├── dot_tmux.conf                   ← ~/.tmux.conf
+├── dot_config/                     ← ~/.config/ (chezmoi maps dot_ → .)
+│   ├── nvim/                       ← LazyVim config
+│   ├── zsh/                        ← 6 user config files (aliases, exports, etc.)
 │   ├── ghostty/config
-│   ├── atuin/config.toml                 # shell history
-│   ├── direnv/direnv.toml                # per-project env
-│   ├── uv/uv.toml                        # Python
-│   ├── bunfig.toml                       # Bun
-│   ├── act/actrc                         # local GitHub Actions
-│   ├── opencode/                         # AI agent config
-│   │   ├── AGENTS.md                     # global system instructions
-│   │   ├── config.json                   # model, agents, MCP
-│   │   ├── skills-lock.json              # versioned skill lockfile
-│   │   ├── agents/                       # 10 subagent definitions
-│   │   │   ├── build.md                  #   default active-coding
-│   │   │   ├── plan.md                   #   read-only analysis
-│   │   │   ├── backend-engineer.md
-│   │   │   ├── frontend-engineer.md
-│   │   │   ├── frontend-senior.md
-│   │   │   ├── qa-engineer.md
-│   │   │   ├── devops-engineer.md
-│   │   │   ├── code-reviewer.md
-│   │   │   ├── product-manager.md
-│   │   │   └── marketing.md
-│   │   ├── skills/                       # 10 skills (5 generic + 5 dev)
-│   │   │   ├── rest-api-design.md
-│   │   │   ├── database-patterns.md
-│   │   │   ├── react-patterns.md
-│   │   │   ├── i18n-patterns.md
-│   │   │   ├── multi-tenant-patterns.md
-│   │   │   ├── code-review.md
-│   │   │   ├── refactor.md
-│   │   │   ├── write-test.md
-│   │   │   ├── debug.md
-│   │   │   └── dotfiles.md
-│   │   ├── commands/                     # 4 /slash commands
-│   │   │   ├── plan.md
-│   │   │   ├── build.md
-│   │   │   ├── refactor.md
-│   │   │   └── debug.md
-│   │   └── themes/tokyo-night.json
-│   ├── lazydocker/config.yml
-│   ├── gitui/config.toml
-│   ├── mprocs/config.yaml
-│   ├── pre-commit/config.yaml
 │   ├── starship.toml
-│   ├── btop/btop.conf
-│   ├── lazygit/config.yml
-│   ├── delta/config.toml                 # git pager (lenient TOML)
-│   ├── yazi/{yazi.toml,theme.toml}
-│   └── omp/omp.json                      # Windows prompt
-├── dot_zshrc                             # → ~/.zshrc
-├── dot_zshenv                            # → ~/.zshenv
-├── dot_tmux.conf                         # → ~/.tmux.conf
-├── dot_gitconfig.tmpl                    # → ~/.gitconfig
-└── docs/                                 # documentation
-    ├── SECRETS.md                        # age encryption guide
-    ├── gitconfig.local.example
-    ├── python-uv-migration.md            # Python → uv
-    ├── direnv-usage.md
-    ├── devcontainer-guide.md
-    ├── justfile-recipes.md
-    ├── when-to-use-bun.md
-    ├── act-usage.md
-    ├── opencode-guide.md                 # OpenCode config + skills/agents
-    ├── gas-town-integration.md           # gas town workflow
-    └── long-tail-cli-tools.md            # hyperfine, dive, lazydocker, etc.
+│   ├── opencode/                   ← OpenCode AI agent config
+│   └── ... (atuin, yazi, btop, lazygit, tmux, etc.)
+├── packages/
+│   ├── manifest.yaml               ← single tool manifest (all tools, per OS)
+│   ├── arch.txt                    ← Arch package list (reference)
+│   └── fedora.txt                  ← Fedora package list (reference)
+├── Brewfile                        ← macOS packages
+├── scripts/
+│   ├── bootstrap.sh                ← main entry point (2-3 command setup)
+│   ├── lib.sh                      ← shared functions (detect OS, install gas town, etc.)
+│   ├── install-{arch,fedora,debian,mac}.sh   ← OS-specific installers
+│   ├── install-windows.ps1         ← Windows (native) installer
+│   └── post-install.sh             ← hooks after chezmoi apply
+├── templates/                      ← copy-once project templates
+├── docs/                           ← documentation
+└── justfile                        ← task runner template
 ```
 
 ---
 
-## Load order in zsh (matters!)
+## Reference
+
+### Zsh load order (matters!)
 
 ```dot_zshrc (zshrc):
 1.  compinit                       (with daily cache)
 2.  Source 5 user config files     (aliases, exports, vi-mode, tools, prompt)
 3.  fzf-tab plugin                 (after compinit, before fzf keybindings)
-4.  fzf-tab.zsh UI config          (6th file, sourced after plugin)
-5.  fzf keybindings                (after fzf-tab)
-6.  direnv hook                    (after compinit)
+4.  fzf-tab.zsh UI config
+5.  fzf keybindings
+6.  direnv hook
 7.  zoxide init
 8.  Atuin init                     (MUST be last — overrides Ctrl+R)
 9.  Local overrides                (~/.zshrc.local if present)
-
-dot_config/zsh/tools.zsh (sourced at step 2):
--  tmux auto-attach
--  mise activate
--  fzf-git
--  zsh-autosuggestions
--  zsh-syntax-highlighting         (must be last in tools.zsh)
 ```
 
----
-
-## Gas town quick reference
+### Gas town quick reference
 
 ```sh
-# Setup (one-time)
-gt town new                        # create ~/gt/
-gt rig new <name> <git-url>        # add a project (rig)
-
-# Day-to-day
 gt status                          # dashboard
 gt convoy create "Feature X" gt-abc gt-def
 gt sling <bead-id> <rig>           # assign work to a polecat
-gt nudge <polecat> "msg"           # send a message
-gt prime                           # re-inject Mayor context after compaction
-gt doctor                          # health check
-
-# Beads (issue tracker)
+gt prime                           # re-inject context after compaction
 bd ready                           # unblocked work
 bd create --title="..." --type=task --priority=2
-bd update <id> --status=in_progress
-bd close <id>
 bd sync                            # git sync at session end
-
-# Beads graph triage (NEVER bare `bv` — it's interactive)
-bv --robot-triage                  # ranked picks, blockers
-bv --robot-next                    # top pick + claim cmd
-bv --robot-plan                    # parallel execution tracks
 ```
 
 See `docs/gas-town-integration.md` for the full picture.
 
----
+### Secrets
 
-## Secrets
-
-Private files live in `private_*` and are encrypted with age. To add a secret:
+Private files live in `private_*` and are encrypted with age:
 
 ```bash
 chezmoi age encrypt --output ~/dotfiles/private_dot_secrets/foo.txt.age
-# then add `private_dot_secrets/foo.txt.age` to the repo
 ```
 
-The age key is stored locally at `~/.config/chezmoi/key.txt`. **Back this up.**
+The age key is stored at `~/.config/chezmoi/key.txt`. **Back this up.**
+See `docs/SECRETS.md`.
 
-See `docs/SECRETS.md` for the full workflow.
-
----
-
-## Validation
-
-Run from repo root to validate all config files:
+### Validation
 
 ```bash
-python3 -c "
-import os, json, subprocess, tomllib, yaml, toml
-ok = fail = 0
-for root, _, files in os.walk('.'):
-    for f in files:
-        path = os.path.join(root, f)
-        try:
-            if f.endswith('.toml'):
-                with open(path, 'rb') as fh: tomllib.load(fh)
-            elif f.endswith('.json'): json.load(open(path))
-            elif f.endswith(('.yml','.yaml')): yaml.safe_load(open(path))
-            elif f.endswith('.lua'):
-                subprocess.run(['luac','-p',path], check=True, capture_output=True)
-            elif f.endswith('.sh'):
-                subprocess.run(['bash','-n',path], check=True, capture_output=True)
-            else: continue
-            ok += 1
-        except Exception as e:
-            fail += 1; print(f'FAIL {path}: {e}')
-print(f'{ok} passed, {fail} failed')
-"
+~/dotfiles/scripts/verify.sh       # checks all tools, files, and configs
 ```
-
-Requirements: `python3 -m pip install pyyaml toml` (if pyyaml/toml not already installed).
-Note: TOML files use strict `tomllib` (Python 3.11+). Files with non-strict syntax are skipped.
-Delta (`dot_config/delta/config.toml`) is valid TOML but uses non-standard keys; it's parsed as git-config format if strict parse fails (see validation script in CI).
 
 ---
 
 ## License
 
-MIT. Copy, modify, redistribute — your call.
+MIT.

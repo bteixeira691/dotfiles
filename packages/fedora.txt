@@ -5,6 +5,7 @@ zsh-vi-mode
 starship
 
 ghostty
+kitty
 tmux
 tpm
 

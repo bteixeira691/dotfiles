@@ -1,12 +1,27 @@
 #!/usr/bin/env bash
-# Bootstrap a fresh machine with the dotfiles setup.
-# Detects OS and dispatches to the right installer.
+# bootstrap.sh — set up a fresh machine with the dotfiles setup
 #
-# Usage: ./scripts/bootstrap.sh [--skip-packages] [--chezmoi-source PATH]
+# Usage:
+#   bash ~/dotfiles/scripts/bootstrap.sh
+#   bash ~/dotfiles/scripts/bootstrap.sh --skip-packages
+#   bash ~/dotfiles/scripts/bootstrap.sh --chezmoi-source PATH
+#
+# What it does:
+#   1. Detects your OS (arch/fedora/debian/macos/wsl/windows)
+#   2. Installs prereqs: chezmoi, age, git
+#   3. Installs all packages via the OS-specific installer
+#   4. Runs `chezmoi apply` to link all dotfiles
+#   5. Runs post-install hooks (tpm, zsh plugins, git stubs, etc.)
+#
+# After this, restart your shell with: exec zsh
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+source "$SCRIPT_DIR/lib.sh"
+
+# --- Args --------------------------------------------------------------------
 SKIP_PACKAGES=0
 CHEZMOI_SOURCE="$DOTFILES_DIR"
 
@@ -18,120 +33,74 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# --- Colors for output --------------------------------------------------------
-if [[ -t 1 ]]; then
-  BOLD=$'\033[1m'; BLUE=$'\033[34m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; RESET=$'\033[0m'
-else
-  BOLD=""; BLUE=""; GREEN=""; YELLOW=""; RESET=""
-fi
-
-log()  { printf "%b==>%b %b%s%b\n" "$BOLD" "$RESET" "$BLUE" "$1" "$RESET"; }
-ok()   { printf "%b✓%b %s\n" "$GREEN" "$RESET" "$1"; }
-warn() { printf "%b!%b %s\n" "$YELLOW" "$RESET" "$1"; }
-
-# --- OS detection -------------------------------------------------------------
-detect_os() {
-  case "$(uname -s)" in
-    Linux)
-      if grep -qi microsoft /proc/version 2>/dev/null; then
-        echo "wsl"
-      elif [[ -f /etc/os-release ]]; then
-        . /etc/os-release
-        case "$ID" in
-          arch|omarchy|manjaro|endeavouros) echo "arch" ;;
-          fedora|nobara)                    echo "fedora" ;;
-          ubuntu|debian|pop|linuxmint)      echo "debian" ;;
-          *)                                echo "linux-unknown" ;;
-        esac
-      else
-        echo "linux-unknown"
-      fi
-      ;;
-    Darwin)  echo "macos" ;;
-    CYGWIN*|MINGW*|MSYS*) echo "windows" ;;
-    *) echo "unsupported" ;;
-  esac
-}
-
+# =============================================================================
+# Step 1: OS detection
+# =============================================================================
 OS="$(detect_os)"
 log "Detected OS: $OS"
 
-# --- Prereqs: chezmoi + age + git ---------------------------------------------
-install_prereqs() {
-  if ! command -v chezmoi >/dev/null 2>&1; then
-    log "Installing chezmoi"
-    mkdir -p "$HOME/.local/bin"
-    curl -fsSL https://chezmoi.io/get | sh -s -- -b "$HOME/.local/bin" || {
-      warn "chezmoi install failed. Install manually: https://chezmoi.io/install"
-      exit 1
-    }
-    export PATH="$HOME/.local/bin:$PATH"
-  fi
-  ok "chezmoi: $(chezmoi --version)"
+# =============================================================================
+# Step 2: Install prereqs (chezmoi, age, git)
+# =============================================================================
+log "Installing prereqs"
+install_chezmoi
+install_age
+install_git
+ensure_local_bin
 
-  if ! command -v age >/dev/null 2>&1 && ! command -v rage >/dev/null 2>&1; then
-    log "Installing age (encryption)"
-    case "$OS" in
-      arch)   sudo pacman -S --noconfirm --needed age ;;
-      fedora) sudo dnf install -y age ;;
-      debian|wsl)
-        sudo apt-get update && sudo apt-get install -y age ;;
-      macos)  brew install age ;;
-      windows) winget install FiloSottile.age ;;
-    esac
-  fi
-  ok "age: $(command -v age || command -v rage)"
-
-  if ! command -v git >/dev/null 2>&1; then
-    warn "git not found. Install git first."
-    exit 1
-  fi
-  ok "git: $(git --version)"
-}
-
-# --- Package installation -----------------------------------------------------
-install_packages() {
-  [[ $SKIP_PACKAGES -eq 1 ]] && { warn "Skipping packages (--skip-packages)"; return; }
+# =============================================================================
+# Step 3: Install packages
+# =============================================================================
+if [[ $SKIP_PACKAGES -eq 1 ]]; then
+  warn "Skipping packages (--skip-packages)"
+else
+  log "Installing packages"
   case "$OS" in
     arch)        "$SCRIPT_DIR/install-arch.sh" ;;
     fedora)      "$SCRIPT_DIR/install-fedora.sh" ;;
     debian|wsl)  "$SCRIPT_DIR/install-debian.sh" ;;
     macos)       "$SCRIPT_DIR/install-mac.sh" ;;
-    windows)     "$SCRIPT_DIR/install-windows.sh" ;;
+    windows)     "$SCRIPT_DIR/install-windows.ps1" ;;
     *)           warn "Unknown OS '$OS', skipping package install" ;;
   esac
-}
+fi
 
-# --- Dotfiles apply -----------------------------------------------------------
-apply_dotfiles() {
-  if [[ ! -d "$CHEZMOI_SOURCE/.git" ]] && ! git -C "$CHEZMOI_SOURCE" rev-parse --git-dir >/dev/null 2>&1; then
-    log "Initializing git in $CHEZMOI_SOURCE"
-    (cd "$CHEZMOI_SOURCE" && git init -b main && git add -A && git commit -m "initial dotfiles" --allow-empty)
-  fi
+# =============================================================================
+# Step 4: Apply dotfiles with chezmoi
+# =============================================================================
+log "Applying dotfiles with chezmoi"
 
-  if ! chezmoi managed -i path 2>/dev/null | grep -q .; then
-    log "Initializing chezmoi from $CHEZMOI_SOURCE"
-    chezmoi init --source "$CHEZMOI_SOURCE"
-  fi
+if [[ ! -d "$CHEZMOI_SOURCE/.git" ]] && ! git -C "$CHEZMOI_SOURCE" rev-parse --git-dir >/dev/null 2>&1; then
+  log "Initializing git in $CHEZMOI_SOURCE"
+  (cd "$CHEZMOI_SOURCE" && git init -b main && git add -A && git commit -m "initial dotfiles" --allow-empty)
+fi
 
-  log "Running chezmoi apply (this will back up conflicting files to ~/.local/share/chezmoi/backups)"
-  chezmoi apply --force
+if ! chezmoi managed -i path 2>/dev/null | grep -q .; then
+  log "Initializing chezmoi from $CHEZMOI_SOURCE"
+  chezmoi init --source "$CHEZMOI_SOURCE"
+fi
 
-  if [[ -f "$CHEZMOI_SOURCE/scripts/post-install.sh" ]]; then
-    log "Running post-install hooks"
-    bash "$CHEZMOI_SOURCE/scripts/post-install.sh"
-  fi
-}
+log "Running chezmoi apply (backs up conflicts to ~/.local/share/chezmoi/backups)"
+chezmoi apply --force
 
-# --- Main ---------------------------------------------------------------------
-install_prereqs
-install_packages
-apply_dotfiles
+# =============================================================================
+# Step 5: Post-install hooks
+# =============================================================================
+if [[ -f "$DOTFILES_DIR/scripts/post-install.sh" ]]; then
+  log "Running post-install hooks"
+  bash "$DOTFILES_DIR/scripts/post-install.sh"
+fi
 
+# =============================================================================
+# Done
+# =============================================================================
+echo ""
 ok "Bootstrap complete!"
-echo
-echo "Next steps:"
-echo "  1. Restart your shell: exec zsh"
-echo "  2. Open nvim and let LazyVim install plugins: nvim"
-echo "  3. Edit ~/.gitconfig.local with your name and email"
-echo "  4. Set up age encryption (see README.md > Secrets)"
+echo ""
+echo "  Next steps:"
+echo "    1. Restart your shell:  exec zsh"
+echo "    2. Open nvim:           nvim  (LazyVim installs plugins)"
+echo "    3. Set git identity:    nvim ~/.gitconfig.local"
+echo "    4. (Optional) Atuin:    atuin register -u <user> -e <email>"
+echo "    5. (Optional) Gas town: gt town new"
+echo ""

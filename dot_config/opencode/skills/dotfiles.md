@@ -12,18 +12,21 @@ This is the dotfiles repo. When working on it, follow these conventions.
 
 ```
 ~/dotfiles/
-├── README.md
+├── README.md                          # step-by-step guide
 ├── .chezmoiroot
 ├── .chezmoiignore.tmpl
 ├── .chezmoi/chezmoi.toml.tmpl
-├── Brewfile                          # macOS packages
-├── packages/{arch,fedora}.txt        # Linux packages
-├── justfile                          # local task runner
-├── dot_zshrc / dot_zshenv            # ~ (chezmoi strips dot_ prefix)
-├── dot_gitconfig.tmpl                # git config (with includeIf)
-├── dot_tmux.conf                     # tmux
+├── Brewfile                           # macOS packages
+├── packages/
+│   ├── manifest.yaml                  # single source of truth for all tools
+│   ├── arch.txt                       # Arch package list (reference)
+│   └── fedora.txt                     # Fedora package list (reference)
+├── justfile                           # local task runner
+├── dot_zshrc / dot_zshenv             # ~ (chezmoi strips dot_ prefix)
+├── dot_gitconfig.tmpl                 # git config (with includeIf)
+├── dot_tmux.conf                      # tmux
 ├── dot_config/
-│   ├── atuin/config.toml             # Phase 1
+│   ├── atuin/config.toml
 │   ├── direnv/direnv.toml
 │   ├── uv/uv.toml
 │   ├── bunfig.toml
@@ -33,24 +36,25 @@ This is the dotfiles repo. When working on it, follow these conventions.
 │   ├── starship.toml
 │   ├── btop/btop.conf
 │   ├── lazygit/config.yml
-│   ├── delta/config.yml
+│   ├── delta/config.toml
 │   ├── yazi/{yazi.toml,theme.toml}
 │   ├── omp/omp.json
-│   ├── opencode/                      # Phase 3
+│   ├── opencode/                      # AI agent config
 │   │   ├── AGENTS.md
 │   │   ├── config.json
-│   │   ├── agents/{build,plan}.md
+│   │   ├── agents/{build,plan,...}.md
 │   │   └── skills/
 │   └── zsh/{aliases,exports,vi-mode,tools,prompt,fzf-tab}.zsh
-├── templates/                        # Phase 2
+├── templates/
 │   ├── devcontainer.json.tmpl
 │   ├── Dockerfile.tmpl
 │   └── post-create.sh.tmpl
 ├── scripts/
-│   ├── bootstrap.sh                  # main entry
-│   ├── install-{arch,fedora,debian,mac}.sh
+│   ├── bootstrap.sh                   # main entry point (2-3 command setup)
+│   ├── lib.sh                         # shared functions (detect OS, install gastown, etc.)
+│   ├── install-{arch,fedora,debian,mac}.sh   # OS-specific installers
 │   ├── install-windows.ps1
-│   └── post-install.sh
+│   └── post-install.sh                # hooks after chezmoi apply
 └── docs/
     ├── SECRETS.md
     ├── gitconfig.local.example
@@ -80,17 +84,15 @@ This is the dotfiles repo. When working on it, follow these conventions.
 1. **Add config** in `dot_config/<toolname>/`.
 2. **Add zsh integration** in `dot_config/zsh/` (if shell-using).
 3. **Update aliases** in `dot_config/zsh/aliases.zsh`.
-4. **Add to package lists:** `Brewfile`, `packages/arch.txt`, `packages/fedora.txt`.
-5. **Update install scripts** if any special install steps needed.
+4. **Update manifest:** add the tool to `packages/manifest.yaml` with OS-specific package names.
+5. **Update install scripts** — add the package to the relevant `install-{arch,fedora,debian,mac}.sh` (or the PowerShell script for Windows). If the install step is common across platforms, add a function to `scripts/lib.sh` instead.
 6. **Add post-install hook** in `scripts/post-install.sh` (e.g. plugin clone).
 7. **Write a doc** in `docs/<tool>.md` if non-trivial.
 8. **Update README** with the new tool in the feature list.
 
-## When adding a new install phase
+## When adding a shared install function
 
-- Don't break existing installers.
-- Add a feature flag (env var) for opt-in.
-- Update bootstrap.sh with a "phase X" log header.
+If a tool is installed the same way on all platforms (e.g. `go install`, `cargo install`, `curl ... | sh`), add it to `scripts/lib.sh` instead of repeating it in every `install-*.sh` script. This keeps the platform installers focused on package manager commands.
 
 ## nvim config specifics
 

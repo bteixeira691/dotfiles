@@ -55,6 +55,15 @@ if [[ ! -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlightin
   git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.zsh/plugins/zsh-syntax-highlighting
 fi
 
+# Install zsh-vi-mode if not provided by pkg manager
+if [[ ! -f /usr/share/zsh-vi-mode/zsh-vi-mode.zsh ]] \
+   && [[ ! -f /opt/homebrew/share/zsh-vi-mode/zsh-vi-mode.zsh ]] \
+   && [[ ! -d $HOME/.zsh/plugins/zsh-vi-mode ]]; then
+  echo "  -> Installing zsh-vi-mode to ~/.zsh/plugins/zsh-vi-mode"
+  mkdir -p "$HOME/.zsh/plugins"
+  git clone https://github.com/jeffreytse/zsh-vi-mode $HOME/.zsh/plugins/zsh-vi-mode
+fi
+
 # Atuin: import history from existing shell (one-time, only if no Atuin db)
 if command -v atuin >/dev/null && [[ ! -f $HOME/.local/share/atuin/history.db ]]; then
   echo "  -> Importing shell history into Atuin"

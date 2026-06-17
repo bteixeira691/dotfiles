@@ -24,6 +24,7 @@ brew "zsh-syntax-highlighting"
 
 # Terminal + multiplexer
 brew "ghostty"
+brew "kitty"
 brew "tmux"
 brew "tpm"
 brew "fzf-tab"

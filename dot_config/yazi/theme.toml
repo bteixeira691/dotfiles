@@ -83,7 +83,7 @@ bg       = "#1a1b26"
 fg       = "#c0caf5"
 placeholder = "#414868"
 cursor   = "#bb9af7"
-selected = "#33467c"
+selected = { bg = "#33467c", fg = "#c0caf5" }
 
 [hovered]
 # Hovered file/folder
