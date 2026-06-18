@@ -1,9 +1,9 @@
--- neotest configuration with neotest-dotnet for C# tests + debug support
 return {
   {
     "nvim-neotest/neotest",
     dependencies = {
       "nvim-lua/plenary.nvim",
+      "nvim-neotest/nvim-nio",
       {
         "Issafalcon/neotest-dotnet",
         dependencies = { "mfussenegger/nvim-dap" },
@@ -18,17 +18,11 @@ return {
           require("neotest-dotnet")({
             dap = {
               args = { justMyCode = false },
-              adapter_name = "netcoredbg",
+              adapter_name = "coreclr",
             },
             discovery_root = "solution",
           }),
         },
-        -- LazyVim's neotest extra keymaps (set via which-key):
-        -- <leader>tt = Run nearest test
-        -- <leader>tT = Run file
-        -- <leader>tl = Run last
-        -- <leader>ts = Toggle summary
-        -- <leader>to = Toggle output
       })
     end,
   },

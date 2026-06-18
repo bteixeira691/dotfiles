@@ -1,15 +1,19 @@
--- dotnet.lua: .NET/C# LSP and tooling integration for LazyVim
-
 return {
   {
     "seblyng/roslyn.nvim",
     ft = { "cs", "csharp", "fsharp" },
-    config = function()
-      require("roslyn").setup({
-        broad_search = true,
-        lock_target = false,
-      })
-    end,
+    opts = {
+      broad_search = true,
+      lock_target = false,
+      config = {
+        settings = {
+          ["csharp|background_analysis"] = {
+            dotnet_analyzer_diagnostics_scope = "openFiles",
+            dotnet_compiler_diagnostics_scope = "openFiles",
+          },
+        },
+      },
+    },
   },
   {
     "leblocks/hopcsharp.nvim",
@@ -24,30 +28,21 @@ return {
     dependencies = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap" },
     cmd = { "Dotnet" },
     config = function()
-      -- Ensure .NET global tools are in PATH so easy-dotnet can find its server
       local dotnet_tools = vim.fn.expand("~/.dotnet/tools")
       if vim.fn.isdirectory(dotnet_tools) == 1 then
         vim.env.PATH = dotnet_tools .. ":" .. vim.env.PATH
       end
 
-      -- Find netcoredbg via Mason (Linux) or PATH
-      local debugger_bin = nil
       local mason_data = vim.fn.stdpath("data")
       local mason_bin = mason_data .. "/mason/bin/netcoredbg"
       local mason_pkg = mason_data .. "/mason/packages/netcoredbg/netcoredbg"
-
+      local debugger_bin = nil
       if vim.loop.fs_stat(mason_bin) then
         debugger_bin = mason_bin
       elseif vim.loop.fs_stat(mason_pkg) then
         debugger_bin = mason_pkg
       elseif vim.fn.executable("netcoredbg") == 1 then
         debugger_bin = "netcoredbg"
-      end
-
-      if debugger_bin then
-        vim.schedule(function()
-          vim.notify("easy-dotnet: using debugger at " .. debugger_bin, vim.log.levels.INFO)
-        end)
       end
 
       local ok, err = pcall(function()
