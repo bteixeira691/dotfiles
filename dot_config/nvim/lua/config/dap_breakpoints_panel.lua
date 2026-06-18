@@ -18,7 +18,7 @@ local function create_bp_buf()
   api.nvim_buf_set_option(bp_bufnr, "buflisted", false)
   api.nvim_buf_set_option(bp_bufnr, "filetype", "dap-breakpoints")
   api.nvim_buf_set_option(bp_bufnr, "modifiable", false)
-  api.nvim_buf_set_keymap(bp_bufnr, "n", "<CR>", "<cmd>lua require('config.dap_breakpoints_panel').goto()<CR>", { silent=true, noremap=true, nowait=true })
+  api.nvim_buf_set_keymap(bp_bufnr, "n", "<CR>", "<cmd>lua require('config.dap_breakpoints_panel').jump_to()<CR>", { silent=true, noremap=true, nowait=true })
   api.nvim_buf_set_keymap(bp_bufnr, "n", "q", "<cmd>close<CR>", { silent=true, noremap=true, nowait=true })
   return bp_bufnr
 end
@@ -102,7 +102,7 @@ function M.toggle()
   end
 end
 
-function M.goto()
+function M.jump_to()
   local w = api.nvim_get_current_win()
   local pos = api.nvim_win_get_cursor(w)
   local row = pos[1]
