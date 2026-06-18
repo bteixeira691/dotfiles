@@ -14,22 +14,4 @@ return {
       pcall(function() refactoring.setup({}) end)
     end,
   },
-  {
-    "glepnir/lspsaga.nvim",
-    branch = "main",
-    event = "VeryLazy",
-    config = function()
-      require("lspsaga").setup({
-        code_action = { num_shortcut = true },
-        lightbulb = { enable = false }, -- use nvim-lightbulb plugin
-      })
-    end,
-  },
-  {
-    "kosayoda/nvim-lightbulb",
-    event = "VeryLazy",
-    config = function()
-      require("nvim-lightbulb").setup({ autocmd = { enabled = true } })
-    end,
-  },
 }

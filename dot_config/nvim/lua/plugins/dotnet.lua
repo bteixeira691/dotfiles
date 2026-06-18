@@ -50,7 +50,7 @@ return {
           lsp = { enabled = false },
           auto_install_easy_dotnet_server = false,
           debugger = {
-            auto_register_dap = true,
+            auto_register_dap = false,
             bin_path = debugger_bin,
             console = "integratedTerminal",
             apply_value_converters = true,

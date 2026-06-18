@@ -17,15 +17,20 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- Format on save for C# and F# using LSP formatting if available
+-- Format on save for C# and F# via conform (csharpier) when available
 vim.api.nvim_create_augroup("dotnet_format", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = "dotnet_format",
   pattern = { "*.cs", "*.fs" },
   callback = function()
     local bufnr = vim.api.nvim_get_current_buf()
-    pcall(function()
-      vim.lsp.buf.format({ bufnr = bufnr })
-    end)
+    local conform = pcall(require, "conform")
+    if conform then
+      require("conform").format({ bufnr = bufnr })
+    else
+      pcall(function()
+        vim.lsp.buf.format({ bufnr = bufnr })
+      end)
+    end
   end,
 })
