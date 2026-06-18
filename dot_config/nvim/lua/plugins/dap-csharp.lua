@@ -54,6 +54,19 @@ return {
           console = "integratedTerminal",
         },
       }
+
+      vim.fn.sign_define("DapBreakpoint", {
+        text = "●",
+        texthl = "DapBreakpointSymbol",
+        linehl = "DapBreakpoint",
+        numhl = "DapBreakpoint",
+      })
+      vim.fn.sign_define("DapStopped", {
+        text = "→",
+        texthl = "DapStoppedSymbol",
+        linehl = "DapBreakpoint",
+        numhl = "DapBreakpoint",
+      })
     end,
   },
 
@@ -99,16 +112,23 @@ return {
   },
 }
 
-vim.fn.sign_define("DapBreakpoint", {
-  text = "●",
-  texthl = "DapBreakpointSymbol",
-  linehl = "DapBreakpoint",
-  numhl = "DapBreakpoint",
-})
-
-vim.fn.sign_define("DapStopped", {
-  text = "→",
-  texthl = "DapStoppedSymbol",
-  linehl = "DapBreakpoint",
-  numhl = "DapBreakpoint",
+-- HACK: init=false prevents LazyVim from reloading this file and dropping our signs
+local aug = vim.api.nvim_create_augroup("DapSigns", { clear = true })
+vim.api.nvim_create_autocmd("User", {
+  group = aug,
+  pattern = "VeryLazy",
+  callback = function()
+    vim.fn.sign_define("DapBreakpoint", {
+      text = "●",
+      texthl = "DapBreakpointSymbol",
+      linehl = "DapBreakpoint",
+      numhl = "DapBreakpoint",
+    })
+    vim.fn.sign_define("DapStopped", {
+      text = "→",
+      texthl = "DapStoppedSymbol",
+      linehl = "DapBreakpoint",
+      numhl = "DapBreakpoint",
+    })
+  end,
 })

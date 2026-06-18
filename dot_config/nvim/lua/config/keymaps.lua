@@ -22,9 +22,6 @@ map("n", "x", '"_x')
 map("n", "+", "<C-a>")
 map("n", "-", "<C-x>")
 
--- Delete a word backwards without yanking
-map("n", "dw", 'vb"_d')
-
 -- Select all
 map("n", "<C-a>", "gg<S-v>G")
 
