@@ -50,30 +50,36 @@ return {
         end)
       end
 
-      require("easy-dotnet").setup({
-        -- LSP managed by roslyn.nvim — disable here to avoid 'dotnet-easydotnet' errors
-        lsp = { enabled = false },
-        debugger = {
-          auto_register_dap = true,
-          bin_path = debugger_bin,
-          console = "integratedTerminal",
-          apply_value_converters = true,
-          mappings = { open_variable_viewer = { lhs = "T", desc = "open variable viewer" } },
-        },
-        managed_terminal = {
-          auto_hide = true,
-          auto_hide_delay = 2000,
-          mappings = {
-            next_tab = { lhs = "<Tab>", desc = "Next terminal tab" },
-            prev_tab = { lhs = "<S-Tab>", desc = "Previous terminal tab" },
-            new_terminal = { lhs = "+", desc = "New user terminal" },
-            close_terminal = { lhs = "X", desc = "Close current terminal tab" },
-            hide_panel = { lhs = "q", desc = "Hide terminal panel" },
+      local ok, err = pcall(function()
+        require("easy-dotnet").setup({
+          lsp = { enabled = false },
+          auto_install_easy_dotnet_server = false,
+          debugger = {
+            auto_register_dap = true,
+            bin_path = debugger_bin,
+            console = "integratedTerminal",
+            apply_value_converters = true,
+            mappings = { open_variable_viewer = { lhs = "T", desc = "open variable viewer" } },
           },
-        },
-        -- Delegate test UI to neotest (disables easy-dotnet's built-in test signs/keymaps)
-        test_runner = { neotest_integration = true },
-      })
+          managed_terminal = {
+            auto_hide = true,
+            auto_hide_delay = 2000,
+            mappings = {
+              next_tab = { lhs = "<Tab>", desc = "Next terminal tab" },
+              prev_tab = { lhs = "<S-Tab>", desc = "Previous terminal tab" },
+              new_terminal = { lhs = "+", desc = "New user terminal" },
+              close_terminal = { lhs = "X", desc = "Close current terminal tab" },
+              hide_panel = { lhs = "q", desc = "Hide terminal panel" },
+            },
+          },
+          test_runner = { neotest_integration = true },
+        })
+      end)
+      if not ok then
+        vim.schedule(function()
+          vim.notify("easy-dotnet: " .. tostring(err), vim.log.levels.WARN)
+        end)
+      end
     end,
   },
 }
