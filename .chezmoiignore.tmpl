@@ -1,15 +1,23 @@
-# Files that should NEVER be applied, even if they're in the source repo.
-# This file uses Go template syntax (chezmoi) for per-machine behavior.
-#
-# IMPORTANT: this only filters chezmoi-managed targets. Scripts in scripts/
-# and the install-windows.ps1 are not applied by chezmoi directly — they're
-# executed by bootstrap.sh. So listing them here is a no-op.
+# Files and directories that should NOT be applied by chezmoi.
+# These are repo infrastructure (scripts, docs, templates, etc.)
 
-# Per-machine files (created by post-install.sh, not in the source repo,
-# but if a user accidentally adds them to source, skip them)
+# Repo-level files (not dotfiles)
+README.md
+justfile
+Brewfile
+.gitignore
+
+# Scripts, docs, templates, packages (not dotfiles)
+scripts/
+docs/
+templates/
+packages/
+
+# Per-machine files (created by post-install.sh, not in the source repo)
 .gitconfig.local
 .gitconfig.work
 .gitconfig.personal
 
 # Local-only state files (created at runtime, never committed to source)
 .cache/
+.cache/**

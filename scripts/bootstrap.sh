@@ -75,9 +75,12 @@ if [[ ! -d "$CHEZMOI_SOURCE/.git" ]] && ! git -C "$CHEZMOI_SOURCE" rev-parse --g
   (cd "$CHEZMOI_SOURCE" && git init -b main && git add -A && git commit -m "initial dotfiles" --allow-empty)
 fi
 
-if ! chezmoi managed -i path 2>/dev/null | grep -q .; then
-  log "Initializing chezmoi from $CHEZMOI_SOURCE"
-  chezmoi init --source "$CHEZMOI_SOURCE"
+# Ensure chezmoi source points to the dotfiles repo
+# --force allows overwriting a previous config that might point elsewhere (e.g. ~/.local/share/chezmoi)
+if [[ ! -f "$HOME/.config/chezmoi/chezmoi.toml" ]] \
+   || ! grep -q "sourceDir.*$CHEZMOI_SOURCE" "$HOME/.config/chezmoi/chezmoi.toml" 2>/dev/null; then
+  log "Configuring chezmoi source to $CHEZMOI_SOURCE"
+  chezmoi init --source "$CHEZMOI_SOURCE" --force
 fi
 
 log "Running chezmoi apply (backs up conflicts to ~/.local/share/chezmoi/backups)"
