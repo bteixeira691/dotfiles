@@ -13,15 +13,10 @@ local opts = { noremap = true, silent = true, nowait = true }
 local discipline = require("craftzdog.discipline")
 discipline.cowboy()
 
--- --- Discipline: register-safe keybinds (don't pollute registers) ---
+-- --- Register-safe keybinds (don't pollute registers) ---
+-- Only add ones that don't conflict with LazyVim groups.
+-- LazyVim uses <leader>p (yank history), <leader>c (code), <leader>d (debug), <leader>r (refactor).
 map("n", "x", '"_x')
-map("n", "<Leader>p", '"0p')
-map("n", "<Leader>P", '"0P')
-map("v", "<Leader>p", '"0p')
-map("n", "<Leader>c", '"_c')
-map("n", "<Leader>C", '"_C')
-map("v", "<Leader>c", '"_c')
-map("v", "<Leader>C", '"_C')
 
 -- Increment/decrement with + and -
 map("n", "+", "<C-a>")
