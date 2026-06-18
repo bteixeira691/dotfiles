@@ -9,8 +9,51 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true, nowait = true }
 
+-- --- Discipline: cowboy mode (warns on excessive h/j/k/l/+/-) ---
+local discipline = require("craftzdog.discipline")
+discipline.cowboy()
+
+-- --- Discipline: register-safe keybinds (don't pollute registers) ---
+map("n", "x", '"_x')
+map("n", "<Leader>p", '"0p')
+map("n", "<Leader>P", '"0P')
+map("v", "<Leader>p", '"0p')
+map("n", "<Leader>c", '"_c')
+map("n", "<Leader>C", '"_C')
+map("v", "<Leader>c", '"_c')
+map("v", "<Leader>C", '"_C')
+
+-- Increment/decrement with + and -
+map("n", "+", "<C-a>")
+map("n", "-", "<C-x>")
+
+-- Delete a word backwards without yanking
+map("n", "dw", 'vb"_d')
+
+-- Select all
+map("n", "<C-a>", "gg<S-v>G")
+
+-- Disable continuations (o/O inserts blank line above/below)
+map("n", "<Leader>o", "o<Esc>^Da", opts)
+map("n", "<Leader>O", "O<Esc>^Da", opts)
+
+-- Jumplist: C-m as C-i (more reachable than C-i which requires Tab on some keyboards)
+map("n", "<C-m>", "<C-i>", opts)
+
+-- --- LSP helpers (craftzdog) ---
+map("n", "<leader>i", function()
+  require("craftzdog.lsp").toggle_inlay_hints()
+end, { desc = "Toggle inlay hints" })
+
+map("n", "<leader>h", function()
+  require("craftzdog.hsl").replace_hex_with_hsl()
+end, { desc = "Replace hex with HSL" })
+
+vim.api.nvim_create_user_command("ToggleAutoformat", function()
+  require("craftzdog.lsp").format_toggle()
+end, {})
+
 -- --- Highlight word under cursor without moving ---
--- Overrides the default H (jump to top of screen).
 map("n", "H", function()
   local word = vim.fn.expand("<cword>")
   if word ~= "" then
