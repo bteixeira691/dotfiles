@@ -16,6 +16,7 @@ return {
 
       dap.adapters.netcoredbg = adapter
       dap.adapters.coreclr = adapter
+      dap.adapters["easy-dotnet"] = adapter
 
       local function find_dll()
         local cwd = vim.fn.getcwd()
