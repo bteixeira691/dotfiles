@@ -41,14 +41,8 @@ dap.adapters["easy-dotnet"] = function(callback, config)
   end
 end
 
-dap.configurations.cs = dap.configurations.cs or {}
-table.insert(dap.configurations.cs, {
-  type = "coreclr",
-  name = "Launch",
-  request = "launch",
-  console = "internalConsole",
-  internalConsoleOptions = "openOnSessionStart",
-  program = function()
+local function find_dll(prompt)
+  return function()
     local cwd = vim.fn.getcwd()
     local dir = cwd
     local fs_stat = vim.loop.fs_stat or vim.uv.fs_stat
@@ -77,6 +71,21 @@ table.insert(dap.configurations.cs, {
       end
       dir = vim.fn.fnamemodify(dir, ":h")
     end
-    return vim.fn.input("DLL path: ", cwd .. "/bin/Debug/net10.0/", "file")
-  end,
+    return vim.fn.input(prompt, cwd .. "/bin/Debug/net10.0/", "file")
+  end
+end
+
+dap.configurations.cs = dap.configurations.cs or {}
+table.insert(dap.configurations.cs, {
+  type = "coreclr",
+  name = "Launch app",
+  request = "launch",
+  console = "internalConsole",
+  program = find_dll("App DLL path: "),
+})
+table.insert(dap.configurations.cs, {
+  type = "coreclr",
+  name = "Launch",
+  request = "launch",
+  program = find_dll("App DLL path: "),
 })
