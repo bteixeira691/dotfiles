@@ -20,20 +20,12 @@ return {
       layouts = {
         {
           elements = {
-            { id = "scopes", size = 0.5 },
-            { id = "stacks", size = 0.25 },
-            { id = "watches", size = 0.25 },
+            { id = "scopes", size = 0.33 },
+            { id = "stacks", size = 0.33 },
+            { id = "watches", size = 0.34 },
           },
           size = 15,
           position = "bottom",
-        },
-        {
-          elements = {
-            { id = "repl", size = 0.5 },
-            { id = "console", size = 0.5 },
-          },
-          size = 50,
-          position = "right",
         },
       },
     },
