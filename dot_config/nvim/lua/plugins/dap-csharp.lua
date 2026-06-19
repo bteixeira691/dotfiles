@@ -49,10 +49,7 @@ return {
           name = "Launch",
           request = "launch",
           program = find_dll,
-          cwd = "${workspaceFolder}",
-          stopAtEntry = false,
-          justMyCode = false,
-          console = "integratedTerminal",
+          cwd = vim.fn.getcwd,
         },
       }
 

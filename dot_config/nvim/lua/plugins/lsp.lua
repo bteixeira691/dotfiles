@@ -5,6 +5,7 @@ return {
       ensure_installed = {
         "csharpier",
         "netcoredbg",
+        "roslyn-language-server",
       },
     },
   },
