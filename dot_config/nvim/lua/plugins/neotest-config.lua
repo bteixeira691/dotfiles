@@ -14,7 +14,7 @@ return {
       neotest.setup({
         adapters = {
           require("neotest-dotnet")({
-            discovery_root = "solution",
+            discovery_root = "project",
           }),
           require("neotest-vstest"),
         },
