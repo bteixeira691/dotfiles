@@ -4,10 +4,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-neotest/nvim-nio",
-      {
-        "Issafalcon/neotest-dotnet",
-        dependencies = { "mfussenegger/nvim-dap" },
-      },
+      "Issafalcon/neotest-dotnet",
     },
     config = function()
       local ok, neotest = pcall(require, "neotest")
@@ -16,10 +13,6 @@ return {
       neotest.setup({
         adapters = {
           require("neotest-dotnet")({
-            dap = {
-              args = { justMyCode = false },
-              adapter_name = "coreclr",
-            },
             discovery_root = "solution",
           }),
         },
