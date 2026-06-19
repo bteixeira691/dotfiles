@@ -101,8 +101,17 @@ map("n", "<leader>bS", function()
 end, vim.tbl_extend("force", opts, { desc = "Reload & save" }))
 
 -- --- Debug (DAP) keymaps ---
--- LazyVim already defines the <leader>d group and most DAP keymaps.
--- Only add custom ones or overrides.
+-- LazyVim defines <leader>d group: <leader>db = toggle breakpoint, <leader>dc = continue, etc.
+-- Add IDE-style F-key shortcuts
+local function dap()
+  local ok, m = pcall(require, "dap")
+  return ok and m
+end
+map("n", "<F5>", function() local m = dap(); if m then m.continue() end end, { desc = "DAP Continue" })
+map("n", "<F9>", function() local m = dap(); if m then m.toggle_breakpoint() end end, { desc = "DAP Toggle Breakpoint" })
+map("n", "<F10>", function() local m = dap(); if m then m.step_over() end end, { desc = "DAP Step Over" })
+map("n", "<F11>", function() local m = dap(); if m then m.step_into() end end, { desc = "DAP Step Into" })
+map("n", "<F12>", function() local m = dap(); if m then m.step_out() end end, { desc = "DAP Step Out" })
 map("n", "<leader>dP", function()
   require("config.dap_breakpoints_panel").toggle()
 end, vim.tbl_extend("force", opts, { desc = "Breakpoints panel" }))
