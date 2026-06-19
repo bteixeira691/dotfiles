@@ -17,12 +17,7 @@ local function find_netcoredbg()
 end
 
 local cmd = find_netcoredbg()
-if not cmd then
-  vim.schedule(function()
-    vim.notify("netcoredbg not found. Run :MasonInstall netcoredbg", vim.log.levels.WARN)
-  end)
-  return
-end
+if not cmd then return end
 
 local adapter = {
   type = "executable",
@@ -48,17 +43,9 @@ table.insert(dap.configurations.cs, {
   request = "launch",
   console = "internalConsole",
   program = function()
-    vim.cmd("Dotnet build")
-    return vim.fn.input("App DLL: ", vim.fn.getcwd() .. "/bin/Debug/net10.0/", "file")
-  end,
-})
-table.insert(dap.configurations.cs, {
-  type = "coreclr",
-  name = "Debug tests",
-  request = "launch",
-  console = "internalConsole",
-  program = function()
-    vim.cmd("Dotnet build")
-    return vim.fn.input("Test DLL: ", vim.fn.getcwd() .. "/bin/Debug/net10.0/", "file")
+    vim.fn.system("dotnet build -c Debug 2>&1")
+    local dll = vim.fn.input("DLL path: ", vim.fn.getcwd() .. "/bin/Debug/net10.0/", "file")
+    if dll == "" then return nil end
+    return dll
   end,
 })
