@@ -46,6 +46,8 @@ table.insert(dap.configurations.cs, {
   type = "coreclr",
   name = "Launch",
   request = "launch",
+  console = "internalConsole",
+  internalConsoleOptions = "openOnSessionStart",
   program = function()
     local cwd = vim.fn.getcwd()
     local dir = cwd
