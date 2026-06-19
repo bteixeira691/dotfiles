@@ -58,7 +58,7 @@ return {
           },
           managed_terminal = {
             auto_hide = true,
-            auto_hide_delay = 2000,
+            auto_hide_delay = 15000,
             mappings = {
               next_tab = { lhs = "<Tab>", desc = "Next terminal tab" },
               prev_tab = { lhs = "<S-Tab>", desc = "Previous terminal tab" },
