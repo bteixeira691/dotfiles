@@ -2,15 +2,13 @@ return {
   {
     "mfussenegger/nvim-dap",
     optional = true,
-    opts = function()
+    config = function()
       local dap = require("dap")
       local mason_path = vim.fn.stdpath("data") .. "/mason/packages/netcoredbg/netcoredbg"
-      local fs_stat = vim.loop.fs_stat or vim.uv.fs_stat
-      local netcoredbg_cmd = fs_stat(mason_path) and mason_path or "netcoredbg"
 
       local adapter = {
         type = "executable",
-        command = netcoredbg_cmd,
+        command = mason_path,
         args = { "--interpreter=vscode" },
       }
 
@@ -18,40 +16,42 @@ return {
       dap.adapters.coreclr = adapter
       dap.adapters["easy-dotnet"] = adapter
 
-      local function find_dll()
-        local cwd = vim.fn.getcwd()
-        local dir = cwd
-        while dir and dir ~= "/" do
-          for _, entry in ipairs(vim.fn.readdir(dir) or {}) do
-            local full = dir .. "/" .. entry
-            local stat = fs_stat(full)
-            if stat and stat.type == "file" and entry:match("%.csproj$") then
-              local ok, lines = pcall(vim.fn.readfile, full)
-              if ok and lines then
-                local name = entry:gsub("%.csproj$", "")
-                local tfm = "net10.0"
-                for _, line in ipairs(lines) do
-                  local tf = line:match("<TargetFramework>(.-)</TargetFramework>")
-                  if tf then tfm = tf; break end
+      dap.configurations.cs = dap.configurations.cs or {}
+      table.insert(dap.configurations.cs, {
+        type = "coreclr",
+        name = "Launch",
+        request = "launch",
+        program = function()
+          local cwd = vim.fn.getcwd()
+          local fs_stat = vim.loop.fs_stat or vim.uv.fs_stat
+          local dir = cwd
+          while dir and dir ~= "/" do
+            for _, entry in ipairs(vim.fn.readdir(dir) or {}) do
+              local full = dir .. "/" .. entry
+              local stat = fs_stat(full)
+              if stat and stat.type == "file" and entry:match("%.csproj$") then
+                local ok, lines = pcall(vim.fn.readfile, full)
+                if ok and lines then
+                  local name = entry:gsub("%.csproj$", "")
+                  local tfm = "net10.0"
+                  for _, line in ipairs(lines) do
+                    local tf = line:match("<TargetFramework>(.-)</TargetFramework>")
+                    if tf then tfm = tf; break end
+                  end
+                  return dir .. "/bin/Debug/" .. tfm .. "/" .. name .. ".dll"
                 end
-                return dir .. "/bin/Debug/" .. tfm .. "/" .. name .. ".dll"
               end
             end
+            dir = vim.fn.fnamemodify(dir, ":h")
           end
-          dir = vim.fn.fnamemodify(dir, ":h")
-        end
-        return vim.fn.input("DLL path: ", cwd .. "/bin/Debug/net10.0/", "file")
-      end
+          return vim.fn.input("DLL path: ", cwd .. "/bin/Debug/net10.0/", "file")
+        end,
+      })
 
-      dap.configurations.cs = {
-        {
-          type = "coreclr",
-          name = "Launch",
-          request = "launch",
-          program = find_dll,
-          cwd = vim.fn.getcwd,
-        },
-      }
+      local dapui = require("dapui")
+      dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
+      dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+      dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
 
       vim.fn.sign_define("DapBreakpoint", {
         text = "●",
