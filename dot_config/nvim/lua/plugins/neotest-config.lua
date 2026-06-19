@@ -5,6 +5,7 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-neotest/nvim-nio",
       "Issafalcon/neotest-dotnet",
+      "Nsidorenco/neotest-vstest",
     },
     config = function()
       local ok, neotest = pcall(require, "neotest")
@@ -15,6 +16,7 @@ return {
           require("neotest-dotnet")({
             discovery_root = "solution",
           }),
+          require("neotest-vstest"),
         },
       })
     end,
