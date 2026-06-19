@@ -41,52 +41,24 @@ dap.adapters["easy-dotnet"] = function(callback, config)
   end
 end
 
-local function find_dll(prompt)
-  return function()
-    local cwd = vim.fn.getcwd()
-    local dir = cwd
-    local fs_stat = vim.loop.fs_stat or vim.uv.fs_stat
-    while dir and dir ~= "/" do
-      for _, entry in ipairs(vim.fn.readdir(dir) or {}) do
-        local full = dir .. "/" .. entry
-        local stat = fs_stat(full)
-        if stat and stat.type == "file" and entry:match("%.csproj$") then
-          local ok, lines = pcall(vim.fn.readfile, full)
-          if ok and lines then
-            local name = entry:gsub("%.csproj$", "")
-            local tfm = "net10.0"
-            for _, line in ipairs(lines) do
-              local tf = line:match("<TargetFramework>(.-)</TargetFramework>")
-              if tf then tfm = tf; break end
-            end
-            local dll = dir .. "/bin/Debug/" .. tfm .. "/" .. name .. ".dll"
-            if not fs_stat(dll) then
-              vim.schedule(function()
-                vim.notify("DLL not found. Build the project first.", vim.log.levels.WARN)
-              end)
-            end
-            return dll
-          end
-        end
-      end
-      dir = vim.fn.fnamemodify(dir, ":h")
-    end
-    return vim.fn.input(prompt, cwd .. "/bin/Debug/net10.0/", "file")
-  end
-end
-
 dap.configurations.cs = dap.configurations.cs or {}
 table.insert(dap.configurations.cs, {
   type = "coreclr",
   name = "Launch app",
   request = "launch",
   console = "internalConsole",
-  program = find_dll("App DLL path: "),
+  program = function()
+    vim.cmd("Dotnet build")
+    return vim.fn.input("App DLL: ", vim.fn.getcwd() .. "/bin/Debug/net10.0/", "file")
+  end,
 })
 table.insert(dap.configurations.cs, {
   type = "coreclr",
   name = "Debug tests",
   request = "launch",
   console = "internalConsole",
-  program = find_dll("Test DLL path: "),
+  program = function()
+    vim.cmd("Dotnet build")
+    return vim.fn.input("Test DLL: ", vim.fn.getcwd() .. "/bin/Debug/net10.0/", "file")
+  end,
 })
