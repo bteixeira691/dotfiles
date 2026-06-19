@@ -85,7 +85,8 @@ table.insert(dap.configurations.cs, {
 })
 table.insert(dap.configurations.cs, {
   type = "coreclr",
-  name = "Launch",
+  name = "Debug tests",
   request = "launch",
-  program = find_dll("App DLL path: "),
+  console = "internalConsole",
+  program = find_dll("Test DLL path: "),
 })

@@ -8,9 +8,7 @@ return {
       "Nsidorenco/neotest-vstest",
     },
     config = function()
-      local ok, neotest = pcall(require, "neotest")
-      if not ok then return end
-
+      local neotest = require("neotest")
       neotest.setup({
         adapters = {
           require("neotest-dotnet")({
