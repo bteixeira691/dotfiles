@@ -33,7 +33,13 @@ local adapter = {
 
 dap.adapters.netcoredbg = adapter
 dap.adapters.coreclr = adapter
-dap.adapters["easy-dotnet"] = adapter
+dap.adapters["easy-dotnet"] = function(callback, config)
+  if config and config.port then
+    callback({ type = "server", host = config.host or "127.0.0.1", port = config.port })
+  else
+    callback(adapter)
+  end
+end
 
 dap.configurations.cs = dap.configurations.cs or {}
 table.insert(dap.configurations.cs, {
