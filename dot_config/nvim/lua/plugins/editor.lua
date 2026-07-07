@@ -62,4 +62,7 @@ return {
       },
     },
   },
+
+  -- Explicitly disable fzf-lua to prevent LazyVim auto-detection from loading it
+  { "ibhagwan/fzf-lua", enabled = false },
 }
