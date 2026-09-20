@@ -113,7 +113,7 @@ The stock `lang.dotnet` extra already provides: csharpier/fantomas via conform, 
 
 ### Formatting & autocmds
 
-- csharpier via conform (already in extra); explicit csharpier plugin file not needed — verify and drop if redundant.
+- csharpier via conform — the extra already registers `cs = { "csharpier" }` in `formatters_by_ft`; no separate csharpier plugin file.
 - Autocmds: C#/F# inlay hints on `LspAttach`; format-on-save for `*.cs`/`*.fs` on `BufWritePre`.
 
 ## Misc plugins (curated)
