@@ -1,68 +1,22 @@
 return {
-  {
-    "brenoprata10/nvim-highlight-colors",
-    event = "BufReadPre",
-    opts = {
-      render = "background",
-      enable_hex = true,
-      enable_short_hex = true,
-      enable_rgb = true,
-      enable_hsl = true,
-      enable_hsl_without_function = true,
-      enable_ansi = true,
-      enable_var_usage = true,
-      enable_tailwind = true,
-    },
-  },
-
-  {
-    "dinhhuy258/git.nvim",
-    event = "BufReadPre",
-    opts = {
-      keymaps = {
-        blame = "<Leader>gb",
-        browse = "<Leader>go",
-      },
-    },
-  },
-
-  {
-    "kazhala/close-buffers.nvim",
-    event = "VeryLazy",
-    keys = {
-      {
-        "<leader>th",
-        function()
-          require("close_buffers").delete({ type = "hidden" })
-        end,
-        desc = "Close Hidden Buffers",
-      },
-      {
-        "<leader>tu",
-        function()
-          require("close_buffers").delete({ type = "nameless" })
-        end,
-        desc = "Close Nameless Buffers",
-      },
-    },
-  },
-
+  -- at-file.nvim: @path completion in blink.cmp
   {
     "saghen/blink.cmp",
-    opts = {
-      completion = {
-        menu = {
-          winblend = vim.o.pumblend,
+    dependencies = { "benborla/at-file.nvim" },
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      opts.sources.default = opts.sources.default or { "lsp", "path", "snippets", "buffer" }
+      table.insert(opts.sources.default, "at_file")
+      opts.sources.providers = opts.sources.providers or {}
+      opts.sources.providers.at_file = {
+        name = "AtFile",
+        module = "at-file",
+        score_offset = 100,
+        opts = {
+          integration = "blink",
+          ignores = { ".git", "node_modules", "bin", "obj" },
         },
-      },
-      signature = {
-        window = {
-          winblend = vim.o.pumblend,
-        },
-      },
-    },
+      }
+    end,
   },
-
-  -- Explicitly disable fzf-lua to prevent LazyVim auto-detection from loading it
-  { "ibhagwan/fzf-lua", enabled = false },
 }

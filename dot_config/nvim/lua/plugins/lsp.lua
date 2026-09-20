@@ -14,6 +14,8 @@ return {
     opts = {
       inlay_hints = { enabled = false },
       servers = {
+        -- roslyn.nvim is the C# LSP; keep omnisharp off
+        omnisharp = { enabled = false },
         cssls = {},
         tailwindcss = {
           root_dir = function(...)

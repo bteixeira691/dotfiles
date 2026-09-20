@@ -7,4 +7,3 @@ vim.opt.autoread = true
 
 -- Use snacks as the default picker (disable fzf)
 vim.g.lazyvim_picker = "snacks"
-

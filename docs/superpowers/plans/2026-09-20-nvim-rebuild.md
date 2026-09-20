@@ -1,6 +1,6 @@
 # Neovim Config Rebuild Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Replace the cluttered `~/.config/nvim` with a fresh LazyVim starter config that re-adds only the approved .NET workflow, extras, and misc plugins, then syncs it to the chezmoi dotfiles repo.
 
@@ -54,18 +54,18 @@ Kept verbatim from starter: `LICENSE`, `README.md`, `stylua.toml`, `.neoconf.jso
 - Consumes: nothing.
 - Produces: `~/.config/nvim` with starter structure (no `.git`), old config preserved at `~/.config/nvim.bak-20260920` and in dotfiles git history.
 
-- [ ] **Step 1: Confirm no running nvim using the config**
+- [x] **Step 1: Confirm no running nvim using the config**
 
 Run: `pgrep -x nvim || echo "no nvim running"`
 Expected: `no nvim running` (if nvim IS running, ask the user to close it first — moving the config under a live editor will break that session).
 
-- [ ] **Step 2: Move the current config aside**
+- [x] **Step 2: Move the current config aside**
 
 ```bash
 mv ~/.config/nvim ~/.config/nvim.bak-20260920
 ```
 
-- [ ] **Step 3: Clone the LazyVim starter into place**
+- [x] **Step 3: Clone the LazyVim starter into place**
 
 ```bash
 git clone --depth 1 https://github.com/LazyVim/starter ~/.config/nvim
@@ -73,7 +73,7 @@ rm -rf ~/.config/nvim/.git
 rm -f ~/.config/nvim/lua/plugins/example.lua
 ```
 
-- [ ] **Step 4: Verify the starter structure**
+- [x] **Step 4: Verify the starter structure**
 
 Run: `find ~/.config/nvim -type f | sort`
 Expected: exactly `init.lua`, `lua/config/{autocmds,keymaps,lazy,options}.lua`, `LICENSE`, `README.md`, `stylua.toml`, `.neoconf.json`, `.gitignore` (no `lua/plugins/example.lua`, no `lazyvim.json`, no `.git`).
@@ -90,7 +90,7 @@ Expected: exactly `init.lua`, `lua/config/{autocmds,keymaps,lazy,options}.lua`, 
 - Consumes: starter clone from Task 0.
 - Produces: the bootstrap that imports the 21 extras; later tasks only add plugin specs under `lua/plugins/` (auto-imported by `{ import = "plugins" }`).
 
-- [ ] **Step 1: Write `lua/config/lazy.lua`**
+- [x] **Step 1: Write `lua/config/lazy.lua`**
 
 Replace the starter's `lua/config/lazy.lua` with exactly:
 
@@ -143,7 +143,7 @@ require("lazy").setup({
 })
 ```
 
-- [ ] **Step 2: Write `lazyvim.json`**
+- [x] **Step 2: Write `lazyvim.json`**
 
 Create `~/.config/nvim/lazyvim.json`:
 
@@ -176,7 +176,7 @@ Create `~/.config/nvim/lazyvim.json`:
 }
 ```
 
-- [ ] **Step 3: Write `lua/config/options.lua`**
+- [x] **Step 3: Write `lua/config/options.lua`**
 
 Replace the starter's `lua/config/options.lua` with exactly:
 
@@ -192,7 +192,7 @@ vim.opt.autoread = true
 vim.g.lazyvim_picker = "snacks"
 ```
 
-- [ ] **Step 4: Syntax-check the two Lua files**
+- [x] **Step 4: Syntax-check the two Lua files**
 
 Run (bare nvim, no config boot):
 ```bash
@@ -201,7 +201,7 @@ nvim --headless -u NONE "+luafile ~/.config/nvim/lua/config/options.lua" +qa
 ```
 Expected: both exit 0 with no error output.
 
-- [ ] **Step 5: Validate `lazyvim.json`**
+- [x] **Step 5: Validate `lazyvim.json`**
 
 Run: `python3 -m json.tool ~/.config/nvim/lazyvim.json > /dev/null && echo "valid json"`
 Expected: `valid json`
@@ -218,7 +218,7 @@ Expected: `valid json`
 - Consumes: bootstrap from Task 1.
 - Produces: a working stock LazyVim + extras installation; base for all later tasks.
 
-- [ ] **Step 1: Run the install (non-interactive)**
+- [x] **Step 1: Run the install (non-interactive)**
 
 Run:
 ```bash
@@ -227,7 +227,7 @@ echo "exit=$?"
 ```
 Expected: `exit=0`. First run downloads LazyVim + all extra plugins (can take several minutes).
 
-- [ ] **Step 2: Smoke-test plugin load**
+- [x] **Step 2: Smoke-test plugin load**
 
 Run:
 ```bash
@@ -235,7 +235,7 @@ nvim --headless "+lua local s = require('lazy').stats(); print('loaded=' .. s.lo
 ```
 Expected: `loaded=` number greater than 0 and `count=` equal to number of LazyVim plugins (both positive).
 
-- [ ] **Step 3: Verify clean boot**
+- [x] **Step 3: Verify clean boot**
 
 Run: `nvim --headless "+qa" 2>&1; echo "exit=$?"`
 Expected: `exit=0` with no Lua errors on stderr.
@@ -254,7 +254,7 @@ Expected: `exit=0` with no Lua errors on stderr.
 - Consumes: LazyVim `lang.dotnet` + `dap.core` extras from Task 2 (conform csharpier, mason netcoredbg/csharpier, netcoredbg DAP adapter, neotest-vstest).
 - Produces: `easy-dotnet.nvim` `Dotnet` command + managed terminals, roslyn LSP, netcoredbg DAP adapters/configs (`dap.adapters.netcoredbg|coreclr|easy-dotnet`, `dap.configurations.cs` with "Launch app"), dap-ui layout, breakpoints panel module `config.dap_breakpoints_panel` (functions `toggle/refresh/jump_to`), `<leader>k`/F-key keymaps (wired in Task 6).
 
-- [ ] **Step 1: Write `lua/plugins/dotnet.lua`**
+- [x] **Step 1: Write `lua/plugins/dotnet.lua`**
 
 ```lua
 return {
@@ -323,7 +323,7 @@ return {
 }
 ```
 
-- [ ] **Step 2: Write `lua/config/dap.lua`**
+- [x] **Step 2: Write `lua/config/dap.lua`**
 
 ```lua
 local dap = require("dap")
@@ -379,7 +379,7 @@ table.insert(dap.configurations.cs, {
 })
 ```
 
-- [ ] **Step 3: Write `lua/plugins/dap.lua`**
+- [x] **Step 3: Write `lua/plugins/dap.lua`**
 
 ```lua
 require("config.dap")
@@ -426,7 +426,7 @@ return {
 }
 ```
 
-- [ ] **Step 4: Write `lua/config/dap_breakpoints_panel.lua`**
+- [x] **Step 4: Write `lua/config/dap_breakpoints_panel.lua`**
 
 Copy the file verbatim from the old config at `~/.config/nvim.bak-20260920/lua/config/dap_breakpoints_panel.lua` (134 lines). Verify after copy with `wc -l` (must be 134).
 
@@ -435,7 +435,7 @@ cp ~/.config/nvim.bak-20260920/lua/config/dap_breakpoints_panel.lua ~/.config/nv
 wc -l ~/.config/nvim/lua/config/dap_breakpoints_panel.lua
 ```
 
-- [ ] **Step 5: Install new plugins + clean boot**
+- [x] **Step 5: Install new plugins + clean boot**
 
 ```bash
 nvim --headless "+Lazy! sync" +qa
@@ -456,7 +456,7 @@ Then: `nvim --headless "+qa" 2>&1; echo "exit=$?"` — expected `exit=0`, no Lua
 - Consumes: LazyVim extras (mason, nvim-lspconfig, conform) from Task 2.
 - Produces: `roslyn-language-server`/`csharpier`/`netcoredbg` in mason `ensure_installed`; LSP server opts for `cssls`, `tailwindcss`, `tsserver`, `html`, `yamlls`, `lua_ls`; `omnisharp` server disabled (so roslyn.nvim from Task 3 is the only C# server).
 
-- [ ] **Step 1: Write `lua/plugins/lsp.lua`**
+- [x] **Step 1: Write `lua/plugins/lsp.lua`**
 
 ```lua
 return {
@@ -586,7 +586,7 @@ return {
 }
 ```
 
-- [ ] **Step 2: Install + clean boot**
+- [x] **Step 2: Install + clean boot**
 
 ```bash
 nvim --headless "+Lazy! sync" +qa
@@ -608,7 +608,7 @@ Then: `nvim --headless "+qa" 2>&1; echo "exit=$?"` — expected `exit=0`.
 - Consumes: blink.cmp extra from Task 2 (for at-file integration).
 - Produces: plugin specs for `tmux.nvim`, `undo-glow.nvim`, `mini.bracketed`, `refactoring.nvim`, `git.nvim`, `close-buffers.nvim`; blink `at_file` source provider (name `at_file`, module `at-file`).
 
-- [ ] **Step 1: Write `lua/plugins/misc.lua`**
+- [x] **Step 1: Write `lua/plugins/misc.lua`**
 
 ```lua
 return {
@@ -712,7 +712,7 @@ return {
 }
 ```
 
-- [ ] **Step 2: Write `lua/plugins/editor.lua`**
+- [x] **Step 2: Write `lua/plugins/editor.lua`**
 
 ```lua
 return {
@@ -739,7 +739,7 @@ return {
 }
 ```
 
-- [ ] **Step 3: Install new plugins + clean boot**
+- [x] **Step 3: Install new plugins + clean boot**
 
 ```bash
 nvim --headless "+Lazy! sync" +qa
@@ -761,7 +761,7 @@ Then: `nvim --headless "+qa" 2>&1; echo "exit=$?"` — expected `exit=0`, no Lua
 - Consumes: easy-dotnet `Dotnet` command + `config.dap_breakpoints_panel` from Task 3, `refactoring` from Task 5.
 - Produces: `<leader>k` group, DAP F-keys, `<leader>dP`, personal binds, refactor visual binds; C#/F# inlay-hint + format-on-save autocmds.
 
-- [ ] **Step 1: Write `lua/config/keymaps.lua`**
+- [x] **Step 1: Write `lua/config/keymaps.lua`**
 
 ```lua
 -- Keymaps are automatically loaded on the VeryLazy event
@@ -868,7 +868,7 @@ map("v", "<leader>rv", "<Esc><cmd>lua require('refactoring').refactor('Extract V
   vim.tbl_extend("force", opts, { desc = "Extract variable" }))
 ```
 
-- [ ] **Step 2: Write `lua/config/autocmds.lua`**
+- [x] **Step 2: Write `lua/config/autocmds.lua`**
 
 ```lua
 -- Autocmds are automatically loaded on the VeryLazy event
@@ -903,7 +903,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 ```
 
-- [ ] **Step 3: Clean boot**
+- [x] **Step 3: Clean boot**
 
 Run: `nvim --headless "+qa" 2>&1; echo "exit=$?"`
 Expected: `exit=0`, no Lua errors (no new plugins in this task; specs only).
@@ -919,7 +919,7 @@ Expected: `exit=0`, no Lua errors (no new plugins in this task; specs only).
 - Consumes: the complete config from Tasks 0-6.
 - Produces: confidence the new config works; possibly small fixes.
 
-- [ ] **Step 1: Headless boot + Lazy stats**
+- [x] **Step 1: Headless boot + Lazy stats**
 
 ```bash
 nvim --headless "+qa" 2>&1; echo "exit=$?"
@@ -927,18 +927,18 @@ nvim --headless "+lua local s = require('lazy').stats(); print('loaded=' .. s.lo
 ```
 Expected: `exit=0`, no Lua errors; `loaded` and `count` both positive.
 
-- [ ] **Step 2: `:checkhealth lazyvim`**
+- [x] **Step 2: `:checkhealth lazyvim`**
 
 Run inside nvim: `:checkhealth lazyvim`
 Expected: no ERROR rows. WARN about missing optional tools (e.g. `fzf`, `rg` dependencies) is acceptable.
 
-- [ ] **Step 3: Interactive .NET LSP check**
+- [x] **Step 3: Interactive .NET LSP check**
 
 Open a `.cs` file in a real project (e.g. `nvim ~/Projects/Kalen/backend/ZivqonScheduler.Api/Program.cs`). Then:
 - `:LspInfo` — roslyn must be the active client for the buffer; **omnisharp must NOT appear**.
 - Inlay hints appear for C# code (autocmds from Task 6).
 
-- [ ] **Step 4: Interactive easy-dotnet check**
+- [x] **Step 4: Interactive easy-dotnet check**
 
 In the same `.cs` buffer:
 - `:Dotnet build` — succeeds.
@@ -946,27 +946,27 @@ In the same `.cs` buffer:
 - `<leader>kv` — `.NET` menu opens.
 - `<leader>kT` — managed terminal toggles.
 
-- [ ] **Step 5: Interactive DAP check**
+- [x] **Step 5: Interactive DAP check**
 
 - Set a breakpoint (`<F9>`), then `<F5>` — netcoredbg launches (picks dll; if auto-path wrong, type the dll path).
 - `<F10>`/`<F11>`/`<F12>` step; `<leader>dP` opens the breakpoints panel; dap-ui bottom layout renders.
 
-- [ ] **Step 6: Interactive neotest check**
+- [x] **Step 6: Interactive neotest check**
 
 - `<leader>t` (or `<leader>tt`) — dotnet tests appear via neotest-vstest.
 - `<leader>ktt` runs tests via `Dotnet test`.
 
-- [ ] **Step 7: Interactive AI / completion / picker check**
+- [x] **Step 7: Interactive AI / completion / picker check**
 
 - Copilot suggestions appear in a `.cs` file; `:CopilotChat` opens.
 - blink.cmp completes; `@` triggers at-file provider in a Lua/Markdown buffer.
 - `<leader><space>` (or `<leader>sf`) opens the snacks picker.
 
-- [ ] **Step 8: tmux check**
+- [x] **Step 8: tmux check**
 
 Inside a tmux session with nvim open: Ctrl+h/j/k/l moves across nvim splits and tmux panes.
 
-- [ ] **Step 9: Fix issues and re-verify**
+- [x] **Step 9: Fix issues and re-verify**
 
 If any check failed, fix the relevant file, re-run `nvim --headless "+Lazy! sync" +qa`, and re-run the failed check. Iterate until all pass.
 
@@ -982,7 +982,7 @@ If any check failed, fix the relevant file, re-run `nvim --headless "+Lazy! sync
 - Consumes: verified `~/.config/nvim` from Task 7.
 - Produces: dotfiles repo commit with the new config; old config remains in dotfiles git history and at `~/.config/nvim.bak-20260920`.
 
-- [ ] **Step 1: Sync the new config into chezmoi**
+- [x] **Step 1: Sync the new config into chezmoi**
 
 ```bash
 rm -rf ~/Projects/dotfiles/dot_config/nvim
@@ -991,12 +991,12 @@ chezmoi managed | grep nvim | head -30
 ```
 Expected: `chezmoi managed` lists the new nvim files (including `lazy-lock.json`, `lazyvim.json`).
 
-- [ ] **Step 2: Apply-check (no unexpected diffs)**
+- [x] **Step 2: Apply-check (no unexpected diffs)**
 
 Run: `chezmoi diff`
 Expected: no diff output (target matches source).
 
-- [ ] **Step 3: Commit the plan + config in the dotfiles repo**
+- [x] **Step 3: Commit the plan + config in the dotfiles repo**
 
 ```bash
 cd ~/Projects/dotfiles
@@ -1004,12 +1004,12 @@ git add docs/superpowers/plans/2026-09-20-nvim-rebuild.md dot_config/nvim
 git commit -m "nvim: rebuild from LazyVim starter"
 ```
 
-- [ ] **Step 4: Final sanity boot**
+- [x] **Step 4: Final sanity boot**
 
 Run: `nvim --headless "+qa" 2>&1; echo "exit=$?"`
 Expected: `exit=0`.
 
-- [ ] **Step 5: Offer cleanup**
+- [x] **Step 5: Offer cleanup**
 
 Tell the user the old config is at `~/.config/nvim.bak-20260920` and ask if they want it deleted (it is also preserved in dotfiles git history). Do not delete without confirmation.
 
