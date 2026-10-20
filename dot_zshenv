@@ -7,7 +7,17 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+# Linux: /run/user/<uid>. macOS has no writable /run, so use TMPDIR (and replace
+# an inherited Linux path, e.g. from a long-running process started earlier).
+if [[ "$OSTYPE" == darwin* ]]; then
+  if [[ -z "$XDG_RUNTIME_DIR" || ! -d "$XDG_RUNTIME_DIR" || ! -w "$XDG_RUNTIME_DIR" ]]; then
+    export XDG_RUNTIME_DIR="${TMPDIR%/}/xdg-runtime-$(id -u)"
+  fi
+else
+  export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+fi
+[[ -d "$XDG_RUNTIME_DIR" ]] || mkdir -p "$XDG_RUNTIME_DIR" 2>/dev/null
+chmod 700 "$XDG_RUNTIME_DIR" 2>/dev/null
 
 # --- Zsh own stuff ------------------------------------------------------------
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"

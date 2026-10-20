@@ -8,7 +8,12 @@ local function notify(msg, level)
 end
 
 function M.enabled()
-  return vim.env.HERDR_ENV == "1" and vim.env.HERDR_PANE_ID ~= nil
+  -- The herdr-nvim sidebar runs as a headless nvim with a remote UI attached;
+  -- it must not write the nav marker or act as the "main" editor.
+  if vim.tbl_contains(vim.v.argv, "--headless") then
+    return false
+  end
+  return vim.env.HERDR_ENV == "1" and vim.env.HERDR_PANE_ID ~= nil and #vim.api.nvim_list_uis() > 0
 end
 
 local function bin()

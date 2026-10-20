@@ -10,6 +10,23 @@ status_indicators = "dots"
 name = "tokyo-night"
 auto_switch = false
 
+[keys]
+# prefix+e opens the nvim sidebar, so keep the scrollback editor on shift+e
+edit_scrollback = "prefix+shift+e"
+
+# --- herdr-nvim: nvim sidebar + file picker ---------------------------------
+[[keys.command]]
+key = "prefix+e"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.toggle"
+description = "nvim sidebar"
+
+[[keys.command]]
+key = "prefix+o"
+type = "plugin_action"
+command = "chmarax.herdr-nvim.pick-file"
+description = "open file from agent output"
+
 # --- Neovim <-> Herdr pane navigation (Ctrl+h/j/k/l) ------------------------
 # herdr-nvim-nav forwards the chord to Neovim when a Neovim pane is focused,
 # and otherwise returns focus to the last Neovim pane in the workspace.

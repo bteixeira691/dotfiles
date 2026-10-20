@@ -53,11 +53,16 @@ case "$fg" in
 esac
 
 # Find the Neovim pane in this workspace: marker first (last focused), then scan.
+# The herdr-nvim sidebar is also "nvim" but runs with --remote-ui; skip it.
 marker="${XDG_CACHE_HOME:-$HOME/.cache}/herdr/nvim-pane-$ws"
 target=""
+is_sidebar() {
+  "$H" pane process-info --pane "$1" 2>/dev/null | "$JQ" -r '
+    .result.process_info.foreground_processes[0].cmdline // empty' | grep -q -- "--remote-ui"
+}
 if [ -f "$marker" ]; then
   candidate=$(cat "$marker" 2>/dev/null)
-  if [ -n "$candidate" ] && "$H" pane get "$candidate" >/dev/null 2>&1; then
+  if [ -n "$candidate" ] && "$H" pane get "$candidate" >/dev/null 2>&1 && ! is_sidebar "$candidate"; then
     target="$candidate"
   fi
 fi
@@ -67,8 +72,10 @@ if [ -z "$target" ]; then
     name=$("$H" pane process-info --pane "$pane" 2>/dev/null | "$JQ" -r '.result.process_info.foreground_processes[0].name // empty')
     case "$name" in
       nvim|vim)
-        target="$pane"
-        break
+        if ! is_sidebar "$pane"; then
+          target="$pane"
+          break
+        fi
         ;;
     esac
   done
@@ -85,10 +92,15 @@ EOF
 
 if [ -n "$target_tab" ] && [ "$target_tab" != "$cur_tab" ]; then
   "$H" tab focus "$target_tab" >/dev/null 2>&1
-  exit 0
+  # tab focus keeps the tab's internal focus; find where it landed.
+  cur=$("$H" pane list 2>/dev/null | "$JQ" -r --arg t "$target_tab" \
+    '.result.panes[] | select(.tab_id == $t and .focused) | .pane_id' | head -n 1)
+  [ -n "$cur" ] || exit 0
+  [ "$cur" = "$target" ] && exit 0
 fi
 
-# Same tab (or unknown tab): move directionally towards the Neovim pane.
+# Same tab (or just focused the target tab): move directionally towards the
+# Neovim pane. Explicit pane ids keep this independent of the caller context.
 next_direction() {
   "$H" pane layout --pane "$cur" 2>/dev/null | "$JQ" -r --arg a "$cur" --arg b "$target" '
     def m: if . < 0 then -. else . end;
@@ -108,7 +120,7 @@ while [ "$i" -lt 6 ] && [ "$cur" != "$target" ]; do
   step=$(next_direction)
   [ -n "$step" ] || break
   "$H" pane focus --direction "$step" --pane "$cur" >/dev/null 2>&1 || break
-  moved=$("$H" pane current 2>/dev/null | "$JQ" -r '.result.pane.pane_id // empty')
+  moved=$("$H" pane list 2>/dev/null | "$JQ" -r '.result.panes[] | select(.focused) | .pane_id' | head -n 1)
   [ -n "$moved" ] || break
   [ "$moved" = "$cur" ] && break
   cur="$moved"

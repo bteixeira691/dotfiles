@@ -93,9 +93,48 @@ nearest, `<leader>ts` summary, `<leader>to` output, `<leader>tS` stop.
 `<C-h/j/k/l>` moves Neovim splits and falls through to Herdr panes at an edge.
 From a shell pane the same chords return to the last Neovim pane in the
 workspace (`~/.local/bin/herdr-nvim-nav`, bound in `~/.config/herdr/config.toml`).
+Sidebar panes (`nvim --remote-ui`) are ignored, so focus lands on the main editor.
 
-Remove the `[[keys.command]]` block from `~/.config/herdr/config.toml` to go back
+Remove the `[[keys.command]]` blocks from `~/.config/herdr/config.toml` to go back
 to prefix-only navigation.
+
+#### herdr-nvim (sidebar, file picker, annotations)
+
+[ChmaraX/herdr-nvim](https://github.com/ChmaraX/herdr-nvim) adds a persistent,
+per-tab nvim sidebar plus code annotations that are sent to the agent in the
+workspace.
+
+```sh
+herdr plugin install --yes ChmaraX/herdr-nvim
+```
+
+Herdr keys (already bound in `config.toml`):
+
+| Key | Action |
+|---|---|
+| `prefix+e` | toggle the nvim sidebar for this tab |
+| `prefix+o` | pick a file from the agent's recent output |
+
+Neovim keys (annotations, `<leader>a` — LazyVim's AI group):
+
+| Key | Action |
+|---|---|
+| `<leader>ac` | comment line / selection |
+| `<leader>al` | list comments |
+| `<leader>as` | paste comments into the agent input |
+| `<leader>aS` | send comments (submits) |
+| `<leader>ai` | insert `path:line` at the agent's cursor |
+
+The sidebar is a headless nvim daemon per tab. `config/herdr.lua` ignores it for
+navigation (`v:argv` contains `--headless`), so it never becomes the "main" nvim.
+
+#### macOS note
+
+The plugin stores its sockets in `$XDG_RUNTIME_DIR/herdr-nvim`. Linux uses
+`/run/user/<uid>`; macOS has no writable `/run`, so `~/.zshenv` points
+`XDG_RUNTIME_DIR` at `$TMPDIR/xdg-runtime-<uid>` (and `~/.config/zsh/.zshenv`
+sources the canonical file because `ZDOTDIR` is set). A Herdr server started
+before that fix keeps the old environment until restarted.
 
 ## Maintenance
 

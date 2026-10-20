@@ -1,0 +1,5 @@
+# ZDOTDIR redirects zsh to ~/.config/zsh, so ~/.zshenv is not read by child
+# shells. Keep the canonical ~/.zshenv as the single source of truth.
+if [[ -f "$HOME/.zshenv" ]]; then
+  source "$HOME/.zshenv"
+fi
