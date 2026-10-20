@@ -1,12 +1,4 @@
 return {
-  -- tmux.nvim: seamless navigation between nvim splits and tmux panes
-  {
-    "aserowy/tmux.nvim",
-    config = function()
-      require("tmux").setup()
-    end,
-  },
-
   -- undo-glow.nvim: animated visual feedback for undo, redo, yank, paste, search
   {
     "y3owk1n/undo-glow.nvim",

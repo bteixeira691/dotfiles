@@ -1,9 +1,22 @@
 -- Options are automatically loaded before lazy.nvim startup
--- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
--- Add any additional options here
+-- Default options: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 
--- Hot reload: auto-reload when file changes on disk
+-- .NET global tools: roslyn-language-server, dotnet-ef, dotnet-easydotnet.
+-- Put them on PATH before any plugin (roslyn.nvim resolves the server from it).
+local dotnet_tools = vim.fs.joinpath(vim.env.HOME, ".dotnet", "tools")
+-- Mason tools (csharpier, html-lsp for Razor, lua-language-server, ...)
+local mason_bin = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "bin")
+for _, dir in ipairs({ dotnet_tools, mason_bin }) do
+  if vim.fn.isdirectory(dir) == 1 then
+    local path = vim.env.PATH or ""
+    if not path:find(dir, 1, true) then
+      vim.env.PATH = dir .. ":" .. path
+    end
+  end
+end
+
+-- Hot reload: auto-reload when the file changes on disk
 vim.opt.autoread = true
 
--- Use snacks as the default picker (disable fzf)
+-- Use snacks as the default picker
 vim.g.lazyvim_picker = "snacks"

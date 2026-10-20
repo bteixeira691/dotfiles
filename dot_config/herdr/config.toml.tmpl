@@ -1,0 +1,39 @@
+onboarding = false
+
+[ui.toast]
+delivery = "system"
+
+[ui]
+status_indicators = "dots"
+
+[theme]
+name = "tokyo-night"
+auto_switch = false
+
+# --- Neovim <-> Herdr pane navigation (Ctrl+h/j/k/l) ------------------------
+# herdr-nvim-nav forwards the chord to Neovim when a Neovim pane is focused,
+# and otherwise returns focus to the last Neovim pane in the workspace.
+# Remove this block (and bin/herdr-nvim-nav) to go back to prefix-only nav.
+[[keys.command]]
+key = "ctrl+h"
+type = "shell"
+command = "{{ .chezmoi.homeDir }}/.local/bin/herdr-nvim-nav left"
+description = "navigate left (neovim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "shell"
+command = "{{ .chezmoi.homeDir }}/.local/bin/herdr-nvim-nav down"
+description = "navigate down (neovim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "shell"
+command = "{{ .chezmoi.homeDir }}/.local/bin/herdr-nvim-nav up"
+description = "navigate up (neovim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "shell"
+command = "{{ .chezmoi.homeDir }}/.local/bin/herdr-nvim-nav right"
+description = "navigate right (neovim/herdr)"

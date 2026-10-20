@@ -1,30 +1,27 @@
 -- Autocmds are automatically loaded on the VeryLazy event
 -- Default autocmds: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 
--- Enable LSP inlay hints for C# (type annotations inline, like Rider)
-vim.api.nvim_create_augroup("lsp_inlay_hints", { clear = true })
+local group = vim.api.nvim_create_augroup("dotnet", { clear = true })
+
+-- Inlay hints for C#/F#. The hint categories themselves are configured in
+-- lua/plugins/dotnet.lua via the Roslyn `csharp|inlay_hints` settings.
 vim.api.nvim_create_autocmd("LspAttach", {
-  group = "lsp_inlay_hints",
-  pattern = { "*.cs", "*.fs" },
+  group = group,
+  pattern = { "*.cs", "*.fs", "*.razor" },
   callback = function(args)
-    vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+    pcall(vim.lsp.inlay_hint.enable, true, { bufnr = args.buf })
   end,
 })
 
--- Format on save for C# and F# via conform (csharpier) when available
-vim.api.nvim_create_augroup("dotnet_format", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = "dotnet_format",
-  pattern = { "*.cs", "*.fs" },
+-- Pick up changes made outside Neovim (branch switch, dotnet CLI, git pull).
+vim.api.nvim_create_autocmd("FocusGained", {
+  group = group,
   callback = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local conform = pcall(require, "conform")
-    if conform then
-      require("conform").format({ bufnr = bufnr })
-    else
-      pcall(function()
-        vim.lsp.buf.format({ bufnr = bufnr })
-      end)
+    if vim.fn.getcmdwintype() == "" then
+      pcall(vim.cmd, "checktime")
     end
   end,
 })
+
+-- Formatting on save is handled by LazyVim (conform + csharpier).
+-- Do not add a second BufWritePre hook here.

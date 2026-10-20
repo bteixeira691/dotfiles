@@ -5,18 +5,26 @@ return {
       ensure_installed = {
         "csharpier",
         "netcoredbg",
-        "roslyn-language-server",
+        -- roslyn-language-server is installed as a global dotnet tool and
+        -- kept up to date from the Azure DevOps feed (daemon mode needs >= 5.12)
       },
     },
   },
   {
     "neovim/nvim-lspconfig",
     opts = {
+      -- Inlay hints are enabled per C# buffer in lua/config/autocmds.lua
       inlay_hints = { enabled = false },
       servers = {
-        -- roslyn.nvim is the C# LSP; keep omnisharp off
+        -- roslyn.nvim is the C# LSP; keep OmniSharp off
         omnisharp = { enabled = false },
+        -- mason-lspconfig auto-enables every installed server; roslyn_ls would
+        -- start a second, per-instance Roslyn next to the shared daemon.
+        roslyn_ls = { enabled = false },
+        csharp_ls = { enabled = false },
+
         cssls = {},
+        html = {},
         tailwindcss = {
           root_dir = function(...)
             return require("lspconfig.util").root_pattern(".git")(...)
@@ -52,7 +60,6 @@ return {
             },
           },
         },
-        html = {},
         yamlls = {
           settings = {
             yaml = {
@@ -119,7 +126,6 @@ return {
           },
         },
       },
-      setup = {},
     },
   },
 }

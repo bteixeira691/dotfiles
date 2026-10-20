@@ -1,0 +1,118 @@
+#!/bin/sh
+# Neovim <-> Herdr navigation helper.
+#
+# Called by a Herdr key binding (see ~/.config/herdr/config.toml):
+#   herdr-nvim-nav <left|right|up|down>
+#
+# - If the focused pane runs Neovim, forward the matching Ctrl chord into it so
+#   Neovim can move between its own splits (and fall back to Herdr at an edge).
+# - Otherwise return focus to the last Neovim pane in this workspace, focusing
+#   its tab, or moving directionally when Neovim shares the tab.
+
+direction="${1:-}"
+case "$direction" in
+  left|right|up|down) ;;
+  *) exit 0 ;;
+esac
+
+if [ -n "${HERDR_BIN_PATH:-}" ]; then
+  H="$HERDR_BIN_PATH"
+elif command -v herdr >/dev/null 2>&1; then
+  H="herdr"
+else
+  H="$HOME/.local/bin/herdr"
+fi
+
+JQ=/usr/bin/jq
+[ -x "$JQ" ] || JQ=jq
+
+current=$("$H" pane current 2>/dev/null) || exit 0
+cur=$("$JQ" -r '.result.pane.pane_id // empty' <<EOF
+$current
+EOF
+)
+ws=$("$JQ" -r '.result.pane.workspace_id // empty' <<EOF
+$current
+EOF
+)
+[ -n "$cur" ] || exit 0
+
+fg=$("$H" pane process-info --pane "$cur" 2>/dev/null | "$JQ" -r '.result.process_info.foreground_processes[0].name // empty')
+
+case "$fg" in
+  nvim|vim)
+    case "$direction" in
+      left) key="ctrl+h" ;;
+      right) key="ctrl+l" ;;
+      up) key="ctrl+k" ;;
+      down) key="ctrl+j" ;;
+    esac
+    "$H" pane send-keys "$cur" "$key" >/dev/null 2>&1
+    exit 0
+    ;;
+esac
+
+# Find the Neovim pane in this workspace: marker first (last focused), then scan.
+marker="${XDG_CACHE_HOME:-$HOME/.cache}/herdr/nvim-pane-$ws"
+target=""
+if [ -f "$marker" ]; then
+  candidate=$(cat "$marker" 2>/dev/null)
+  if [ -n "$candidate" ] && "$H" pane get "$candidate" >/dev/null 2>&1; then
+    target="$candidate"
+  fi
+fi
+
+if [ -z "$target" ]; then
+  for pane in $("$H" pane list --workspace "$ws" 2>/dev/null | "$JQ" -r '.result.panes[].pane_id'); do
+    name=$("$H" pane process-info --pane "$pane" 2>/dev/null | "$JQ" -r '.result.process_info.foreground_processes[0].name // empty')
+    case "$name" in
+      nvim|vim)
+        target="$pane"
+        break
+        ;;
+    esac
+  done
+fi
+
+[ -n "$target" ] || exit 0
+[ "$target" = "$cur" ] && exit 0
+
+target_tab=$("$H" pane get "$target" 2>/dev/null | "$JQ" -r '.result.pane.tab_id // empty')
+cur_tab=$("$JQ" -r '.result.pane.tab_id // empty' <<EOF
+$current
+EOF
+)
+
+if [ -n "$target_tab" ] && [ "$target_tab" != "$cur_tab" ]; then
+  "$H" tab focus "$target_tab" >/dev/null 2>&1
+  exit 0
+fi
+
+# Same tab (or unknown tab): move directionally towards the Neovim pane.
+next_direction() {
+  "$H" pane layout --pane "$cur" 2>/dev/null | "$JQ" -r --arg a "$cur" --arg b "$target" '
+    def m: if . < 0 then -. else . end;
+    .result.layout.panes as $panes
+    | ($panes | map(select(.pane_id == $a)) | .[0].rect) as $ra
+    | ($panes | map(select(.pane_id == $b)) | .[0].rect) as $rb
+    | (($rb.x + $rb.width / 2) - ($ra.x + $ra.width / 2)) as $dx
+    | (($rb.y + $rb.height / 2) - ($ra.y + $ra.height / 2)) as $dy
+    | if (($dx | m) > ($dy | m))
+      then (if $dx > 0 then "right" else "left" end)
+      else (if $dy > 0 then "down" else "up" end)
+      end'
+}
+
+i=0
+while [ "$i" -lt 6 ] && [ "$cur" != "$target" ]; do
+  step=$(next_direction)
+  [ -n "$step" ] || break
+  "$H" pane focus --direction "$step" --pane "$cur" >/dev/null 2>&1 || break
+  moved=$("$H" pane current 2>/dev/null | "$JQ" -r '.result.pane.pane_id // empty')
+  [ -n "$moved" ] || break
+  [ "$moved" = "$cur" ] && break
+  cur="$moved"
+  i=$((i + 1))
+done
+
+exit 0
