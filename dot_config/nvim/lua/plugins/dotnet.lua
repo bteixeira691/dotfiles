@@ -61,16 +61,6 @@ return {
             on_dir(decision.root_dir)
           end
         end,
-        -- Work around a Roslyn off-by-one in `textDocument/semanticTokens/range`:
-        -- at EOF it requests a line one past the end, the server throws, and
-        -- Neovim retries on every redraw. Full-file requests still work.
-        capabilities = {
-          textDocument = {
-            semanticTokens = {
-              requests = { range = false },
-            },
-          },
-        },
         settings = {
           ["csharp|inlay_hints"] = {
             csharp_enable_inlay_hints_for_implicit_object_creation = true,
