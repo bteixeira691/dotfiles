@@ -5,16 +5,69 @@ delivery = "system"
 
 [ui]
 status_indicators = "dots"
+pane_gaps = false
+hide_tab_bar_when_single_tab = true
+tab_bar_position = "bottom"
+copy_on_select = false
+sidebar_start_collapsed = true
+sidebar_width = 20
+window_title = "{workspace}: {terminal_title}"
+
+# Show Claude's session summary (its terminal title) in the sidebar instead of
+# just the agent name.
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", "machine", "workspace", "tab"], ["terminal_title_stripped"]]
+
+[ui.sound.agents]
+claude = "off"
+
+[terminal]
+new_cwd = "follow"
 
 [theme]
 name = "tokyo-night"
 auto_switch = false
 
 [keys]
+prefix = "ctrl+t"
+
+# Reload settings
+reload_config = "prefix+r"
+resize_mode = "prefix+shift+r"
+
+detach = "prefix+d"
+rename_tab = "prefix+comma"
+close_tab = "prefix+&"
+
+# Moving tabs / workspaces
+move_tab_previous = "ctrl+shift+left"
+move_tab_next = "ctrl+shift+right"
+previous_workspace = ["ctrl+shift+[", "ctrl+{"]
+next_workspace = ["ctrl+shift+]", "ctrl+}"]
+
+copy_mode = "prefix+["
+last_pane = "prefix+;"
+
+# Pane focus. ctrl+h/j/k/l is handled by herdr-nvim-nav below, because it can
+# hand the chord to Neovim first; these are the plain herdr fallbacks.
+focus_pane_left = ["prefix+h", "ctrl+shift+h"]
+focus_pane_down = ["prefix+j", "ctrl+shift+j"]
+focus_pane_up = ["prefix+k", "ctrl+shift+k"]
+focus_pane_right = ["prefix+l", "ctrl+shift+l"]
+
+# Splits
+split_vertical = ["prefix+|", "prefix+%", "prefix+backslash"]
+split_horizontal = ["prefix+minus", 'prefix+"', "prefix+_"]
+
+goto = "prefix+u"
+open_notification_target = "prefix+shift+o"
+
 # prefix+e opens the nvim sidebar, so keep the scrollback editor on shift+e
 edit_scrollback = "prefix+shift+e"
 
 # --- herdr-nvim: nvim sidebar + file picker ---------------------------------
+# Kept on prefix+e / prefix+o (craftzdog uses these for "kill other panes" and
+# "open cwd"; the nvim integration is more useful here).
 [[keys.command]]
 key = "prefix+e"
 type = "plugin_action"
@@ -54,3 +107,48 @@ key = "ctrl+l"
 type = "shell"
 command = "{{ .chezmoi.homeDir }}/.local/bin/herdr-nvim-nav right"
 description = "navigate right (neovim/herdr)"
+
+# --- Lazygit in a pane ------------------------------------------------------
+[[keys.command]]
+key = "prefix+g"
+type = "pane"
+command = 'cd "$HERDR_ACTIVE_PANE_CWD" && lazygit'
+description = "lazygit"
+
+# --- tmux-pain-control style resizing --------------------------------------
+[[keys.command]]
+key = "prefix+shift+h"
+type = "shell"
+command = 'herdr pane resize --direction left --pane "$HERDR_ACTIVE_PANE_ID"'
+description = "resize pane left"
+
+[[keys.command]]
+key = "prefix+shift+j"
+type = "shell"
+command = 'herdr pane resize --direction down --pane "$HERDR_ACTIVE_PANE_ID"'
+description = "resize pane down"
+
+[[keys.command]]
+key = "prefix+shift+k"
+type = "shell"
+command = 'herdr pane resize --direction up --pane "$HERDR_ACTIVE_PANE_ID"'
+description = "resize pane up"
+
+[[keys.command]]
+key = "prefix+shift+l"
+type = "shell"
+command = 'herdr pane resize --direction right --pane "$HERDR_ACTIVE_PANE_ID"'
+description = "resize pane right"
+
+# --- Move the current workspace up/down ------------------------------------
+[[keys.command]]
+key = "ctrl+shift+up"
+type = "shell"
+command = '"$HOME/.local/bin/herdr-move-workspace" up'
+description = "move workspace up"
+
+[[keys.command]]
+key = "ctrl+shift+down"
+type = "shell"
+command = '"$HOME/.local/bin/herdr-move-workspace" down'
+description = "move workspace down"
