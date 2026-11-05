@@ -190,6 +190,10 @@ if (Get-Command lazygit -ErrorAction SilentlyContinue) {
   Set-Alias -Name lg -Value lazygit
 }
 
+if (Get-Command lazydocker -ErrorAction SilentlyContinue) {
+  Set-Alias -Name lzd -Value lazydocker
+}
+
 if (Get-Command just -ErrorAction SilentlyContinue) {
   Set-Alias -Name j -Value just
 }

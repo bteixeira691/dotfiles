@@ -115,6 +115,14 @@ type = "pane"
 command = 'cd "$HERDR_ACTIVE_PANE_CWD" && lazygit'
 description = "lazygit"
 
+# --- Lazydocker in a pane ---------------------------------------------------
+# prefix+d is detach, so use shift+d for docker. Opens in the active pane's cwd.
+[[keys.command]]
+key = "prefix+shift+d"
+type = "pane"
+command = 'cd "$HERDR_ACTIVE_PANE_CWD" && lazydocker'
+description = "lazydocker"
+
 # --- tmux-pain-control style resizing --------------------------------------
 [[keys.command]]
 key = "prefix+shift+h"
