@@ -73,6 +73,12 @@ $pwsh = Get-Command pwsh -ErrorAction SilentlyContinue
 if ($pwsh) {
   $pwshProfile = & $pwsh.Source -NoProfile -Command '$PROFILE.CurrentUserAllHosts'
   if ($pwshProfile) { $profileTargets += $pwshProfile }
+} else {
+  # PowerShell 7 was just installed but may not be on PATH in this session yet.
+  $pwshDefault = Join-Path $HOME 'Documents/PowerShell/profile.ps1'
+  if (Test-Path (Split-Path -Parent $pwshDefault)) {
+    $profileTargets += $pwshDefault
+  }
 }
 
 $shim = @'

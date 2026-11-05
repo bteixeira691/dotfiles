@@ -237,5 +237,9 @@ function reload {
 
 function serve {
   param([int]$Port = 8000)
-  python -m http.server $Port
+  if (Get-Command uv -ErrorAction SilentlyContinue) {
+    uv run python -m http.server $Port
+  } else {
+    python -m http.server $Port
+  }
 }
