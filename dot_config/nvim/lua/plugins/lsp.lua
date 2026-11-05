@@ -30,36 +30,10 @@ return {
             return require("lspconfig.util").root_pattern(".git")(...)
           end,
         },
-        tsserver = {
-          root_dir = function(...)
-            return require("lspconfig.util").root_pattern(".git")(...)
-          end,
-          single_file_support = false,
-          settings = {
-            typescript = {
-              inlayHints = {
-                includeInlayParameterNameHints = "literal",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = false,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
-              },
-            },
-            javascript = {
-              inlayHints = {
-                includeInlayParameterNameHints = "all",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = true,
-                includeInlayEnumMemberValueHints = true,
-              },
-            },
-          },
-        },
+        -- NOTE: `tsserver` no longer exists in nvim-lspconfig (renamed to
+        -- `ts_ls`), so this block only produced an "invalid config" error on
+        -- every TypeScript buffer. Enable `lazyvim.plugins.extras.lang.typescript`
+        -- and configure `vtsls` if TS support is needed.
         yamlls = {
           settings = {
             yaml = {

@@ -1,0 +1,10 @@
+--smart-case
+--hidden
+--glob=!.git/*
+--glob=!node_modules/*
+--glob=!bin/*
+--glob=!obj/*
+--glob=!dist/*
+--glob=!build/*
+--max-columns=200
+--max-columns-preview

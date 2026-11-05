@@ -61,6 +61,16 @@ return {
             on_dir(decision.root_dir)
           end
         end,
+        -- Work around a Roslyn off-by-one in `textDocument/semanticTokens/range`:
+        -- at EOF it requests a line one past the end, the server throws, and
+        -- Neovim retries on every redraw. Full-file requests still work.
+        capabilities = {
+          textDocument = {
+            semanticTokens = {
+              requests = { range = false },
+            },
+          },
+        },
         settings = {
           ["csharp|inlay_hints"] = {
             csharp_enable_inlay_hints_for_implicit_object_creation = true,
@@ -81,7 +91,9 @@ return {
             dotnet_compiler_diagnostics_scope = "openFiles",
           },
           ["csharp|code_lens"] = {
-            dotnet_enable_references_code_lens = true,
+            -- Reference lenses force a solution-wide reference search for every
+            -- visible file. Test lenses are cheap and useful, so keep those.
+            dotnet_enable_references_code_lens = false,
             dotnet_enable_tests_code_lens = true,
           },
           ["csharp|formatting"] = {
@@ -137,7 +149,10 @@ return {
       test_runner = {
         -- neotest owns signs/keymaps (see lua/plugins/test.lua)
         neotest_integration = true,
-        auto_start_testrunner = true,
+        -- quick_discover runs `dotnet test --list-tests` on every C# buffer,
+        -- which is the main reason opening a file in a large solution stalls.
+        -- Open the runner with <leader>kt when you actually need it.
+        auto_start_testrunner = false,
         viewmode = "float",
       },
       diagnostics = {

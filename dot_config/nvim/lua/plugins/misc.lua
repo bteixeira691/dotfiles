@@ -7,7 +7,9 @@ return {
     opts = {
       animation = {
         enabled = true,
-        duration = 300,
+        -- 300ms per undo/yank/paste made fast editing feel laggy. 120ms is
+        -- still visible but no longer delays the next keystroke.
+        duration = 120,
         animation_type = "fade",
       },
       highlights = {
@@ -55,37 +57,14 @@ return {
     end,
   },
 
-  -- git.nvim: blame + browse
+  -- Scrolling animation is the one that feels like input lag on long files.
+  -- Cursor/resize animations stay on.
   {
-    "dinhhuy258/git.nvim",
-    event = "BufReadPre",
-    opts = {
-      keymaps = {
-        blame = "<Leader>gb",
-        browse = "<Leader>go",
-      },
-    },
-  },
-
-  -- close-buffers.nvim: close hidden/nameless buffers
-  {
-    "kazhala/close-buffers.nvim",
-    event = "VeryLazy",
-    keys = {
-      {
-        "<leader>th",
-        function()
-          require("close_buffers").delete({ type = "hidden" })
-        end,
-        desc = "Close Hidden Buffers",
-      },
-      {
-        "<leader>tu",
-        function()
-          require("close_buffers").delete({ type = "nameless" })
-        end,
-        desc = "Close Nameless Buffers",
-      },
-    },
+    "nvim-mini/mini.animate",
+    opts = function(_, opts)
+      opts.scroll = opts.scroll or {}
+      opts.scroll.enable = false
+      return opts
+    end,
   },
 }

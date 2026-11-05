@@ -15,6 +15,10 @@ return {
         opts = {
           integration = "blink",
           ignores = { ".git", "node_modules", "bin", "obj" },
+          -- The first `@` in a session shells out to fd/git to enumerate the
+          -- repo. Keep that result longer and cap it so huge repos stay snappy.
+          max_entries = 5000,
+          cache_ttl_ms = 30000,
         },
       }
     end,
