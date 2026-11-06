@@ -1,4 +1,23 @@
 return {
+  -- Dashboard: replace LazyVim's wordmark with a neutral NVIM one. The
+  -- dashboard keys/pickers still come from LazyVim's snacks spec.
+  {
+    "snacks.nvim",
+    opts = {
+      dashboard = {
+        preset = {
+          header = [[
+███╗   ██╗██╗   ██╗██╗███╗   ███╗
+████╗  ██║██║   ██║██║████╗ ████║
+██╔██╗ ██║██║   ██║██║██╔████╔██║
+██║╚██╗██║╚██╗ ██╔╝██║██║╚██╔╝██║
+██║ ╚████║ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚═╝  ╚═══╝  ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+        },
+      },
+    },
+  },
+
   -- undo-glow.nvim: animated visual feedback for undo, redo, yank, paste, search
   {
     "y3owk1n/undo-glow.nvim",
