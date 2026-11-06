@@ -31,38 +31,60 @@ auto_switch = false
 [keys]
 prefix = "ctrl+t"
 
-# Reload settings
+# --- Session ----------------------------------------------------------------
+help = "prefix+?"
+settings = "prefix+s"
 reload_config = "prefix+r"
 resize_mode = "prefix+shift+r"
+detach = ["prefix+d", "prefix+q"]
 
-detach = "prefix+d"
-rename_tab = "prefix+comma"
-close_tab = "prefix+&"
-
-# Moving tabs / workspaces
-move_tab_previous = "ctrl+shift+left"
-move_tab_next = "ctrl+shift+right"
+# --- Workspaces -------------------------------------------------------------
+workspace_picker = "prefix+w"
+new_workspace = "prefix+shift+n"
+close_workspace = "prefix+shift+d"
+goto = "prefix+u"
+open_notification_target = "prefix+shift+o"
 previous_workspace = ["ctrl+shift+[", "ctrl+{"]
 next_workspace = ["ctrl+shift+]", "ctrl+}"]
 
-copy_mode = "prefix+["
-last_pane = "prefix+;"
+# --- Tabs -------------------------------------------------------------------
+new_tab = "prefix+c"
+previous_tab = "prefix+p"
+next_tab = "prefix+n"
+switch_tab = "prefix+1..9"
+rename_tab = ["prefix+comma", "prefix+shift+t"]
+close_tab = ["prefix+&", "prefix+shift+x"]
+move_tab_previous = "ctrl+shift+left"
+move_tab_next = "ctrl+shift+right"
 
+# --- Panes ------------------------------------------------------------------
 # Pane focus. ctrl+h/j/k/l is handled by herdr-nvim-nav below, because it can
 # hand the chord to Neovim first; these are the plain herdr fallbacks.
 focus_pane_left = ["prefix+h", "ctrl+shift+h"]
 focus_pane_down = ["prefix+j", "ctrl+shift+j"]
 focus_pane_up = ["prefix+k", "ctrl+shift+k"]
 focus_pane_right = ["prefix+l", "ctrl+shift+l"]
+cycle_pane_next = "prefix+tab"
+cycle_pane_previous = "prefix+shift+tab"
+last_pane = "prefix+;"
+copy_mode = "prefix+["
+close_pane = "prefix+x"
+zoom = "prefix+z"
+toggle_sidebar = "prefix+b"
+
+# Native resize bindings. Do NOT bind prefix+shift+h/j/k/l here: Herdr uses
+# those for swapping panes by default.
+resize_pane_left = "ctrl+shift+alt+h"
+resize_pane_down = "ctrl+shift+alt+j"
+resize_pane_up = "ctrl+shift+alt+k"
+resize_pane_right = "ctrl+shift+alt+l"
 
 # Splits
-split_vertical = ["prefix+|", "prefix+%", "prefix+backslash"]
+split_vertical = ["prefix+|", "prefix+%", "prefix+backslash", "prefix+v"]
 split_horizontal = ["prefix+minus", 'prefix+"', "prefix+_"]
 
-goto = "prefix+u"
-open_notification_target = "prefix+shift+o"
-
-# prefix+e opens the nvim sidebar, so keep the scrollback editor on shift+e
+# --- Scrollback -------------------------------------------------------------
+# prefix+e opens the nvim sidebar, so move the scrollback editor to shift+e.
 edit_scrollback = "prefix+shift+e"
 
 # --- herdr-nvim: nvim sidebar + file picker ---------------------------------
@@ -116,37 +138,12 @@ command = 'cd "$HERDR_ACTIVE_PANE_CWD" && lazygit'
 description = "lazygit"
 
 # --- Lazydocker in a pane ---------------------------------------------------
-# prefix+d is detach, so use shift+d for docker. Opens in the active pane's cwd.
+# prefix+shift+d is Herdr's "close workspace", so use shift+c for containers.
 [[keys.command]]
-key = "prefix+shift+d"
+key = "prefix+shift+c"
 type = "pane"
 command = 'cd "$HERDR_ACTIVE_PANE_CWD" && lazydocker'
 description = "lazydocker"
-
-# --- tmux-pain-control style resizing --------------------------------------
-[[keys.command]]
-key = "prefix+shift+h"
-type = "shell"
-command = 'herdr pane resize --direction left --pane "$HERDR_ACTIVE_PANE_ID"'
-description = "resize pane left"
-
-[[keys.command]]
-key = "prefix+shift+j"
-type = "shell"
-command = 'herdr pane resize --direction down --pane "$HERDR_ACTIVE_PANE_ID"'
-description = "resize pane down"
-
-[[keys.command]]
-key = "prefix+shift+k"
-type = "shell"
-command = 'herdr pane resize --direction up --pane "$HERDR_ACTIVE_PANE_ID"'
-description = "resize pane up"
-
-[[keys.command]]
-key = "prefix+shift+l"
-type = "shell"
-command = 'herdr pane resize --direction right --pane "$HERDR_ACTIVE_PANE_ID"'
-description = "resize pane right"
 
 # --- Move the current workspace up/down ------------------------------------
 [[keys.command]]

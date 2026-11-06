@@ -283,30 +283,53 @@ Prefix: **`ctrl+t`**. Source: `dot_config/herdr/config.toml.tmpl`.
 
 | Key | Action |
 |---|---|
+| `prefix+?` | Live help panel (all active bindings) |
+| `prefix+s` | Settings |
 | `prefix+r` | Reload config |
 | `prefix+shift+r` | Resize mode |
-| `prefix+d` | Detach |
-| `prefix+,` | Rename tab |
-| `prefix+&` | Close tab |
-| `ctrl+shift+left` / `ctrl+shift+right` | Move tab |
+| `prefix+d` / `prefix+q` | Detach |
+| `prefix+w` | Workspace picker |
+| `prefix+shift+n` | New workspace |
+| `prefix+shift+d` | Close workspace |
+| `prefix+u` | Goto |
+| `prefix+shift+o` | Open notification target |
 | `ctrl+shift+[` / `ctrl+shift+]` | Previous / next workspace |
 | `ctrl+{` / `ctrl+}` | Previous / next workspace (alternate) |
-| `prefix+[` | Copy mode |
-| `prefix+;` | Last pane |
+| `prefix+c` | New tab |
+| `prefix+p` / `prefix+n` | Previous / next tab |
+| `prefix+1..9` | Switch tab |
+| `prefix+,` / `prefix+shift+t` | Rename tab |
+| `prefix+&` / `prefix+shift+x` | Close tab |
+| `ctrl+shift+left` / `ctrl+shift+right` | Move tab |
 | `prefix+h` `prefix+j` `prefix+k` `prefix+l` | Focus pane left/down/up/right |
 | `ctrl+shift+h` `ctrl+shift+j` `ctrl+shift+k` `ctrl+shift+l` | Focus pane (alternate) |
 | `ctrl+h` `ctrl+j` `ctrl+k` `ctrl+l` | Neovim-aware navigation (`herdr-nvim-nav`) |
-| `prefix+\|` / `prefix+%` / `prefix+\` | Vertical split |
+| `prefix+tab` / `prefix+shift+tab` | Cycle pane next / previous |
+| `prefix+;` | Last pane |
+| `prefix+[` | Copy mode |
+| `prefix+x` | Close pane |
+| `prefix+z` | Zoom pane (requires ≥2 panes) |
+| `prefix+shift+h/j/k/l` | Swap panes (Herdr default) |
+| `ctrl+shift+alt+h/j/k/l` | Resize pane |
+| `prefix+b` | Toggle Herdr sidebar |
+| `prefix+\|` / `prefix+%` / `prefix+\` / `prefix+v` | Vertical split |
 | `prefix+minus` / `prefix+"` / `prefix+_` | Horizontal split |
-| `prefix+u` | Goto |
-| `prefix+shift+o` | Open notification target |
 | `prefix+shift+e` | Edit scrollback |
 | `prefix+e` | Toggle Neovim sidebar |
 | `prefix+o` | Pick file from agent output |
 | `prefix+g` | Lazygit in a pane |
-| `prefix+shift+d` | Lazydocker in a pane |
-| `prefix+shift+h/j/k/l` | Resize pane |
+| `prefix+shift+c` | Lazydocker in a pane |
 | `ctrl+shift+up` / `ctrl+shift+down` | Move workspace up/down |
+
+**Why zoom can look broken:** `prefix+z` only toggles zoom when the active tab
+has more than one pane. On a single pane Herdr returns `single_pane` and does
+nothing. Split first (`prefix+|` or `prefix+minus`), then zoom.
+
+**Intentional remaps:** `prefix+r` reloads (Herdr's default is `prefix+shift+r`);
+`prefix+shift+r` is resize mode; `prefix+g` is lazygit, so goto moved to
+`prefix+u`; `prefix+e` is the Neovim sidebar, so scrollback moved to
+`prefix+shift+e`; `prefix+o` picks a file, so notifications moved to
+`prefix+shift+o`. Press `prefix+?` to see the merged result.
 
 ---
 
