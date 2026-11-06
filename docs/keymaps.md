@@ -442,6 +442,51 @@ Source: `dot_config/zsh/*.zsh`. Vi mode uses `jj` to leave insert mode.
 
 ---
 
+## Lazygit
+
+Default lazygit keys; this repo does not remap them. `prefix+g` in Herdr opens it.
+
+| Key | Action |
+|---|---|
+| `?` | Help |
+| `q` | Quit |
+| `j` / `k` | Move down / up |
+| `h` / `l` | Previous / next panel |
+| `Tab` | Next panel |
+| `Enter` | Focus / confirm |
+| `space` | Stage / unstage file |
+| `a` | Stage all |
+| `c` | Commit |
+| `P` / `p` | Push / pull |
+| `d` | Diff |
+| `x` | Menu |
+| `e` | Edit |
+| `s` | Stash |
+| `b` | Branches |
+| `l` | Log |
+| `R` | Refresh |
+
+## Lazydocker
+
+Default lazydocker keys; `prefix+shift+d` in Herdr opens it.
+
+| Key | Action |
+|---|---|
+| `?` | Help |
+| `[` / `]` | Previous / next panel |
+| `j` / `k` | Move down / up |
+| `Enter` | Focus |
+| `r` | Restart container |
+| `s` | Stop container |
+| `d` | Remove container |
+| `l` | Logs |
+| `q` | Quit |
+
+> Herdr's own built-in help is `prefix+?`; it lists the defaults not overridden
+> in `config.toml`.
+
+---
+
 ## Keeping this file accurate
 
 - Neovim: `<leader>sk`, `:map`, `:verbose map <key>`.
