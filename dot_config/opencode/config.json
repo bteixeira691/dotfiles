@@ -1,11 +1,85 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"],
   "theme": "tokyo-night",
-  "model": "anthropic/claude-sonnet-4-5",
+  "model": "cline/cline-pass/qwen3.7-max",
   "provider": {
-    "anthropic": {
+    "cline": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "ClinePass",
       "options": {
-        "baseURL": "https://api.anthropic.com"
+        "baseURL": "https://api.cline.bot/api/v1",
+        "headers": {
+          "Authorization": "Bearer {env:CLINE_API_KEY}"
+        }
+      },
+      "models": {
+        "cline-pass/glm-5.2": {"name": "GLM-5.2"},
+        "cline-pass/kimi-k2.7-code": {"name": "Kimi K2.7 Code"},
+        "cline-pass/kimi-k2.6": {"name": "Kimi K2.6"},
+        "cline-pass/deepseek-v4-pro": {"name": "DeepSeek V4 Pro"},
+        "cline-pass/deepseek-v4-flash": {"name": "DeepSeek V4 Flash"},
+        "cline-pass/mimo-v2.5": {"name": "MiMo V2.5"},
+        "cline-pass/mimo-v2.5-pro": {"name": "MiMo V2.5 Pro"},
+        "cline-pass/minimax-m3": {"name": "MiniMax M3"},
+        "cline-pass/qwen3.7-max": {"name": "Qwen3.7 Max"},
+        "cline-pass/qwen3.7-plus": {"name": "Qwen3.7 Plus"}
+      }
+    },
+    "mlx-local": {
+      "options": {
+        "baseURL": "http://127.0.0.1:8080/v1",
+        "apiKey": "not-needed"
+      },
+      "models": {
+        "qwen-14b": {
+          "id": "mlx-community/Qwen2.5-14B-Instruct-4bit",
+          "name": "Qwen 2.5 14B Instruct (MLX)"
+        },
+        "qwen-4b": {
+          "id": "mlx-community/Qwen3.5-4B-8bit",
+          "name": "Qwen 3.5 4B (MLX)"
+        },
+        "qwen-coder-30b": {
+          "id": "lmstudio-community/Qwen3-Coder-30B-A3B-Instruct-MLX-4bit",
+          "name": "Qwen Coder 30B MoE (MLX)"
+        },
+        "coder-heavy": {
+          "id": "mlx-community/Qwen3-Coder-Next-4bit",
+          "name": "Qwen3-Coder-Next 80B MoE (MLX)"
+        },
+        "ornith-35b": {
+          "id": "wang-yang/Ornith-1.0-35B-MTPLX",
+          "name": "Ornith 1.0 35B MTP (MLX)"
+        }
+      }
+    },
+    "mlx-general": {
+      "options": {
+        "baseURL": "http://127.0.0.1:8081/v1",
+        "apiKey": "not-needed"
+      },
+      "models": {
+        "deepseek-r1": {
+          "id": "Outlier-Ai/DeepSeek-R1-Distill-Qwen-14B-MLX-4bit",
+          "name": "DeepSeek R1 Reasoning (MLX)"
+        },
+        "qwen-27b": {
+          "id": "froggeric/Qwen3.6-27B-MLX-4bit",
+          "name": "Qwen 3.6 27B (MLX)"
+        }
+      }
+    },
+    "mlx-small": {
+      "options": {
+        "baseURL": "http://127.0.0.1:8082/v1",
+        "apiKey": "not-needed"
+      },
+      "models": {
+        "fast-14b": {
+          "id": "mlx-community/Qwen2.5-14B-Instruct-4bit",
+          "name": "Qwen 14B Fast (MLX)"
+        }
       }
     }
   },
@@ -15,63 +89,83 @@
   ],
   "agent": {
     "build": {
-      "model": "opencode/deepseek-v4-flash",
+      "model": "cline/cline-pass/deepseek-v4-flash",
       "prompt": "{file:./agents/build.md}"
     },
     "plan": {
-      "model": "opencode/go-kimi-k2.6",
+      "model": "cline/cline-pass/kimi-k2.6",
       "prompt": "{file:./agents/plan.md}"
     },
     "general": {
-      "model": "anthropic/claude-sonnet-4-5"
+      "model": "cline/cline-pass/qwen3.7-max"
     },
     "backend-engineer": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/deepseek-v4-flash",
       "prompt": "{file:./agents/backend-engineer.md}"
     },
     "frontend-engineer": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/deepseek-v4-flash",
       "prompt": "{file:./agents/frontend-engineer.md}"
     },
     "frontend-senior": {
-      "model": "anthropic/claude-opus-4-5",
+      "model": "cline/cline-pass/deepseek-v4-pro",
       "prompt": "{file:./agents/frontend-senior.md}"
     },
     "qa-engineer": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/qwen3.7-max",
       "prompt": "{file:./agents/qa-engineer.md}"
     },
     "devops-engineer": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/qwen3.7-max",
       "prompt": "{file:./agents/devops-engineer.md}"
     },
     "code-reviewer": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/glm-5.2",
       "prompt": "{file:./agents/code-reviewer.md}"
     },
     "product-manager": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/qwen3.7-max",
       "prompt": "{file:./agents/product-manager.md}"
     },
     "marketing": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/qwen3.7-max",
       "prompt": "{file:./agents/marketing.md}"
     },
     "me": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/qwen3.7-max",
       "prompt": "{file:./agents/me.md}"
     },
     "dotnet-dev": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/qwen3.7-max",
       "prompt": "{file:./agents/dotnet-dev.md}"
     },
     "react-ts-dev": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/qwen3.7-max",
       "prompt": "{file:./agents/react-ts-dev.md}"
     },
     "gastown-orchestrator": {
-      "model": "anthropic/claude-sonnet-4-5",
+      "model": "cline/cline-pass/deepseek-v4-pro",
       "prompt": "{file:./agents/gastown-orchestrator.md}"
+    },
+    "local": {
+      "model": "mlx-local/qwen-coder-30b",
+      "description": "Local model (port 8080)"
+    },
+    "local-code": {
+      "model": "mlx-local/qwen-coder-30b",
+      "description": "Qwen Coder 30B — heavy coding tasks (port 8080)"
+    },
+    "local-codeheavy": {
+      "model": "mlx-local/coder-heavy",
+      "description": "Qwen Coder Next 80B — maximum quality coding (port 8080)"
+    },
+    "local-reason": {
+      "model": "mlx-general/deepseek-r1",
+      "description": "DeepSeek R1 — reasoning & debugging (port 8081)"
+    },
+    "local-fast": {
+      "model": "mlx-small/fast-14b",
+      "description": "Fast 14B model — quick tasks (port 8082)"
     }
   },
   "command": {
@@ -120,6 +214,14 @@
     "github": {
       "type": "local",
       "command": ["gh", "mcp", "serve"],
+      "enabled": true
+    },
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+      },
       "enabled": true
     }
   },

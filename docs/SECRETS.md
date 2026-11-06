@@ -38,6 +38,17 @@ The `private_` prefix means chezmoi:
 - Encrypts it with age before committing
 - Never shows it in `chezmoi diff` without explicit flag
 
+### Cline / opencode API key
+
+`dot_config/opencode/config.json` reads the key from `CLINE_API_KEY`:
+
+```sh
+export CLINE_API_KEY="sk_..."
+```
+
+Put that in `~/.zshrc.local` (interactive shells) or a `private_` chezmoi
+file. Never commit the literal key.
+
 ### GitHub tokens
 ```bash
 mkdir -p ~/dotfiles/private_dot_config/gh
