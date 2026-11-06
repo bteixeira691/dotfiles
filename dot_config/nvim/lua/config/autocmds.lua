@@ -13,6 +13,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+-- .NET convention is 4 spaces, while LazyVim defaults to 2. Keep this
+-- buffer-local so JSON/YAML/TS in the same session still use their defaults.
+vim.api.nvim_create_autocmd("FileType", {
+  group = group,
+  pattern = { "cs", "razor", "cshtml", "fsharp", "vb" },
+  callback = function()
+    vim.bo.shiftwidth = 4
+    vim.bo.tabstop = 4
+    vim.bo.softtabstop = 4
+    vim.bo.expandtab = true
+  end,
+})
+
 -- Pick up changes made outside Neovim (branch switch, dotnet CLI, git pull).
 -- Throttled: `checktime` stats every loaded buffer, and tmux/herdr focus
 -- changes can fire it several times per second on large repos.
