@@ -44,6 +44,9 @@ nvim ~/.gitconfig.personal    # personal identity (if applicable)
 
 ## What's included
 
+### Reference
+- **[Keymaps & shortcuts](docs/keymaps.md)** — Neovim, Herdr, Ghostty, tmux, PowerShell, zsh.
+
 ### Editor
 - **Neovim** with **LazyVim** distribution, Tokyo Night theme
 - **LSPs:** pyright, lua_ls, rust_analyzer, csharp_ls, sqls
