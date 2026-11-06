@@ -76,6 +76,7 @@ brew "cmake"
 brew "atuin"
 brew "direnv"
 brew "uv"
+brew "mise"
 
 # Phase 2: dev workflow
 brew "just"

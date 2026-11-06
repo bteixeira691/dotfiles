@@ -331,6 +331,9 @@ nothing. Split first (`prefix+|` or `prefix+minus`), then zoom.
 `prefix+shift+e`; `prefix+o` picks a file, so notifications moved to
 `prefix+shift+o`. Press `prefix+?` to see the merged result.
 
+The `ctrl+t` prefix also shadows fzf's `Ctrl+T` and Neovim's `Ctrl+T` inside
+Herdr panes. Use `Ctrl+G` for the fzf file picker there.
+
 ---
 
 ## Ghostty
@@ -423,11 +426,17 @@ Source: `dot_config/zsh/*.zsh`. Vi mode uses `jj` to leave insert mode.
 |---|---|
 | `jj` | Leave insert mode (`zsh-vi-mode`) |
 | `jk` | Escape bindkey |
-| `Ctrl+r` | Atuin history search |
-| `Ctrl+t` | fzf file picker |
+| `z <dir>` / `zi` | zoxide jump / interactive picker |
+| `cd <dir>` | Aliased to `z` (zoxide) |
+| `Ctrl+g` | fzf file picker (works inside Herdr) |
+| `Ctrl+t` | fzf file picker (outside Herdr only) |
 | `Alt+c` | fzf directory jump |
-| `Tab` | fzf-tab completion |
+| `**` + `Tab` | fzf completion trigger |
+| `Ctrl+r` | Atuin history search |
 | `Ctrl+/` | Toggle preview in history picker |
+
+> Herdr uses `Ctrl+t` as its prefix, so fzf's default `Ctrl+t` never reaches
+> the shell inside a Herdr pane. `Ctrl+g` is bound to the same fzf widget.
 
 ### Common aliases
 
@@ -458,8 +467,10 @@ Source: `dot_config/zsh/*.zsh`. Vi mode uses `jj` to leave insert mode.
 
 | Key | Action |
 |---|---|
-| `Ctrl+t` | Insert file path (fzf) |
+| `Ctrl+g` | Insert file path (fzf, Herdr-safe) |
+| `Ctrl+t` | Insert file path (fzf, outside Herdr) |
 | `Alt+c` | cd into a directory (fzf) |
+| `**` + `Tab` | fzf completion trigger |
 | `Ctrl+r` | Atuin history search (overrides fzf history) |
 | `Ctrl+/` | Toggle preview in Atuin history |
 
@@ -507,6 +518,25 @@ Default lazydocker keys; `prefix+shift+d` in Herdr opens it.
 
 > Herdr's own built-in help is `prefix+?`; it lists the defaults not overridden
 > in `config.toml`.
+
+---
+
+## Shell tools
+
+| Tool | How to use it | Notes |
+|---|---|---|
+| zoxide | `z <dir>`, `zi`, `cd <dir>` | Installed; `z` and `zi` are shell functions from `.zshrc` |
+| fzf | `Ctrl+g`, `Alt+c`, `**` + `Tab` | `Ctrl+T` is shadowed by the Herdr prefix |
+| Atuin | `Ctrl+r` | Overrides fzf history; encrypted history DB |
+| direnv | `da`, `dr`, `dst` | Hook is loaded in `.zshrc` |
+| mise | `mise` | Installed; `mise activate zsh` runs from `tools.zsh` |
+| starship | Prompt | `prompt.zsh` |
+| eza / bat / ripgrep / fd | `ls`, `ll`, `cat`, `grep`, `find` | Aliases in `aliases.zsh` |
+| yazi / just / lazygit / lazydocker | `yazi`, `just`, `lg`, `lzd` | Interactive tools |
+
+> zoxide only works in an interactive shell. Inside Neovim, use the file
+> picker or `:cd`; inside Herdr, `z` is the shell command and `prefix+z` is
+> pane zoom.
 
 ---
 

@@ -80,6 +80,14 @@ if command -v fzf >/dev/null; then
     || source /opt/homebrew/opt/fzf/shell/key-bindings.zsh 2>/dev/null
 fi
 
+# Herdr uses ctrl+t as its prefix, so fzf's Ctrl+T never reaches the shell
+# inside Herdr panes. Bind the same file widget to Ctrl+G as an alternative.
+if (( $+widgets[fzf-file-widget] )); then
+  bindkey -M emacs '^G' fzf-file-widget
+  bindkey -M viins '^G' fzf-file-widget
+  bindkey -M vicmd '^G' fzf-file-widget
+fi
+
 # --- direnv: per-project env vars (after compinit) ---------------------------
 if command -v direnv >/dev/null; then
   eval "$(direnv hook zsh)"
