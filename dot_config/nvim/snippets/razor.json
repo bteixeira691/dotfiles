@@ -1,0 +1,117 @@
+{
+  "page": {
+    "prefix": "page",
+    "body": "@page \"/${1:route}\"",
+    "description": "Blazor: @page directive"
+  },
+  "using": {
+    "prefix": "using",
+    "body": "@using $1",
+    "description": "Blazor: @using directive"
+  },
+  "inject": {
+    "prefix": "inject",
+    "body": "@inject $1 $2",
+    "description": "Blazor: @inject service"
+  },
+  "code": {
+    "prefix": "code",
+    "body": ["@code {", "\t$0", "}"],
+    "description": "Blazor: @code block"
+  },
+  "bind": {
+    "prefix": "bind",
+    "body": "@bind=\"$1\"",
+    "description": "Blazor: two-way bind"
+  },
+  "bindevent": {
+    "prefix": "bindevent",
+    "body": "@bind=\"$1\" @bind:event=\"$2\"",
+    "description": "Blazor: bind with event"
+  },
+  "onclick": {
+    "prefix": "onclick",
+    "body": "@onclick=\"$1\"",
+    "description": "Blazor: click handler"
+  },
+  "oninput": {
+    "prefix": "oninput",
+    "body": "@oninput=\"$1\"",
+    "description": "Blazor: input handler"
+  },
+  "if": {
+    "prefix": "if",
+    "body": ["@if ($1)", "{", "\t$0", "}"],
+    "description": "Blazor: @if block"
+  },
+  "foreach": {
+    "prefix": "foreach",
+    "body": ["@foreach (var $1 in $2)", "{", "\t$0", "}"],
+    "description": "Blazor: @foreach block"
+  },
+  "switch": {
+    "prefix": "switch",
+    "body": ["@switch ($1)", "{", "\t@case $2:", "\t\t$0", "\t\tbreak;", "}"],
+    "description": "Blazor: @switch block"
+  },
+  "rendermode": {
+    "prefix": "rendermode",
+    "body": "@rendermode ${1:InteractiveServer}",
+    "description": "Blazor: render mode"
+  },
+  "component": {
+    "prefix": "component",
+    "body": "<$1 />",
+    "description": "Blazor: component tag"
+  },
+  "parameter": {
+    "prefix": "parameter",
+    "body": ["[Parameter]", "public $1 $2 { get; set; }"],
+    "description": "Blazor: [Parameter] property"
+  },
+  "cascading": {
+    "prefix": "cascading",
+    "body": ["[CascadingParameter]", "public $1 $2 { get; set; }"],
+    "description": "Blazor: [CascadingParameter] property"
+  },
+  "injectprop": {
+    "prefix": "injectprop",
+    "body": ["[Inject]", "public $1 $2 { get; set; }"],
+    "description": "Blazor: [Inject] property"
+  },
+  "oninitialized": {
+    "prefix": "oninitialized",
+    "body": ["protected override void OnInitialized()", "{", "\t$0", "}"],
+    "description": "Blazor: OnInitialized override"
+  },
+  "onparameters": {
+    "prefix": "onparameters",
+    "body": ["protected override void OnParametersSet()", "{", "\t$0", "}"],
+    "description": "Blazor: OnParametersSet override"
+  },
+  "dispose": {
+    "prefix": "dispose",
+    "body": ["public void Dispose()", "{", "\t$0", "}"],
+    "description": "Blazor: Dispose implementation"
+  },
+  "implements": {
+    "prefix": "implements",
+    "body": "@implements ${1:IDisposable}",
+    "description": "Blazor: @implements directive"
+  },
+  "inherits": {
+    "prefix": "inherits",
+    "body": "@inherits $1",
+    "description": "Blazor: @inherits directive"
+  },
+  "typeparam": {
+    "prefix": "typeparam",
+    "body": "@typeparam ${1:T}",
+    "description": "Blazor: @typeparam directive"
+  },
+  "layout": {
+    "prefix": "layout",
+    "body": "@layout $1",
+    "description": "Blazor: @layout directive"
+  }
+}

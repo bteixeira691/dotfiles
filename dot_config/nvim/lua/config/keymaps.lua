@@ -131,6 +131,7 @@ map("n", "<leader>kP", "<cmd>Dotnet remove package<CR>", { desc = "Remove packag
 map("n", "<leader>ko", "<cmd>Dotnet outdated<CR>", { desc = "Outdated packages" })
 map("n", "<leader>ks", "<cmd>Dotnet secrets<CR>", { desc = "User secrets" })
 map("n", "<leader>kv", "<cmd>Dotnet<CR>", { desc = "Dotnet menu" })
+map("n", "<leader>kn", "<cmd>Dotnet new<CR>", { desc = "New .NET item (Razor component/page/view)" })
 map("n", "<leader>kT", function()
   pcall(function()
     require("easy-dotnet.terminal").toggle()

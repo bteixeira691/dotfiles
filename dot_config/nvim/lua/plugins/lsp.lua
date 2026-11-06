@@ -5,6 +5,7 @@ return {
       ensure_installed = {
         "csharpier",
         "netcoredbg",
+        "emmet-language-server",
         -- roslyn-language-server is installed as a global dotnet tool and
         -- kept up to date from the Azure DevOps feed (daemon mode needs >= 5.12)
       },
