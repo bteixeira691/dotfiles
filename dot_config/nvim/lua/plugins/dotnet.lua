@@ -6,7 +6,11 @@ return {
     "seblyng/roslyn.nvim",
     ft = { "cs", "razor" },
     opts = {
-      broad_search = false,
+      -- Search the whole repo for .sln/.slnx, not only the buffer's ancestors.
+      -- `false` makes any buffer outside the solution directory resolve to its
+      -- own .csproj, i.e. a single-project Roslyn workspace: references and
+      -- usages from sibling projects are then invisible ("No results found").
+      broad_search = true,
       -- Keep the target per instance (one nvim per repo); change with :Roslyn target
       lock_target = false,
       ---Pick a target deterministically when a repo has several solutions.
@@ -48,6 +52,44 @@ return {
       end,
     },
     init = function()
+      ---Solution in the buffer's repo that contains the buffer's project.
+      ---`broad_search` only takes effect once the plugin's opts are applied,
+      ---which can be after the first client start (`nvim some/file.cs`); that
+      ---window otherwise leaves the buffer in a single-project workspace where
+      ---cross-project references do not exist.
+      ---@param bufnr number
+      ---@return string?
+      local function repo_solution(bufnr)
+        local discovery = require("roslyn.sln.discovery")
+        local api = require("roslyn.sln.api")
+        local csproj = discovery.find_project(bufnr)
+        local root = vim.fs.root(bufnr, ".git")
+        if not csproj or not root then
+          return nil
+        end
+
+        local skip = function(name)
+          local base = vim.fs.basename(name)
+          return base ~= "obj" and base ~= "bin" and base ~= ".git" and base ~= "node_modules"
+        end
+        local matches = {}
+        for path, kind in vim.fs.dir(root, { depth = 8, skip = skip }) do
+          local is_solution = kind == "file" and (path:match("%.slnx?$") ~= nil or path:match("%.slnf$") ~= nil)
+          if is_solution then
+            local solution = vim.fs.joinpath(root, path)
+            if api.exists_in_target(solution, csproj) then
+              matches[#matches + 1] = solution
+            end
+          end
+        end
+
+        if #matches == 1 then
+          return matches[1]
+        end
+        local choose_target = require("roslyn.config").get().choose_target
+        return choose_target and choose_target(matches) or nil
+      end
+
       vim.lsp.config("roslyn", {
         -- roslyn.nvim calls on_dir(nil) when it sees a buffer before the file
         -- name is set, which starts a second, rootless client next to the real
@@ -55,6 +97,12 @@ return {
         root_dir = function(bufnr, on_dir)
           local target = require("roslyn.target")
           local decision = target.resolve(bufnr)
+          if decision and decision.kind ~= "solution" then
+            local solution = repo_solution(bufnr)
+            if solution then
+              decision = { kind = "solution", root_dir = target.target_root_dir(solution), target = solution }
+            end
+          end
           target.notify_if_needed(decision)
           target.remember(decision)
           if decision and decision.root_dir then
@@ -99,6 +147,78 @@ return {
           },
         },
       })
+    end,
+  },
+
+  -- Roslyn answers `textDocument/references` with an empty list until it has
+  -- finished loading the solution (several seconds, even with the daemon warm).
+  -- Snacks closes `lsp_references` the moment a finder yields nothing, which is
+  -- why `gr` on a freshly opened repo reported "No results found" for symbols
+  -- that do have usages. Keep asking while the client is still loading.
+  {
+    "folke/snacks.nvim",
+    optional = true,
+    opts = function(_, opts)
+      local source = require("snacks.picker.source.lsp")
+      local async = require("snacks.picker.util.async")
+      local uv = vim.uv or vim.loop
+
+      ---@type table<number, integer> client id -> attach time (ms)
+      local attached = {}
+      ---@type table<number, boolean> client id -> solution loaded
+      local ready = {}
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("roslyn_refs", { clear = true }),
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if not client or client.name ~= "roslyn" then
+            return
+          end
+          attached[client.id] = uv.now()
+          -- Roslyn's "the solution is loaded" notification; bound the wait by
+          -- WAIT_MS in case a future server version stops sending it.
+          client.handlers["workspace/projectInitializationComplete"] = function()
+            ready[client.id] = true
+          end
+        end,
+      })
+
+      opts.picker = opts.picker or {}
+      opts.picker.sources = opts.picker.sources or {}
+      opts.picker.sources.lsp_references = {
+        finder = function(o, ctx)
+          local find = source.references(o, ctx)
+          local bufnr = ctx.filter.current_buf
+          return function(cb)
+            ---@return table[], vim.lsp.Client?
+            local function collect()
+              local items = {}
+              find(function(item)
+                items[#items + 1] = item
+              end)
+              return items, vim.lsp.get_clients({ name = "roslyn", bufnr = bufnr })[1]
+            end
+
+            -- While the solution is still loading the server answers with an
+            -- empty or partial list, so results only mean something once
+            -- `projectInitializationComplete` arrived (or the bound expires).
+            local waited = false
+            local items, client = collect()
+            while client and attached[client.id] and not ready[client.id] and uv.now() - attached[client.id] < 30000 do
+              waited = true
+              async.sleep(250)
+              items, client = collect()
+            end
+            if waited and client and not client:is_stopped() then
+              items = collect()
+            end
+            for _, item in ipairs(items) do
+              cb(item)
+            end
+          end
+        end,
+      }
     end,
   },
 

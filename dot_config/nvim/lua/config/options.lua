@@ -3,14 +3,16 @@
 
 -- .NET global tools: roslyn-language-server, dotnet-ef, dotnet-easydotnet.
 -- Put them on PATH before any plugin (roslyn.nvim resolves the server from it).
-local dotnet_tools = vim.fs.joinpath(vim.env.HOME, ".dotnet", "tools")
+local dotnet_tools = vim.fs.joinpath(vim.fn.expand("~"), ".dotnet", "tools")
 -- Mason tools (csharpier, html-lsp for Razor, lua-language-server, ...)
 local mason_bin = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "bin")
+-- PATH is `;`-separated on Windows (`vim.fs.pathsep` does not exist there).
+local pathsep = package.config:sub(1, 1) == "\\" and ";" or ":"
 for _, dir in ipairs({ dotnet_tools, mason_bin }) do
   if vim.fn.isdirectory(dir) == 1 then
     local path = vim.env.PATH or ""
     if not path:find(dir, 1, true) then
-      vim.env.PATH = dir .. ":" .. path
+      vim.env.PATH = dir .. pathsep .. path
     end
   end
 end

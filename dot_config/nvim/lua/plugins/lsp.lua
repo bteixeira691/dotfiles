@@ -6,8 +6,9 @@ return {
         "csharpier",
         "netcoredbg",
         "emmet-language-server",
-        -- roslyn-language-server is installed as a global dotnet tool and
-        -- kept up to date from the Azure DevOps feed (daemon mode needs >= 5.12)
+        -- roslyn-language-server is not listed here on purpose: it is
+        -- installed as a mason package (5.12.x, daemon mode needs >= 5.12) and
+        -- roslyn.nvim resolves it from mason/bin.
       },
     },
   },
