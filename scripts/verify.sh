@@ -6,6 +6,12 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 
+# verify.sh runs outside zsh, so ~/.zshenv's XDG defaults are not in scope.
+: "${XDG_CONFIG_HOME:=$HOME/.config}"
+: "${XDG_DATA_HOME:=$HOME/.local/share}"
+: "${XDG_STATE_HOME:=$HOME/.local/state}"
+: "${XDG_CACHE_HOME:=$HOME/.cache}"
+
 if [[ -t 1 ]]; then
   BOLD=$'\033[1m'; RED=$'\033[31m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; BLUE=$'\033[34m'; RESET=$'\033[0m'
 else
@@ -77,7 +83,7 @@ command -v rage >/dev/null 2>&1 && ok "rage: $(rage --version)" || warn "rage no
 
 # 2. Modern CLI tools
 header "Modern CLI tools"
-for cmd in bat eza fd ripgrep delta zoxide lazygit btop yazi herdr; do
+for cmd in bat eza fd rg delta zoxide lazygit btop yazi herdr; do
   check_cmd "$cmd"
 done
 
@@ -108,7 +114,8 @@ fi
 # 6. Shell config
 header "Shell config"
 check_file "$HOME/.zshenv"
-check_file "$HOME/.zshrc"
+# ZDOTDIR is set by ~/.zshenv, so the interactive config lives here, not ~/.zshrc.
+check_file "$XDG_CONFIG_HOME/zsh/.zshrc"
 check_file "$XDG_CONFIG_HOME/zsh/aliases.zsh"
 check_file "$XDG_CONFIG_HOME/zsh/exports.zsh"
 check_file "$XDG_CONFIG_HOME/zsh/vi-mode.zsh"
