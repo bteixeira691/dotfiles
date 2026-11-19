@@ -2,22 +2,49 @@
 # Interactive zsh config. Sourced for interactive shells only.
 #
 # Load order (matters!):
-#   1. compinit                (this file)
-#   2. config files            (aliases, exports, vi-mode, tools)
-#   3. fzf-tab plugin          (must come after compinit, before fzf keybindings)
-#   4. fzf keybindings         (this file, after the config block)
-#   5. direnv hook             (this file, after compinit)
-#   6. zoxide init             (this file)
-#   7. atuin init              (must be LAST so it can override Ctrl+R)
-#   8. zsh-syntax-highlighting (last in tools.zsh, to bind all widgets)
+#   1. options                 (this file; EXTENDED_GLOB before compinit)
+#   2. compinit                (this file, cached daily at $ZDOTDIR/.zcompdump)
+#   3. config files            (aliases, exports, vi-mode, tools)
+#   4. fzf-tab plugin          (must come after compinit, before fzf keybindings)
+#   5. fzf keybindings         (this file, after the config block)
+#   6. direnv hook             (this file, after compinit)
+#   7. zoxide init             (this file)
+#   8. atuin init              (must be LAST so it can override Ctrl+R)
+#   9. zsh-syntax-highlighting (last in tools.zsh, to bind all widgets)
+
+# --- Options -----------------------------------------------------------------
+# Set before compinit: the compdump freshness check below uses (#q...) glob
+# qualifiers, which require EXTENDED_GLOB.
+setopt EXTENDED_GLOB        # #~^ patterns and (#q...) qualifiers
+setopt AUTO_CD              # cd by typing dir name
+setopt CORRECT              # try to correct typos
+setopt CORRECT_ALL          # correct arguments too
+setopt INTERACTIVE_COMMENTS # # comments in interactive
+setopt NO_CASE_GLOB         # case-insensitive globbing
+setopt SHARE_HISTORY        # share between sessions
+setopt APPEND_HISTORY       # append, don't overwrite
+setopt INC_APPEND_HISTORY   # write immediately
+setopt HIST_IGNORE_DUPS     # ignore consecutive duplicates
+setopt HIST_IGNORE_SPACE    # ignore lines starting with space
+setopt HIST_SAVE_NO_DUPS    # don't re-save entries already in the file
+setopt HIST_VERIFY          # show before executing from history
+setopt PROMPT_SUBST
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_TO_HOME
+setopt MAGIC_EQUAL_SUBST    # completion after =
+
+HISTSIZE=100000             # in-memory history (default is 30 in some builds)
+SAVEHIST=50000              # on-disk history (~/.config/zsh/.zsh_history)
 
 # --- Completion system -------------------------------------------------------
 autoload -Uz compinit
-# Only run compinit once per day (huge speedup)
-if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
-  compinit -u
+zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
+# Rebuild the dump at most once a day; reuse it with -C (skips the insecure
+# directory check). Use -u when rebuilding so Homebrew's dirs don't prompt.
+if [[ -n ${zcompdump}(#qN.mh+24) ]]; then
+  compinit -C -d "$zcompdump"
 else
-  compinit -u -C
+  compinit -u -d "$zcompdump"
 fi
 
 zstyle ':completion:*' menu select
@@ -27,24 +54,6 @@ zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
 zstyle ':completion:*:warnings' format '%F{red}-- no matches --%f'
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
-
-# --- Options -----------------------------------------------------------------
-setopt AUTO_CD              # cd by typing dir name
-setopt CORRECT              # try to correct typos
-setopt CORRECT_ALL          # correct arguments too
-setopt INTERACTIVE_COMMENTS # # comments in interactive
-setopt NO_CASE_GLOB         # case-insensitive globbing
-setopt EXTENDED_GLOB        # #~^ patterns
-setopt SHARE_HISTORY        # share between sessions
-setopt APPEND_HISTORY       # append, don't overwrite
-setopt INC_APPEND_HISTORY   # write immediately
-setopt HIST_IGNORE_DUPS     # ignore consecutive duplicates
-setopt HIST_IGNORE_SPACE    # ignore lines starting with space
-setopt HIST_VERIFY          # show before executing from history
-setopt PROMPT_SUBST
-setopt PUSHD_IGNORE_DUPS
-setopt PUSHD_TO_HOME
-setopt MAGIC_EQUAL_SUBST    # completion after =
 
 # --- Source user config files ------------------------------------------------
 ZSH_CONFIG_DIR="$XDG_CONFIG_HOME/zsh"
