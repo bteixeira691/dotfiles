@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# herdr-zoxide — fuzzy-jump to a zoxide directory as a Herdr workspace.
+#
+# Bound to prefix+f in dot_config/herdr/config.toml.tmpl (popup). Lists zoxide's
+# frecency database in fzf: Enter focuses the workspace already using that
+# directory, or creates one there. zoxide picks up directories as you cd into
+# them; dot_config/zsh/dot_zshrc also registers the directory a shell starts in
+# (Herdr panes, tabs, `herdr worktree create`) so fresh clones are z-able
+# immediately.
+set -euo pipefail
+
+die() { printf 'herdr-zoxide: %s\n' "$*" >&2; exit 1; }
+
+for dep in zoxide fzf herdr jq; do
+  command -v "$dep" >/dev/null 2>&1 || die "missing dependency: $dep"
+done
+
+# Resolve symlinks/trailing slashes so pane cwds compare equal (e.g. /tmp vs
+# /private/tmp on macOS, or a symlinked workspace root).
+resolve() { (cd "$1" 2>/dev/null && pwd -P) || printf '%s' "$1"; }
+
+dir=$(
+  zoxide query --list 2>/dev/null |
+    fzf --layout=reverse --border=rounded --prompt='zoxide> ' \
+      --header='enter: open in Herdr   ctrl-/: toggle preview' \
+      --preview='eza -1 --color=always -- {} 2>/dev/null | head -100' \
+      --preview-window='right:50%:wrap' \
+      --bind='ctrl-/:toggle-preview'
+) || exit 0
+
+[[ -n $dir ]] || exit 0
+[[ -d $dir ]] || die "directory no longer exists: $dir"
+
+target=$(resolve "$dir")
+panes=$(herdr pane list) || die "cannot reach the Herdr server"
+
+ws="" tab=""
+while IFS=$'\t' read -r pane_ws pane_tab pane_cwd; do
+  [[ $(resolve "$pane_cwd") == "$target" ]] || continue
+  ws=$pane_ws
+  tab=$pane_tab
+  break
+done < <(jq -r '.result.panes[] | [.workspace_id, .tab_id, .cwd] | @tsv' <<<"$panes")
+
+if [[ -n $ws ]]; then
+  herdr workspace focus "$ws"
+  if [[ -n $tab ]]; then
+    herdr tab focus "$tab"
+  fi
+else
+  herdr workspace create --cwd "$dir" --label "$(basename -- "$dir")" --focus
+fi

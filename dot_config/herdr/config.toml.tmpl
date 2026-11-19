@@ -29,7 +29,9 @@ name = "tokyo-night"
 auto_switch = false
 
 [keys]
-prefix = "ctrl+t"
+# ctrl+b is Herdr's default prefix. Inside Herdr panes, use tmux's secondary
+# prefix (ctrl+space) if you nest tmux — see dot_config/tmux/tmux.conf.
+prefix = "ctrl+b"
 
 # --- Session ----------------------------------------------------------------
 help = "prefix+?"
@@ -144,6 +146,18 @@ key = "prefix+shift+c"
 type = "pane"
 command = 'cd "$HERDR_ACTIVE_PANE_CWD" && lazydocker'
 description = "lazydocker"
+
+# --- zoxide jump ------------------------------------------------------------
+# Fuzzy-pick a directory from zoxide's frecency DB in a popup; Enter focuses the
+# workspace already on that directory, or creates one there. Fresh clones and
+# worktrees are registered by zsh on pane start (see dot_config/zsh/dot_zshrc).
+[[keys.command]]
+key = "prefix+f"
+type = "popup"
+command = '"$HOME/.local/bin/herdr-zoxide"'
+width = "70%"
+height = "60%"
+description = "zoxide jump"
 
 # --- Move the current workspace up/down ------------------------------------
 [[keys.command]]

@@ -84,6 +84,7 @@ fi
 
 # --- Shared steps (via lib.sh) -----------------------------------------------
 install_rustup_toolchain
+install_herdr
 install_gastown
 set_default_shell_zsh
 

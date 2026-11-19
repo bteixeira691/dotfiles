@@ -53,6 +53,16 @@ if ($userPath -notlike "*Ghostty*") {
   [Environment]::SetEnvironmentVariable("Path", "$userPath;$env:LOCALAPPDATA\Programs\Ghostty\bin", "User")
 }
 
+# Herdr is not on winget; use the official installer
+Write-Host "==> Installing Herdr" -ForegroundColor Cyan
+if (-not (Get-Command herdr -ErrorAction SilentlyContinue)) {
+  try {
+    Invoke-RestMethod -Uri "https://herdr.dev/install.ps1" | Invoke-Expression
+  } catch {
+    Write-Host "  (warning: Herdr install failed — install manually from https://herdr.dev)" -ForegroundColor Yellow
+  }
+}
+
 # PowerShell modules used by the profile (~/.config/powershell/profile.ps1)
 Write-Host "==> Installing PowerShell modules" -ForegroundColor Cyan
 foreach ($module in @("posh-git", "Terminal-Icons", "PSFzf")) {

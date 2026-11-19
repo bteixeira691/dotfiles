@@ -77,6 +77,8 @@ if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
 # --- zoxide -----------------------------------------------------------------
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
   Invoke-Expression (& zoxide init powershell | Out-String)
+  # Register the directory this shell starts in (Herdr panes/workspaces).
+  & zoxide add -- $PWD 2>$null
 }
 
 # --- Environment ------------------------------------------------------------

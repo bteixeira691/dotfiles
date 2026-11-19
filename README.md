@@ -62,6 +62,7 @@ nvim ~/.gitconfig.personal    # personal identity (if applicable)
 
 ### Terminal & multiplexer
 - **Ghostty** with cross-platform keybinds and Tokyo Night palette
+- **Herdr** with `Ctrl+b` prefix, Neovim-aware pane nav, and `prefix+f` zoxide jump
 - **tmux** with `Ctrl-a` prefix, vim-style copy mode, tpm plugin manager
 
 ### Modern CLI tools (50+)
@@ -216,6 +217,7 @@ dotfiles/
 ├── dot_config/                     ← ~/.config/ (chezmoi maps dot_ → .)
 │   ├── nvim/                       ← LazyVim config
 │   ├── zsh/                        ← 6 user config files (aliases, exports, etc.)
+│   ├── herdr/config.toml.tmpl      ← Herdr workspaces/tabs/panes + zoxide jump
 │   ├── ghostty/config
 │   ├── starship.toml
 │   ├── opencode/                   ← OpenCode AI agent config

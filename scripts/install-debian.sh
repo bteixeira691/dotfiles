@@ -158,6 +158,7 @@ if ! command -v trash >/dev/null && ! command -v trash-put >/dev/null; then carg
 
 # --- Shared steps (via lib.sh) -----------------------------------------------
 install_rustup_toolchain
+install_herdr
 install_gastown
 set_default_shell_zsh
 

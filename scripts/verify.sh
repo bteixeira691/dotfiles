@@ -77,7 +77,7 @@ command -v rage >/dev/null 2>&1 && ok "rage: $(rage --version)" || warn "rage no
 
 # 2. Modern CLI tools
 header "Modern CLI tools"
-for cmd in bat eza fd ripgrep delta zoxide lazygit btop yazi; do
+for cmd in bat eza fd ripgrep delta zoxide lazygit btop yazi herdr; do
   check_cmd "$cmd"
 done
 

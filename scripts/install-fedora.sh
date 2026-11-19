@@ -97,6 +97,7 @@ if ! command -v xh >/dev/null; then cargo install xh --locked 2>/dev/null || tru
 if ! command -v mprocs >/dev/null; then go install github.com/pvolok/mprocs@latest 2>/dev/null || true; fi
 
 # --- Shared steps (via lib.sh) -----------------------------------------------
+install_herdr
 install_gastown
 set_default_shell_zsh
 

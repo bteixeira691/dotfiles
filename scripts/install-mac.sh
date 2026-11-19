@@ -31,6 +31,7 @@ if command -v brew >/dev/null; then
 fi
 
 # --- Shared steps (via lib.sh) -----------------------------------------------
+install_herdr
 install_gastown
 
 ok "macOS packages installed"

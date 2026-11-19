@@ -279,7 +279,7 @@ From `herdr-nvim` defaults:
 
 ## Herdr
 
-Prefix: **`ctrl+t`**. Source: `dot_config/herdr/config.toml.tmpl`.
+Prefix: **`ctrl+b`**. Source: `dot_config/herdr/config.toml.tmpl`.
 
 | Key | Action |
 |---|---|
@@ -319,6 +319,7 @@ Prefix: **`ctrl+t`**. Source: `dot_config/herdr/config.toml.tmpl`.
 | `prefix+o` | Pick file from agent output |
 | `prefix+g` | Lazygit in a pane |
 | `prefix+shift+c` | Lazydocker in a pane |
+| `prefix+f` | zoxide jump: pick a directory in fzf, open/focus its workspace |
 | `ctrl+shift+up` / `ctrl+shift+down` | Move workspace up/down |
 
 **Why zoom can look broken:** `prefix+z` only toggles zoom when the active tab
@@ -331,8 +332,14 @@ nothing. Split first (`prefix+|` or `prefix+minus`), then zoom.
 `prefix+shift+e`; `prefix+o` picks a file, so notifications moved to
 `prefix+shift+o`. Press `prefix+?` to see the merged result.
 
-The `ctrl+t` prefix also shadows fzf's `Ctrl+T` and Neovim's `Ctrl+T` inside
-Herdr panes. Use `Ctrl+G` for the fzf file picker there.
+`ctrl+b` is also tmux's default prefix, so Herdr consumes it in its panes. The
+tmux config here uses `ctrl+space` as its primary prefix, so nesting tmux inside
+Herdr still works.
+
+**zoxide jump (`prefix+f`):** `herdr-zoxide` lists zoxide's frecency database in
+fzf. Enter focuses the workspace already on that directory, or creates one
+there. Every shell registers the directory it starts in, so a fresh `git clone`
+or `herdr worktree create` is immediately reachable with `z <name>`.
 
 ---
 

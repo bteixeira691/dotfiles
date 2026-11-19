@@ -121,6 +121,26 @@ install_gastown() {
   command -v bv >/dev/null && ok "bv: $(bv version 2>/dev/null || echo installed)"
 }
 
+# Herdr (terminal workspace manager) — official installer drops into ~/.local/bin
+install_herdr() {
+  ensure_local_bin
+  if command -v herdr >/dev/null 2>&1; then
+    ok "herdr: $(herdr --version 2>/dev/null || echo installed)"
+    return
+  fi
+
+  log "Installing Herdr (terminal workspace manager)"
+  curl -fsSL https://herdr.dev/install.sh | sh || {
+    warn "Herdr install failed. Install manually: https://herdr.dev/tui/docs/install/"
+    return 1
+  }
+  if command -v herdr >/dev/null 2>&1; then
+    ok "herdr: $(herdr --version)"
+  else
+    warn "herdr not on PATH yet — open a new shell or add ~/.local/bin"
+  fi
+}
+
 # Set zsh as default shell
 set_default_shell_zsh() {
   if command -v zsh >/dev/null && [[ "$SHELL" != */zsh ]]; then
