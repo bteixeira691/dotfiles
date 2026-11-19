@@ -23,8 +23,8 @@ link-mode = "clone"
 # cache-dir = "~/.cache/uv"
 
 ## Auto-venv creation in projects
-# If false, requires `uv venv` to be explicit
-manage-project = true
+# uv has no uv.toml switch for this; `managed` belongs in pyproject.toml.
+# manage-project = true
 
 ## Allow insecure packages
 allow-insecure-host = []
@@ -34,7 +34,8 @@ compile-bytecode = false
 
 ## Resolution strategy
 resolution = "highest"
-upgrade = "satisfy"
+# `upgrade` is a boolean in uv.toml (there is no "satisfy" mode).
+upgrade = true
 
 ## Pip-compatible interface defaults
 [pip]
