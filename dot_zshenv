@@ -1,6 +1,11 @@
 # =================== zshenv ===================
 # Sourced for ALL zsh invocations (interactive and non-interactive).
 # Keep this file lightweight. Heavy things go in zshrc.
+#
+# ~/.config/zsh/.zshenv sources this file when ZDOTDIR is already exported, so
+# guard against double execution in the same shell.
+[[ -n ${__DOTFILES_ZSHENV_LOADED:-} ]] && return
+typeset -g __DOTFILES_ZSHENV_LOADED=1
 
 # --- XDG Base Directory --------------------------------------------------------
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -21,15 +26,20 @@ chmod 700 "$XDG_RUNTIME_DIR" 2>/dev/null
 
 # --- Zsh own stuff ------------------------------------------------------------
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
-export ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/zcompcache/.zcompdump-$HOST"
 
 # --- Path ---------------------------------------------------------------------
-# Re-order PATH for sane defaults. Prepend custom bin, then platform defaults.
-export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.local/share/mise/shims:$HOME/.cargo/bin:$PATH"
-# uv: prefer self-installed binaries
-[[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
+# Re-order PATH for sane defaults. `typeset -U` keeps each entry unique, so
+# nested shells (tmux, Herdr panes, `zsh -c`) don't stack duplicates.
+typeset -U path PATH
+path=(
+  "$HOME/.local/bin"
+  "$HOME/bin"
+  "$HOME/.local/share/mise/shims"
+  "$HOME/.cargo/bin"
+  $path
+)
 # .NET global tools (dotnet-easydotnet, dotnet-ef, etc.)
-[[ -d $HOME/.dotnet/tools ]] && export PATH="$HOME/.dotnet/tools:$PATH"
+[[ -d $HOME/.dotnet/tools ]] && path=("$HOME/.dotnet/tools" $path)
 
 # --- Language / locale --------------------------------------------------------
 export LANG="${LANG:-en_US.UTF-8}"
@@ -63,14 +73,9 @@ export BAT_THEME="TwoDark"
 export EZA_COLORS="da=37:di=36:ln=33:so=35:pi=31:bd=33:cd=33:or=31:ex=32"
 export FZF_DEFAULT_OPTS="--height 60% --layout reverse --border rounded --preview 'bat --style=numbers --color=always --line-range=:500 {}' --preview-window=right:60%:wrap"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --color=always {} | head -200'"
-export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind 'ctrl-/:toggle-preview' --bind 'ctrl-y:execute-silent(echo -n {2..} | xargs -r xdg-open 2>/dev/null)+abort'"
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-# Note: FZF_CTRL_R_OPTS is overridden by atuin once atuin is loaded.
-
-# --- Atuin history ------------------------------------------------------------
-# (Atuin handles its own db_path. We just set a sensible default session path.)
-export ATUIN_SESSION_ID="${ATUIN_SESSION_ID:-$(date +%s)}"
+# Ctrl+R is owned by atuin (see zshrc); don't configure FZF_CTRL_R_OPTS here.
 
 # --- mise ---------------------------------------------------------------------
 export MISE_CONFIG_DIR="$XDG_CONFIG_HOME/mise"
@@ -92,7 +97,7 @@ export PYTHONDONTWRITEBYTECODE=1
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 
 # --- Node ---------------------------------------------------------------------
-export NODE_OPTIONS="--enable-source-maps"
+export NODE_OPTIONS="--enable-source-maps --max-old-space-size=4096"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 
 # --- Rust ---------------------------------------------------------------------

@@ -173,10 +173,9 @@ for plugin in fzf-tab zsh-autosuggestions zsh-syntax-highlighting; do
   [[ $found -eq 0 ]] && warn "$plugin: not found"
 done
 
-# 11. TPM (Tmux Plugin Manager)
+# 11. tmux (single config: ~/.config/tmux/tmux.conf; no plugin manager)
 header "Tmux"
-check_file "$HOME/.tmux/plugins/tpm/tpm"
-check_file "$HOME/.tmux.conf"
+check_file "$HOME/.config/tmux/tmux.conf"
 
 # 12. Age keys
 header "Age encryption"

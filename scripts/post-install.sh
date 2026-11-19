@@ -20,12 +20,6 @@ if command -v starship >/dev/null; then
   mkdir -p "$HOME/.cache/starship"
 fi
 
-# tmux: install tpm (Tmux Plugin Manager) on first run
-if command -v tmux >/dev/null && [[ ! -d $HOME/.tmux/plugins/tpm ]]; then
-  echo "  -> Installing tpm (Tmux Plugin Manager)"
-  git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm
-fi
-
 # Install fzf-git
 if [[ ! -d $HOME/.fzf-git ]]; then
   echo "  -> Installing fzf-git"

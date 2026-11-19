@@ -69,7 +69,6 @@ AUR_PACKAGES=(
   google-chrome
   fzf-tab
   zsh-vi-mode
-  tpm
   mprocs
 )
 

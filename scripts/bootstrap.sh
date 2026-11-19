@@ -11,7 +11,7 @@
 #   2. Installs prereqs: chezmoi, age, git
 #   3. Installs all packages via the OS-specific installer
 #   4. Runs `chezmoi apply` to link all dotfiles
-#   5. Runs post-install hooks (tpm, zsh plugins, git stubs, etc.)
+#   5. Runs post-install hooks (zsh plugins, git stubs, etc.)
 #
 # After this, restart your shell with: exec zsh
 

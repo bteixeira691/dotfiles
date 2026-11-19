@@ -1,5 +1,6 @@
 # ===== Per-shell exports that depend on shell being interactive =====
-# Most env vars are in .zshenv. This file is for things that need interactive shell.
+# Machine-wide env (PATH, XDG, language toolchains) lives in ~/.zshenv.
+# This file only holds interactive-shell wiring.
 
 # --- fzf ---------------------------------------------------------------------
 if command -v fzf >/dev/null; then
@@ -23,25 +24,12 @@ if command -v gh >/dev/null; then
   export GH_CONFIG_DIR="$XDG_CONFIG_HOME/gh"
 fi
 
-# --- lazygit -----------------------------------------------------------------
-export LG_CONFIG_FILE="$XDG_CONFIG_HOME/lazygit/config.yml"
-
-# --- yazi (file manager) -----------------------------------------------------
-export YAZI_CONFIG_HOME="$XDG_CONFIG_HOME/yazi"
-
-# --- mise (when not activated as plugin) -------------------------------------
-if ! command -v mise >/dev/null; then
-  export PATH="$HOME/.local/share/mise/shims:$PATH"
-fi
-
 # --- language versions -------------------------------------------------------
-# mise handles these, but fallback paths:
+# mise handles these, but keep nvm's dir discoverable if nvm is installed.
 [[ -d $HOME/.nvm ]] && export NVM_DIR="$HOME/.nvm"
 
 # --- dev quickies ------------------------------------------------------------
 export WORKON_HOME="$HOME/.virtualenvs"
 export PROJECT_HOME="$HOME/projects"
-export PYTHONDONTWRITEBYTECODE=1
 export PYTHONUNBUFFERED=1
 export PIP_REQUIRE_VIRTUALENV=1
-export NODE_OPTIONS="--max-old-space-size=4096"

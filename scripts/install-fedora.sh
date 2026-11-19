@@ -31,7 +31,7 @@ sudo dnf install -y \
   xclip wl-clipboard
 
 # Additional packages (may not be in all Fedora versions — skip if missing)
-for pkg in ghostty btop yazi tpm fzf-tab mprocs lazydocker dive ctop bandwhich gitleaks xh just direnv act dotnet-sdk-9.0; do
+for pkg in ghostty btop yazi fzf-tab mprocs lazydocker dive ctop bandwhich gitleaks xh just direnv act dotnet-sdk-9.0; do
   sudo dnf install -y "$pkg" 2>/dev/null && echo "  -> $pkg installed" || echo "  -> $pkg not in repos, will use fallback"
 done
 

@@ -7,7 +7,6 @@ starship
 ghostty
 kitty
 tmux
-tpm
 
 neovim
 lazygit

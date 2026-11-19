@@ -63,7 +63,7 @@ nvim ~/.gitconfig.personal    # personal identity (if applicable)
 ### Terminal & multiplexer
 - **Ghostty** with cross-platform keybinds and Tokyo Night palette
 - **Herdr** with `Ctrl+b` prefix, Neovim-aware pane nav, and `prefix+f` zoxide jump
-- **tmux** with `Ctrl-a` prefix, vim-style copy mode, tpm plugin manager
+- **tmux** with `Ctrl+Space` prefix (`Ctrl+b` secondary), vim-style copy mode
 
 ### Modern CLI tools (50+)
 | Category | Tools |
@@ -131,7 +131,7 @@ When you run `bootstrap.sh`, here's exactly what happens:
 | 5 | Runs `go install` for gas town (`gt`, `bd`, `bv`) |
 | 6 | Initializes chezmoi source (first time only) |
 | 7 | Runs `chezmoi apply --force` — symlinks all dotfiles, backs up conflicts |
-| 8 | Runs post-install: git stubs, tpm, zsh plugins, skills-lock hashes, scaffolders |
+| 8 | Runs post-install: git stubs, zsh plugins, skills-lock hashes, scaffolders |
 
 ### After bootstrap
 
@@ -213,7 +213,6 @@ dotfiles/
 ├── .chezmoi/                       ← chezmoi config
 ├── dot_gitconfig.tmpl              ← ~/.gitconfig (template)
 ├── dot_zshenv                      ← ~/.zshenv
-├── dot_tmux.conf                   ← ~/.tmux.conf
 ├── dot_config/                     ← ~/.config/ (chezmoi maps dot_ → .)
 │   ├── nvim/                       ← LazyVim config
 │   ├── zsh/                        ← 6 user config files (aliases, exports, etc.)
@@ -245,15 +244,16 @@ dotfiles/
 ### Zsh load order (matters!)
 
 ```dot_zshrc (zshrc):
-1.  compinit                       (with daily cache)
-2.  Source 5 user config files     (aliases, exports, vi-mode, tools, prompt)
-3.  fzf-tab plugin                 (after compinit, before fzf keybindings)
-4.  fzf-tab.zsh UI config
-5.  fzf keybindings
-6.  direnv hook
-7.  zoxide init
-8.  Atuin init                     (MUST be last — overrides Ctrl+R)
-9.  Local overrides                (~/.zshrc.local if present)
+1.  options                        (EXTENDED_GLOB before compinit)
+2.  compinit                       (daily cache at $ZDOTDIR/.zcompdump)
+3.  Source 5 user config files     (aliases, exports, vi-mode, tools, prompt)
+4.  fzf-tab plugin                 (after compinit, before fzf keybindings)
+5.  fzf-tab.zsh UI config
+6.  fzf keybindings
+7.  direnv hook
+8.  zoxide init                    (registers the shell's start dir too)
+9.  Atuin init                     (MUST be last — overrides Ctrl+R)
+10. Local overrides                (~/.zshrc.local if present)
 ```
 
 ### Gas town quick reference

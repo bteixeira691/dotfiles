@@ -27,7 +27,6 @@ brew "ghostty"
 brew "kitty"
 brew "tmux"
 brew "herdr"
-brew "tpm"
 brew "fzf-tab"
 
 # Editor

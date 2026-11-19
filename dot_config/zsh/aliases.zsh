@@ -66,12 +66,14 @@ alias mv="mv -iv"
 alias rm="rm -Iv"   # prompts only on >3 files
 alias df="df -h"
 alias du="du -h"
-alias free="free -h"
+if command -v free >/dev/null; then alias free="free -h"; fi
 alias top="btop"
 alias ps="ps auxf"
 alias ping="ping -c 5"
-alias serve="python3 -m http.server 0.0.0.0"
 alias http="xh"   # httpie alternative, faster
+
+# Serve the cwd on all interfaces: `serve [port]` (default 8000)
+serve() { python3 -m http.server --bind 0.0.0.0 "${1:-8000}"; }
 
 # --- python / uv -------------------------------------------------------------
 alias py="uv run python"

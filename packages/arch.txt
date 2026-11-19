@@ -18,7 +18,6 @@ starship
 ghostty
 kitty
 tmux
-tpm
 
 # Editor
 neovim
